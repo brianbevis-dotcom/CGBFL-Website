@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CGBFL Field Status Control</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600;700&display=swap');
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    background: #0d0d0d;
+    color: #eee;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .panel {
+    width: 100%;
+    max-width: 480px;
+    background: linear-gradient(160deg, #1a1a1a 0%, #0a0a0a 100%);
+    border: 3px solid #b3121c;
+    border-radius: 16px;
+    padding: 24px 24px 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  }
+
+  h1 {
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin: 0 0 2px;
+    text-align: center;
+  }
+  h1 span { color: #e6202c; }
+
+  .subtitle {
+    text-align: center;
+    color: #999;
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+
+  /* Current status readout */
+  .current {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 22px;
+  }
+  .current-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--glow, #3ddc55);
+    box-shadow: 0 0 10px 2px var(--glow, #3ddc55);
+    flex-shrink: 0;
+  }
+  .current-text {
+    line-height: 1.25;
+  }
+  .current-text .label {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #888;
+  }
+  .current-text .value {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    text-transform: uppercase;
+  }
+  .current-meta {
+    font-size: 13px;
+    color: #777;
+    margin-top: 6px;
+  }
+
+  /* Big tap buttons */
+  .btn-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .status-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #111;
+    transition: transform 0.1s ease, filter 0.15s ease;
+  }
+  .status-btn:active { transform: scale(0.97); }
+  .status-btn:hover { filter: brightness(1.08); }
+
+  .status-btn .icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .status-btn .icon svg { width: 18px; height: 18px; }
+
+  .status-btn.open    { background: #3ddc55; }
+  .status-btn.delayed { background: #f2b807; }
+  .status-btn.closed  { background: #e6202c; color: #fff; }
+
+  .status-btn.selected {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+
+  /* Note field */
+  label.field-label {
+    display: block;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 6px;
+  }
+  input[type="text"] {
+    width: 100%;
+    background: #141414;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #eee;
+    padding: 12px 14px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+  input[type="text"]:focus { outline: 2px solid #b3121c; }
+
+  #nameInput { margin-bottom: 20px; }
+
+  .save-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    background: #fff;
+    color: #111;
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .save-btn:hover { background: #eee; }
+  .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .toast {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    display: none;
+  }
+  .toast.success { background: rgba(61,220,85,0.15); color: #6cf28a; display: block; }
+  .toast.error   { background: rgba(230,32,44,0.15); color: #ff8a8a; display: block; }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h1>Field <span>Status</span> Control</h1>
+  <div class="subtitle">Center Grove Bantam Football League</div>
+
+  <div class="current" id="currentBox">
+    <div class="current-dot" id="currentDot"></div>
+    <div class="current-text">
+      <div class="label">Current Status</div>
+      <div class="value" id="currentValue">Loading…</div>
+      <div class="current-meta" id="currentMeta"></div>
+    </div>
+  </div>
+
+  <div class="btn-grid">
+    <button class="status-btn open" data-status="open" onclick="selectStatus('open')">
+      <span class="icon">✓</span> Open — Good to Go
+    </button>
+    <button class="status-btn delayed" data-status="delayed" onclick="selectStatus('delayed')">
+      <span class="icon">⏱</span> Delayed
+    </button>
+    <button class="status-btn closed" data-status="closed" onclick="selectStatus('closed')">
+      <span class="icon">✕</span> Closed
+    </button>
+  </div>
+
+  <label class="field-label" for="noteInput">Reason / Note (optional — shows on website)</label>
+  <input type="text" id="noteInput" placeholder="e.g. Weather delay, back by 6pm">
+
+  <label class="field-label" for="nameInput">Your Name</label>
+  <input type="text" id="nameInput" placeholder="e.g. Coach Smith">
+
+  <button class="save-btn" id="saveBtn" onclick="saveStatus()">Update Website</button>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+  // ============================================================
+  // CONFIG — set once, leaders never need to touch this
+  // ============================================================
+  const GITHUB_OWNER  = "brianbevis";
+  const GITHUB_REPO   = "CGBFL-Website";
+  const GITHUB_BRANCH = "main";
+  const FILE_PATH     = "field-status.json";
+  // Generate a fine-grained PAT scoped only to this repo's Contents (read/write).
+  // Never share this file publicly with the token filled in — keep this page
+  // behind the members-only subpage, not on a public GitHub Pages URL.
+  const GITHUB_TOKEN  = "PASTE_FRESH_TOKEN_HERE";
+
+  const STATUS_META = {
+    open:    { label: "Open",    color: "#3ddc55" },
+    delayed: { label: "Delayed", color: "#f2b807" },
+    closed:  { label: "Closed",  color: "#e6202c" }
+  };
+
+  let selected = null;
+  let currentSha = null;
+
+  function apiUrl() {
+    return `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${FILE_PATH}?ref=${GITHUB_BRANCH}`;
+  }
+
+  function b64EncodeUnicode(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+  function b64DecodeUnicode(str) {
+    return decodeURIComponent(escape(atob(str)));
+  }
+
+  async function loadCurrentStatus() {
+    try {
+      const res = await fetch(apiUrl(), {
+        headers: { Authorization: `token ${GITHUB_TOKEN}` }
+      });
+      if (!res.ok) throw new Error("Could not load current status");
+      const data = await res.json();
+      currentSha = data.sha;
+      const parsed = JSON.parse(b64DecodeUnicode(data.content));
+      renderCurrent(parsed);
+    } catch (err) {
+      document.getElementById('currentValue').textContent = "Unable to load";
+      showToast("Couldn't load current status: " + err.message, "error");
+    }
+  }
+
+  function renderCurrent(data) {
+    const meta = STATUS_META[data.status] || STATUS_META.open;
+    document.getElementById('currentDot').style.setProperty('--glow', meta.color);
+    document.getElementById('currentValue').textContent = meta.label;
+    const when = data.updatedAt ? new Date(data.updatedAt).toLocaleString() : "";
+    const who = data.updatedBy ? ` by ${data.updatedBy}` : "";
+    const note = data.note ? ` — "${data.note}"` : "";
+    document.getElementById('currentMeta').textContent =
+      (when ? `Last updated ${when}${who}` : "") + note;
+  }
+
+  function selectStatus(status) {
+    selected = status;
+    document.querySelectorAll('.status-btn').forEach(btn => {
+      btn.classList.toggle('selected', btn.dataset.status === status);
+    });
+  }
+
+  async function saveStatus() {
+    if (!selected) {
+      showToast("Pick a status first: Open, Delayed, or Closed.", "error");
+      return;
+    }
+    const name = document.getElementById('nameInput').value.trim();
+    if (!name) {
+      showToast("Please enter your name before updating.", "error");
+      return;
+    }
+
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Updating…";
+
+    const payload = {
+      status: selected,
+      note: document.getElementById('noteInput').value.trim(),
+      updatedBy: name,
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      const res = await fetch(apiUrl(), {
+        method: "PUT",
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: `Field status → ${selected} (${name})`,
+          content: b64EncodeUnicode(JSON.stringify(payload, null, 2)),
+          sha: currentSha,
+          branch: GITHUB_BRANCH
+        })
+      });
+      if (!res.ok) throw new Error(`GitHub returned ${res.status}`);
+      const result = await res.json();
+      currentSha = result.content.sha;
+      renderCurrent(payload);
+      showToast("Website updated! It may take a few seconds to show.", "success");
+    } catch (err) {
+      showToast("Update failed: " + err.message, "error");
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Update Website";
+    }
+  }
+
+  function showToast(msg, type) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = "toast " + type;
+    setTimeout(() => { toast.style.display = "none"; }, 6000);
+  }
+
+  loadCurrentStatus();
+</script>
+
+</body>
+</html>
