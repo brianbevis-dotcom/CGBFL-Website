@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CGBFL Field Status Badge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;700&display=swap');
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  /* ============ BADGE ============ */
+  .field-badge {
+    --glow: #3ddc55;
+    width: 220px;
+    background: linear-gradient(160deg, #1a1a1a 0%, #0a0a0a 100%);
+    border: 3px solid #b3121c;
+    border-radius: 14px;
+    box-shadow:
+      0 0 0 2px #000 inset,
+      0 8px 24px rgba(0,0,0,0.6),
+      0 0 26px -4px var(--glow);
+    padding: 12px 14px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.4s ease;
+  }
+
+  /* subtle yard-line texture in background */
+  .field-badge::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.035) 0px,
+      rgba(255,255,255,0.035) 2px,
+      transparent 2px,
+      transparent 22px
+    );
+    pointer-events: none;
+  }
+
+  .badge-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .badge-top svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .badge-label {
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    font-size: 13px;
+    color: #d9d9d9;
+    text-transform: uppercase;
+  }
+
+  .badge-label .accent { color: #e6202c; }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0 4px;
+  }
+
+  .status-light {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--glow);
+    box-shadow: 0 0 12px 3px var(--glow), inset 0 -3px 4px rgba(0,0,0,0.35);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .status-light::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    animation: pulse 1.8s ease-in-out infinite;
+    background: var(--glow);
+    opacity: 0.6;
+  }
+  @keyframes pulse {
+    0%   { transform: scale(1);   opacity: 0.55; }
+    70%  { transform: scale(1.9); opacity: 0; }
+    100% { transform: scale(1.9); opacity: 0; }
+  }
+
+  .status-text {
+    font-family: 'Anton', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .status-sub {
+    text-align: center;
+    font-size: 14px;
+    color: #a8a8a8;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  .badge-footer {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    font-size: 11px;
+    color: #6f6f6f;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* Color states */
+  .field-badge.open     { --glow: #3ddc55; }
+  .field-badge.delayed  { --glow: #f2b807; }
+  .field-badge.closed   { --glow: #e6202c; }
+
+
+</style>
+</head>
+<body>
+
+  <div class="field-badge open" id="fieldBadge">
+    <div class="badge-top">
+      <!-- football icon -->
+      <svg viewBox="0 0 24 24" fill="none">
+        <ellipse cx="12" cy="12" rx="10" ry="6.2" fill="#8a4a1f" stroke="#3a2010" stroke-width="1"/>
+        <path d="M4.5 12h15" stroke="#fff" stroke-width="1" opacity="0.85"/>
+        <path d="M9 9.5v5M11 9v6M13 9v6M15 9.5v5" stroke="#fff" stroke-width="1" opacity="0.85"/>
+      </svg>
+      <span class="badge-label">Center Grove <span class="accent">Field</span> Status</span>
+    </div>
+
+    <div class="status-row">
+      <div class="status-light"></div>
+      <div class="status-text" id="statusText">Open</div>
+    </div>
+    <div class="status-sub" id="statusSub">Good to go — see you on the field</div>
+
+    <div class="badge-footer">CGBFL &middot; Live Update</div>
+  </div>
+
+<script>
+  const STATES = {
+    open:    { text: "Open",    sub: "Good to go — see you on the field" },
+    delayed: { text: "Delayed", sub: "Weather delay — check back soon" },
+    closed:  { text: "Closed",  sub: "No games/practices today" }
+  };
+
+  function setStatus(state) {
+    const badge = document.getElementById('fieldBadge');
+    badge.classList.remove('open', 'delayed', 'closed');
+    badge.classList.add(state);
+    document.getElementById('statusText').textContent = STATES[state].text;
+    document.getElementById('statusSub').textContent = STATES[state].sub;
+  }
+
+  /*
+    LIVE WIRING (for cgbfl.com homepage):
+    Fetch field-status.json from the GitHub repo and call setStatus()
+    with the value returned, e.g. { "status": "delayed" }.
+
+    async function loadFieldStatus() {
+      try {
+        const res = await fetch('https://raw.githubusercontent.com/brianbevis/Bantamdraft/main/field-status.json');
+        const data = await res.json();
+        setStatus(data.status); // "open" | "delayed" | "closed"
+      } catch (e) {
+        console.error('Field status fetch failed', e);
+      }
+    }
+    loadFieldStatus();
+    setInterval(loadFieldStatus, 30000); // refresh every 30s
+  */
+</script>
+
+</body>
+</html>
