@@ -167,31 +167,33 @@
     closed:  { text: "Closed",  sub: "No games/practices today" }
   };
 
-  function setStatus(state) {
+  function setStatus(state, customSub) {
     const badge = document.getElementById('fieldBadge');
     badge.classList.remove('open', 'delayed', 'closed');
     badge.classList.add(state);
     document.getElementById('statusText').textContent = STATES[state].text;
-    document.getElementById('statusSub').textContent = STATES[state].sub;
+    document.getElementById('statusSub').textContent = customSub || STATES[state].sub;
   }
 
-  /*
-    LIVE WIRING (for cgbfl.com homepage):
-    Fetch field-status.json from the GitHub repo and call setStatus()
-    with the value returned, e.g. { "status": "delayed" }.
+  // LIVE WIRING — reads field-status.json from the CGBFL-Website repo
+  // (the same file the leaders' status app writes to).
+  const STATUS_JSON_URL =
+    'https://raw.githubusercontent.com/brianbevis/CGBFL-Website/main/field-status.json';
 
-    async function loadFieldStatus() {
-      try {
-        const res = await fetch('https://raw.githubusercontent.com/brianbevis/Bantamdraft/main/field-status.json');
-        const data = await res.json();
-        setStatus(data.status); // "open" | "delayed" | "closed"
-      } catch (e) {
-        console.error('Field status fetch failed', e);
-      }
+  async function loadFieldStatus() {
+    try {
+      // cache-bust so browsers/CDNs don't serve a stale copy
+      const res = await fetch(STATUS_JSON_URL + '?t=' + Date.now());
+      const data = await res.json();
+      const state = STATES[data.status] ? data.status : 'open';
+      setStatus(state, data.note || null);
+    } catch (e) {
+      console.error('Field status fetch failed', e);
     }
-    loadFieldStatus();
-    setInterval(loadFieldStatus, 30000); // refresh every 30s
-  */
+  }
+
+  loadFieldStatus();
+  setInterval(loadFieldStatus, 30000); // refresh every 30s
 </script>
 
 </body>
