@@ -7,6 +7,9 @@
   @import url('https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;700&display=swap');
 
   * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+  }
   body {
     margin: 0;
     font-family: 'Barlow Condensed', sans-serif;
@@ -14,14 +17,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
+    padding: 10px;
+    overflow: hidden;
   }
 
   /* ============ BADGE ============ */
   .field-badge {
     --glow: #3ddc55;
-    width: 220px;
+    width: 100%;
+    max-width: 260px;
     background: linear-gradient(160deg, #1a1a1a 0%, #0a0a0a 100%);
     border: 3px solid #b3121c;
     border-radius: 14px;
