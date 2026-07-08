@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +82,7 @@
   }
   .panel{display:none;}
   .panel.active{display:block;}
-
+ 
   .search-wrap{
     position:sticky;
     top:96px;
@@ -99,7 +100,7 @@
     outline:none;
   }
   #searchInput:focus{border-color:var(--red);}
-
+ 
   .status-line{
     display:flex;
     justify-content:space-between;
@@ -117,7 +118,7 @@
     cursor:pointer;
     font-size:0.95rem;
   }
-
+ 
   .roster-list{
     display:flex;
     flex-direction:column;
@@ -171,7 +172,7 @@
     padding:40px 10px;
     font-size:1.1rem;
   }
-
+ 
   .submit-bar{
     position:fixed;
     bottom:0; left:0; right:0;
@@ -205,7 +206,7 @@
     background:var(--gray-500);
     cursor:not-allowed;
   }
-
+ 
   /* Modal */
   .modal-overlay{
     position:fixed; inset:0;
@@ -254,7 +255,7 @@
     width:100%;
   }
   .modal-box button.primary{background:var(--red);}
-
+ 
   .toast{
     position:fixed;
     bottom:90px; left:50%;
@@ -271,7 +272,7 @@
     text-align:center;
   }
   .toast.show{opacity:1;}
-
+ 
   /* Admin */
   .admin-lock{
     text-align:center;
@@ -373,19 +374,19 @@
 </style>
 </head>
 <body>
-
+ 
 <header>
   <h1>Trojans Football Camp</h1>
   <p>Check-In</p>
 </header>
-
+ 
 <div class="tabs">
   <button class="tab-btn active" data-tab="checkin">Check-In</button>
   <button class="tab-btn" data-tab="admin">Admin</button>
 </div>
-
+ 
 <main>
-
+ 
   <!-- CHECK-IN PANEL -->
   <section id="panel-checkin" class="panel active">
     <div class="search-wrap">
@@ -397,7 +398,7 @@
     </div>
     <div class="roster-list" id="rosterList"></div>
   </section>
-
+ 
   <!-- ADMIN PANEL -->
   <section id="panel-admin" class="panel">
     <div id="adminLock" class="admin-lock">
@@ -406,9 +407,9 @@
       <br>
       <button id="adminUnlockBtn">Unlock</button>
     </div>
-
+ 
     <div id="adminContent" style="display:none;">
-
+ 
       <div class="admin-section">
         <h3>1. Import / Update Roster (CSV)</h3>
         <p style="font-size:0.95rem; margin-top:0;">Paste rows as: <strong>First Name, Last Name, Grade, Weight, Location</strong> (one registrant per line, weight can be blank). No header row needed.</p>
@@ -423,7 +424,7 @@
         </div>
         <p class="admin-note">Re-importing merges by name+grade+location — existing check-in status is preserved for matching registrants. New rows are added as not-checked-in.</p>
       </div>
-
+ 
       <div class="admin-section">
         <h3>2. Roster Snapshot</h3>
         <div class="admin-btn-row">
@@ -432,7 +433,7 @@
         </div>
         <p class="admin-note" id="snapshotNote">Not loaded yet.</p>
       </div>
-
+ 
       <div class="admin-section">
         <h3>3. QR Code for Registrants</h3>
         <p style="font-size:0.95rem; margin-top:0;">Point phones at this page to check in.</p>
@@ -442,18 +443,18 @@
           <button class="admin-btn" id="downloadQrBtn">Download QR Image</button>
         </div>
       </div>
-
+ 
     </div>
   </section>
-
+ 
 </main>
-
+ 
 <!-- Submit bar (check-in only) -->
 <div class="submit-bar" id="submitBar">
   <span id="selectedCount">0 selected</span>
   <button class="submit-btn" id="submitBtn" disabled>Check In</button>
 </div>
-
+ 
 <!-- Weight prompt modal -->
 <div class="modal-overlay" id="weightModal">
   <div class="modal-box">
@@ -463,7 +464,7 @@
     <button class="primary" id="weightModalContinue">Continue Check-In</button>
   </div>
 </div>
-
+ 
 <!-- Generic confirm/error modal -->
 <div class="modal-overlay" id="infoModal">
   <div class="modal-box">
@@ -472,57 +473,74 @@
     <button id="infoModalClose">OK</button>
   </div>
 </div>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <script>
 /* ======================= CONFIG ======================= */
-const WORKER_URL   = 'trojnas-gh-proxy.brianbevis.workers.dev'; // e.g. https://gh-proxy.yourname.workers.dev
-const REPO_OWNER    = 'brianbevis-dotcom';
-const REPO_NAME     = 'CGBFL-Website';
-const FILE_PATH     = 'camp-registration.json';
+const WORKER_URL    = 'https://trojnas-gh-proxy.brianbevis.workers.dev';
+const GITHUB_BRANCH = 'main';
+const FILE_PATH      = 'camp-registration.json';
 const ADMIN_PASSCODE = 'trojans2026'; // change this to whatever you want
-
+const APP_KEY        = ''; // only needed if your Worker checks an X-App-Key header; leave blank if not
+ 
 /* ======================= GITHUB HELPERS (via Cloudflare Worker) ======================= */
-// These call your Worker, which holds the GitHub PAT server-side.
-// Expected Worker contract:
-//   GET  {WORKER_URL}?file=camp-registration.json          -> { content: <parsed JSON>, sha: "..." } or 404 if not found
-//   PUT  {WORKER_URL}?file=camp-registration.json  body:{ content, sha, message } -> { sha: "new-sha" }
+// Matches your existing gh-proxy-worker.js contract (same one used by the ProBowl app):
+//   GET  {WORKER_URL}/gh/{filename}?ref={branch}   -> raw GitHub Contents API JSON { content(base64), sha, ... }
+//   PUT  {WORKER_URL}/gh/{filename}                -> body: { message, content(base64), sha, branch }
+function b64EncodeUnicode(str){
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function b64DecodeUnicode(str){
+  return decodeURIComponent(escape(atob(str)));
+}
+function ghHeaders(){
+  const h = {};
+  if(APP_KEY) h['X-App-Key'] = APP_KEY;
+  return h;
+}
+ 
 async function ghGet(filename){
-  const res = await fetch(`${WORKER_URL}?file=${encodeURIComponent(filename)}`);
+  const res = await fetch(`${WORKER_URL}/gh/${encodeURIComponent(filename)}?ref=${GITHUB_BRANCH}`, {
+    headers: ghHeaders()
+  });
   if(res.status === 404){
     return { content: null, sha: null };
   }
   if(!res.ok){
     throw new Error(`GitHub read failed (${res.status})`);
   }
-  return res.json();
+  const data = await res.json();
+  const content = data.content ? JSON.parse(b64DecodeUnicode(data.content.replace(/\n/g,''))) : null;
+  return { content, sha: data.sha };
 }
-
-async function ghPut(filename, content, sha, message){
-  const res = await fetch(WORKER_URL, {
+ 
+async function ghPut(filename, contentObj, sha, message){
+  const body = {
+    message: message || `Update ${filename}`,
+    content: b64EncodeUnicode(JSON.stringify(contentObj, null, 2)),
+    branch: GITHUB_BRANCH
+  };
+  if(sha) body.sha = sha;
+  const res = await fetch(`${WORKER_URL}/gh/${encodeURIComponent(filename)}`, {
     method:'PUT',
-    headers:{ 'Content-Type':'application/json' },
-    body: JSON.stringify({
-      file: filename,
-      content: content,
-      sha: sha,
-      message: message || `Update ${filename}`
-    })
+    headers:{ 'Content-Type':'application/json', ...ghHeaders() },
+    body: JSON.stringify(body)
   });
   if(!res.ok){
     const text = await res.text();
     throw new Error(`GitHub write failed (${res.status}): ${text}`);
   }
-  return res.json();
+  const data = await res.json();
+  return { sha: data.content ? data.content.sha : data.sha };
 }
-
+ 
 /* ======================= STATE ======================= */
 let roster = [];          // array of registrant objects
 let currentSha = null;
 let selectedIds = new Set();
 let searchTerm = '';
-
+ 
 /* ======================= UTIL ======================= */
 function slugify(str){
   return String(str||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
@@ -544,7 +562,7 @@ function showInfoModal(title, body){
 document.getElementById('infoModalClose').addEventListener('click', ()=>{
   document.getElementById('infoModal').classList.remove('active');
 });
-
+ 
 /* ======================= LOAD ROSTER ======================= */
 async function loadRoster(showToastOnLoad){
   document.getElementById('statusLine').textContent = 'Loading roster...';
@@ -568,7 +586,7 @@ async function loadRoster(showToastOnLoad){
   renderRoster();
   updateAdminSnapshot();
 }
-
+ 
 /* ======================= RENDER CHECK-IN LIST ======================= */
 function renderRoster(){
   const list = document.getElementById('rosterList');
@@ -578,13 +596,13 @@ function renderRoster(){
     const full = `${r.firstName} ${r.lastName}`.toLowerCase();
     return full.includes(term);
   }).sort((a,b)=> a.lastName.localeCompare(b.lastName) || a.firstName.localeCompare(b.firstName));
-
+ 
   if(filtered.length === 0){
     list.innerHTML = `<div class="empty-msg">No registrants found.</div>`;
     updateSubmitBar();
     return;
   }
-
+ 
   list.innerHTML = filtered.map(r=>{
     const id = r.id;
     const checked = selectedIds.has(id);
@@ -605,7 +623,7 @@ function renderRoster(){
       </label>
     `;
   }).join('');
-
+ 
   list.querySelectorAll('input[type=checkbox]').forEach(cb=>{
     cb.addEventListener('change', (e)=>{
       const id = e.target.getAttribute('data-id');
@@ -614,31 +632,31 @@ function renderRoster(){
       updateSubmitBar();
     });
   });
-
+ 
   updateSubmitBar();
 }
-
+ 
 function escapeHtml(str){
   return String(str).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
 }
-
+ 
 function updateSubmitBar(){
   const count = selectedIds.size;
   document.getElementById('selectedCount').textContent = `${count} selected`;
   document.getElementById('submitBtn').disabled = count === 0;
 }
-
+ 
 /* ======================= SEARCH ======================= */
 document.getElementById('searchInput').addEventListener('input', (e)=>{
   searchTerm = e.target.value;
   renderRoster();
 });
-
+ 
 /* ======================= SUBMIT / CHECK-IN FLOW ======================= */
 document.getElementById('refreshBtn').addEventListener('click', ()=> loadRoster(true));
-
+ 
 document.getElementById('submitBtn').addEventListener('click', ()=>{
   const selected = roster.filter(r=> selectedIds.has(r.id));
   const missingWeight = selected.filter(r=> r.weight === null || r.weight === undefined || r.weight === '');
@@ -650,19 +668,19 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
     doCheckIn(selected);
   }
 });
-
+ 
 document.getElementById('weightModalContinue').addEventListener('click', ()=>{
   document.getElementById('weightModal').classList.remove('active');
   const selected = roster.filter(r=> selectedIds.has(r.id));
   doCheckIn(selected);
 });
-
+ 
 async function doCheckIn(selectedRegs, attempt){
   attempt = attempt || 1;
   document.getElementById('submitBtn').disabled = true;
   document.getElementById('submitBtn').textContent = 'Checking In...';
   const now = new Date().toISOString();
-
+ 
   try{
     // Refetch latest to reduce merge conflicts across multiple devices
     const latest = await ghGet(FILE_PATH);
@@ -674,10 +692,10 @@ async function doCheckIn(selectedRegs, attempt){
       }
       return r;
     });
-
+ 
     const payload = { lastUpdated: now, registrants: liveRoster };
     const result = await ghPut(FILE_PATH, payload, latest.sha, `Check-in: ${selectedRegs.map(r=>r.firstName+' '+r.lastName).join(', ')}`);
-
+ 
     roster = liveRoster;
     currentSha = result.sha || null;
     selectedIds.clear();
@@ -695,7 +713,7 @@ async function doCheckIn(selectedRegs, attempt){
     updateSubmitBar();
   }
 }
-
+ 
 /* ======================= TABS ======================= */
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -709,7 +727,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     }
   });
 });
-
+ 
 /* ======================= ADMIN: UNLOCK ======================= */
 document.getElementById('adminUnlockBtn').addEventListener('click', tryUnlock);
 document.getElementById('adminPasscode').addEventListener('keypress', (e)=>{
@@ -726,10 +744,10 @@ function tryUnlock(){
     showInfoModal('Incorrect Passcode', 'Please try again.');
   }
 }
-
+ 
 /* ======================= ADMIN: CSV IMPORT ======================= */
 let parsedCsvRegistrants = null;
-
+ 
 function parseCsvLine(line){
   // simple CSV split supporting quoted fields
   const result = [];
@@ -749,7 +767,7 @@ function parseCsvLine(line){
   result.push(cur.trim());
   return result;
 }
-
+ 
 document.getElementById('parseCsvBtn').addEventListener('click', ()=>{
   const raw = document.getElementById('csvInput').value;
   const lines = raw.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
@@ -769,16 +787,16 @@ document.getElementById('parseCsvBtn').addEventListener('click', ()=>{
       location: location || ''
     });
   }
-
+ 
   if(parsed.length === 0){
     showInfoModal('Nothing Parsed', 'No valid rows were found. Check the format and try again.');
     return;
   }
-
+ 
   // Merge with existing roster by identity slug, preserving check-in status
   const existingById = {};
   roster.forEach(r=> existingById[r.id] = r);
-
+ 
   parsedCsvRegistrants = parsed.map(r=>{
     const id = makeId(r);
     const existing = existingById[id];
@@ -793,7 +811,7 @@ document.getElementById('parseCsvBtn').addEventListener('click', ()=>{
       checkedInAt: existing ? (existing.checkedInAt || null) : null
     };
   });
-
+ 
   const previewWrap = document.getElementById('csvPreviewWrap');
   previewWrap.innerHTML = `
     <p class="admin-note">${parsedCsvRegistrants.length} registrants parsed (preview below). Nothing is saved yet.</p>
@@ -815,14 +833,14 @@ document.getElementById('parseCsvBtn').addEventListener('click', ()=>{
   `;
   document.getElementById('saveRosterRow').style.display = 'flex';
 });
-
+ 
 document.getElementById('clearCsvBtn').addEventListener('click', ()=>{
   document.getElementById('csvInput').value = '';
   document.getElementById('csvPreviewWrap').innerHTML = '';
   document.getElementById('saveRosterRow').style.display = 'none';
   parsedCsvRegistrants = null;
 });
-
+ 
 document.getElementById('saveRosterBtn').addEventListener('click', async ()=>{
   if(!parsedCsvRegistrants){
     showInfoModal('Nothing to Save', 'Parse a CSV first.');
@@ -846,12 +864,12 @@ document.getElementById('saveRosterBtn').addEventListener('click', async ()=>{
     showInfoModal('Save Error', err.message);
   }
 });
-
+ 
 /* ======================= ADMIN: SNAPSHOT / RELOAD / DOWNLOAD ======================= */
 document.getElementById('reloadFromGithubBtn').addEventListener('click', async ()=>{
   await loadRoster(true);
 });
-
+ 
 function updateAdminSnapshot(){
   const note = document.getElementById('snapshotNote');
   if(!roster || roster.length === 0){
@@ -861,7 +879,7 @@ function updateAdminSnapshot(){
   const checkedCount = roster.filter(r=>r.checkedIn).length;
   note.textContent = `${roster.length} registrants loaded — ${checkedCount} checked in.`;
 }
-
+ 
 document.getElementById('downloadJsonBtn').addEventListener('click', ()=>{
   const payload = { lastUpdated: new Date().toISOString(), registrants: roster };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
@@ -872,7 +890,7 @@ document.getElementById('downloadJsonBtn').addEventListener('click', ()=>{
   a.click();
   URL.revokeObjectURL(url);
 });
-
+ 
 /* ======================= ADMIN: QR CODE ======================= */
 function setupQrCode(){
   const pageUrl = window.location.href.split('?')[0];
@@ -888,7 +906,7 @@ document.getElementById('downloadQrBtn').addEventListener('click', ()=>{
   a.target = '_blank';
   a.click();
 });
-
+ 
 /* ======================= INIT ======================= */
 loadRoster(false);
 </script>
