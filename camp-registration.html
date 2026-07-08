@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -323,6 +322,36 @@
     border:1px solid var(--gray-200);
     border-radius:6px;
   }
+  .file-drop{
+    position:relative;
+    border:2px dashed var(--gray-500);
+    border-radius:10px;
+    padding:26px 14px;
+    text-align:center;
+    background:var(--gray-100);
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+  .file-drop.dragover{
+    border-color:var(--red);
+    background:#fdecea;
+  }
+  .file-drop input[type=file]{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    opacity:0;
+    cursor:pointer;
+  }
+  .file-drop-label{
+    font-size:1.05rem;
+    font-weight:600;
+    color:var(--gray-500);
+    pointer-events:none;
+  }
+  .file-drop-label.has-file{
+    color:var(--black);
+  }
   .admin-btn-row{
     display:flex;
     gap:10px;
@@ -411,11 +440,13 @@
     <div id="adminContent" style="display:none;">
  
       <div class="admin-section">
-        <h3>1. Import / Update Roster (CSV)</h3>
-        <p style="font-size:0.95rem; margin-top:0;">Paste rows as: <strong>First Name, Last Name, Grade, Weight, Location</strong> (one registrant per line, weight can be blank). No header row needed.</p>
-        <textarea id="csvInput" placeholder="Jack, Smith, 3, 78, Center Grove Elementary&#10;Ava, Jones, 4, , Sugar Grove Elementary"></textarea>
+        <h3>1. Import / Update Roster (File)</h3>
+        <p style="font-size:0.95rem; margin-top:0;">Upload a <strong>.csv</strong> file with columns in this order: <strong>First Name, Last Name, Grade, Weight, Location</strong> (weight can be blank). A header row is fine — it will be skipped automatically.</p>
+        <div class="file-drop" id="fileDropZone">
+          <input type="file" id="csvFileInput" accept=".csv,text/csv,.txt">
+          <div class="file-drop-label" id="fileDropLabel">Tap to choose a file, or drag one here</div>
+        </div>
         <div class="admin-btn-row">
-          <button class="admin-btn primary" id="parseCsvBtn">Parse CSV</button>
           <button class="admin-btn secondary" id="clearCsvBtn">Clear</button>
         </div>
         <div id="csvPreviewWrap"></div>
@@ -478,7 +509,7 @@
  
 <script>
 /* ======================= CONFIG ======================= */
-const WORKER_URL    = 'https://trojnas-gh-proxy.brianbevis.workers.dev';
+const WORKER_URL    = 'https://trojnas-gh-proxy.brianbevis.workers.dev'; // e.g. https://gh-proxy.yoursubdomain.workers.dev  (no trailing slash)
 const GITHUB_BRANCH = 'main';
 const FILE_PATH      = 'camp-registration.json';
 const ADMIN_PASSCODE = 'trojans2026'; // change this to whatever you want
@@ -768,8 +799,44 @@ function parseCsvLine(line){
   return result;
 }
  
-document.getElementById('parseCsvBtn').addEventListener('click', ()=>{
-  const raw = document.getElementById('csvInput').value;
+function handleCsvFile(file){
+  if(!file) return;
+  document.getElementById('fileDropLabel').textContent = `Selected: ${file.name}`;
+  document.getElementById('fileDropLabel').classList.add('has-file');
+  const reader = new FileReader();
+  reader.onload = (e)=> parseCsvText(String(e.target.result));
+  reader.onerror = ()=> showInfoModal('File Error', 'Could not read that file. Please try again.');
+  reader.readAsText(file);
+}
+ 
+const fileInput = document.getElementById('csvFileInput');
+fileInput.addEventListener('change', (e)=>{
+  const file = e.target.files && e.target.files[0];
+  handleCsvFile(file);
+});
+ 
+const dropZone = document.getElementById('fileDropZone');
+['dragenter','dragover'].forEach(evt=>{
+  dropZone.addEventListener(evt, (e)=>{
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+});
+['dragleave','drop'].forEach(evt=>{
+  dropZone.addEventListener(evt, (e)=>{
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+  });
+});
+dropZone.addEventListener('drop', (e)=>{
+  const file = e.dataTransfer.files && e.dataTransfer.files[0];
+  if(file){
+    fileInput.value = '';
+    handleCsvFile(file);
+  }
+});
+ 
+function parseCsvText(raw){
   const lines = raw.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
   const parsed = [];
   for(const line of lines){
@@ -832,10 +899,12 @@ document.getElementById('parseCsvBtn').addEventListener('click', ()=>{
     </table>
   `;
   document.getElementById('saveRosterRow').style.display = 'flex';
-});
+}
  
 document.getElementById('clearCsvBtn').addEventListener('click', ()=>{
-  document.getElementById('csvInput').value = '';
+  fileInput.value = '';
+  document.getElementById('fileDropLabel').textContent = 'Tap to choose a file, or drag one here';
+  document.getElementById('fileDropLabel').classList.remove('has-file');
   document.getElementById('csvPreviewWrap').innerHTML = '';
   document.getElementById('saveRosterRow').style.display = 'none';
   parsedCsvRegistrants = null;
@@ -856,7 +925,9 @@ document.getElementById('saveRosterBtn').addEventListener('click', async ()=>{
     showToast('Roster saved to GitHub!');
     document.getElementById('csvPreviewWrap').innerHTML = '';
     document.getElementById('saveRosterRow').style.display = 'none';
-    document.getElementById('csvInput').value = '';
+    fileInput.value = '';
+    document.getElementById('fileDropLabel').textContent = 'Tap to choose a file, or drag one here';
+    document.getElementById('fileDropLabel').classList.remove('has-file');
     parsedCsvRegistrants = null;
     updateAdminSnapshot();
     renderRoster();
