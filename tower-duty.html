@@ -1,0 +1,2778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CGBFL Tower Duty | 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#C8102E;
+  --red-dark:#8E0B20;
+  --ink:#111111;
+  --ink-soft:#2A2A2A;
+  --chalk:#FFFFFF;
+  --paper:#F4F4F4;
+  --line:#D8D8D8;
+  --grey:#6E6E6E;
+  --shadow:0 2px 0 rgba(0,0,0,.18);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Barlow Condensed',Arial,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  font-size:17px;
+  line-height:1.35;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{font-family:'Anton',Impact,sans-serif;font-weight:400;letter-spacing:.02em;text-transform:uppercase;margin:0}
+a{color:var(--red-dark)}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- header ---------- */
+.masthead{background:var(--ink);color:var(--chalk);border-bottom:6px solid var(--red)}
+.masthead-in{max-width:1180px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.mark{width:44px;height:44px;flex:0 0 auto;background:var(--red);display:flex;align-items:center;justify-content:center;
+      clip-path:polygon(50% 0,100% 22%,100% 68%,50% 100%,0 68%,0 22%);}
+.mark span{font-family:'Anton';font-size:22px;line-height:1;color:#fff;transform:translateY(1px)}
+.masthead h1{font-size:30px;line-height:1}
+.masthead .sub{font-size:15px;color:#B9B9B9;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.badge-draft{margin-left:auto;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+  border:2px solid var(--red);color:#fff;padding:4px 10px}
+
+/* ---------- tabs ---------- */
+.tabs{background:var(--ink-soft);position:sticky;top:0;z-index:40}
+.tabs-in{max-width:1180px;margin:0 auto;display:flex;overflow-x:auto}
+.tab{background:none;border:0;color:#CFCFCF;font-family:'Anton';font-size:17px;letter-spacing:.05em;text-transform:uppercase;
+  padding:13px 20px;cursor:pointer;border-bottom:4px solid transparent;white-space:nowrap}
+.tab:hover{color:#fff}
+.tab[aria-selected="true"]{color:#fff;border-bottom-color:var(--red);background:#000}
+
+.wrap{max-width:1180px;margin:0 auto;padding:22px 18px 70px}
+.panel[hidden]{display:none}
+
+/* ---------- shared bits ---------- */
+.eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);font-weight:700;margin-bottom:6px}
+.card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.btn{display:inline-flex;align-items:center;gap:7px;background:var(--red);color:#fff;border:0;padding:9px 15px;
+  font-family:'Anton';font-size:15px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;box-shadow:var(--shadow)}
+.btn:hover{background:var(--red-dark)}
+.btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:#fff}
+.btn.small{font-size:13px;padding:6px 11px}
+select,input[type=text]{font-family:'Barlow Condensed';font-size:18px;font-weight:600;padding:9px 11px;
+  border:2px solid var(--ink);background:#fff;color:var(--ink);min-width:0}
+label.fld{display:flex;flex-direction:column;gap:5px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:700;color:var(--grey)}
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:18px}
+
+/* ---------- duty finder ---------- */
+.finder{padding:18px;margin-bottom:22px}
+.finder h2{font-size:24px;margin-bottom:4px}
+.finder p.lede{margin:0 0 16px;color:var(--grey);font-size:17px;max-width:62ch}
+.count-strip{display:flex;gap:0;border:2px solid var(--ink);margin:18px 0 22px;background:#fff;flex-wrap:wrap}
+.count-strip div{flex:1;padding:10px 14px;border-right:1px solid var(--line);min-width:120px}
+.count-strip div:last-child{border-right:0}
+.count-strip .n{font-family:'Anton';font-size:28px;line-height:1}
+.count-strip .l{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);font-weight:700}
+
+/* ticket */
+.tickets{display:grid;gap:14px}
+.ticket{display:grid;grid-template-columns:96px 1fr auto;background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);position:relative}
+.ticket.next{border-color:var(--red);border-width:2px}
+.ticket-date{background:var(--ink);color:#fff;padding:14px 10px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.ticket.next .ticket-date{background:var(--red)}
+.ticket-date .dow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#CFCFCF}
+.ticket.next .ticket-date .dow{color:#FFD9DF}
+.ticket-date .dnum{font-family:'Anton';font-size:38px;line-height:.95}
+.ticket-date .mon{font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+.ticket-body{padding:13px 16px;min-width:0}
+.ticket-body .kick{font-family:'Anton';font-size:26px;line-height:1}
+.ticket-body .kick em{font-style:normal;font-size:15px;color:var(--grey);letter-spacing:.06em;margin-left:8px}
+.ticket-body .matchup{font-size:19px;font-weight:600;margin-top:3px}
+.ticket-body .meta{font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);font-weight:700;margin-top:5px}
+.ticket-acts{padding:13px 16px;display:flex;flex-direction:column;gap:7px;justify-content:center;
+  border-left:1px dashed var(--line)}
+.field-chip{display:inline-block;background:var(--ink);color:#fff;font-family:'Anton';font-size:13px;letter-spacing:.08em;
+  padding:3px 8px;text-transform:uppercase}
+.tag-next{position:absolute;top:-1px;right:-1px;background:var(--red);color:#fff;font-family:'Anton';font-size:11px;
+  letter-spacing:.14em;padding:3px 8px}
+
+/* subscribe */
+.subscribe{padding:18px;margin-top:24px;border-left:6px solid var(--red)}
+.subscribe h3{font-size:20px;margin-bottom:6px}
+.url-row{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}
+.url-row input{flex:1;min-width:240px;font-size:15px;font-weight:500;background:var(--paper)}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-top:6px}
+.how div{border-top:3px solid var(--ink);padding-top:8px}
+.how h4{font-family:'Anton';font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 4px}
+.how p{margin:0;font-size:15px;color:var(--ink-soft)}
+
+/* ---------- table ---------- */
+.tbl-wrap{overflow-x:auto;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th{background:var(--ink);color:#fff;font-family:'Anton';font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+  text-align:left;padding:9px 11px;position:sticky;top:0;white-space:nowrap}
+td{padding:8px 11px;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody tr:nth-child(even){background:#FAFAFA}
+tbody tr.hit{background:#FFF0F2}
+tbody tr.hit td{border-bottom-color:#F3C9D0}
+td.duty{font-weight:700}
+td.duty .dot{display:inline-block;width:8px;height:8px;background:var(--red);margin-right:6px;vertical-align:1px}
+.empty{padding:34px;text-align:center;color:var(--grey);font-size:18px}
+
+/* ---------- calendar ---------- */
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:14px;letter-spacing:.08em;
+  text-transform:uppercase;font-weight:700;color:var(--grey)}
+.legend b{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:0}
+.month{margin-bottom:30px}
+.month h2{font-size:26px;border-bottom:4px solid var(--red);padding-bottom:5px;margin-bottom:10px}
+.grid{border-left:1px solid var(--line);border-top:1px solid var(--line);background:#fff}
+.week{display:grid;grid-template-columns:repeat(7,1fr)}
+.dow-head{background:var(--ink);color:#fff;font-family:'Anton';font-size:12px;letter-spacing:.14em;text-align:center;
+  padding:6px 2px;border-right:1px solid #000}
+.cell{border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-height:104px;padding:4px 5px;vertical-align:top}
+.cell.out{background:#F0F0F0}
+.cell .dnum{font-family:'Anton';font-size:15px;color:var(--grey);line-height:1;margin-bottom:3px}
+.cell.has .dnum{color:var(--ink)}
+.ev{font-size:12px;line-height:1.2;border-left:4px solid var(--ink);padding:2px 4px;margin-bottom:3px;background:#F7F7F7;
+  overflow:hidden;text-overflow:ellipsis}
+.ev .t{font-weight:700;letter-spacing:.02em}
+.ev .m{color:var(--grey);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev .d{color:var(--ink);font-weight:700;font-size:11.5px}
+.ev.mine{background:var(--red);border-left-color:#000;color:#fff}
+.ev.mine .m{color:#FFD3DA}
+.ev.mine .d{color:#fff}
+.cell .more{font-size:12px;color:var(--grey);font-weight:700}
+
+/* ---------- print ---------- */
+.print-note{background:#fff;border:1px solid var(--line);border-left:6px solid var(--ink);padding:16px 18px;margin-bottom:18px;box-shadow:var(--shadow)}
+.print-note h3{font-size:20px;margin-bottom:5px}
+.print-note p{margin:0 0 8px;max-width:70ch}
+.sheet{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:20px}
+.sheet-head{display:flex;align-items:baseline;gap:14px;border-bottom:4px solid var(--red);padding-bottom:7px;margin-bottom:14px;flex-wrap:wrap}
+.sheet-head h2{font-size:24px}
+.sheet-head .who{font-size:16px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--grey);margin-left:auto}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;
+  font-family:'Anton';font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:11px 20px;z-index:99;
+  box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.toast[hidden]{display:none}
+
+@media (max-width:720px){
+  .masthead h1{font-size:24px}
+  .ticket{grid-template-columns:76px 1fr}
+  .ticket-acts{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;border-left:0;border-top:1px dashed var(--line);padding:11px 14px}
+  .cell{min-height:78px}
+  .ev{font-size:11px}
+  th,td{font-size:14px;padding:7px 8px}
+}
+
+@media print{
+  @page{size:landscape;margin:.45in}
+  body{background:#fff;font-size:11px}
+  .masthead,.tabs,.subscribe,.controls,.print-note,.btn,.toast,.finder .lede,.count-strip,
+  .eyebrow,.legend,.card.finder{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .panel[hidden]{display:none}
+  .card,.sheet,.tbl-wrap{border:0;box-shadow:none;padding:0}
+  .month{page-break-after:always;margin-bottom:0}
+  .month:last-child{page-break-after:auto}
+  .month h2{font-size:19px}
+  .cell{min-height:62px;padding:2px 3px}
+  .ev{font-size:8px;line-height:1.16;background:#fff;border-left:2.5px solid #000;padding:0 3px;margin-bottom:1px}
+  .ev .m{display:none}
+  .ev .t,.ev .d{display:inline}
+  .ev .t::after{content:' '}
+  .ev .d{font-size:8px}
+  .week{break-inside:avoid;page-break-inside:avoid}
+  .cell .dnum{font-size:11px;margin-bottom:1px}
+  .ev.mine{background:#000!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .dow-head{background:#000!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ticket{page-break-inside:avoid;border:1px solid #000}
+  .ticket-date{background:#000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ticket-acts{display:none}
+  th{background:#000!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  tr{page-break-inside:avoid}
+  .print-head{display:block!important}
+}
+.print-head{display:none;margin-bottom:10px;border-bottom:3px solid #000;padding-bottom:5px}
+.print-head h1{font-size:20px}
+.print-head p{margin:2px 0 0;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <div class="mark" aria-hidden="true"><span>CG</span></div>
+    <div>
+      <h1>Tower Duty</h1>
+      <div class="sub">Center Grove Bantam Football &middot; 2026</div>
+    </div>
+    <div class="badge-draft" id="statusBadge">Draft</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-in" role="tablist" aria-label="Views">
+    <button class="tab" role="tab" id="tab-duty"     aria-controls="panel-duty"     aria-selected="true">My Duty</button>
+    <button class="tab" role="tab" id="tab-schedule" aria-controls="panel-schedule" aria-selected="false">Full Schedule</button>
+    <button class="tab" role="tab" id="tab-calendar" aria-controls="panel-calendar" aria-selected="false">Calendar</button>
+    <button class="tab" role="tab" id="tab-print"    aria-controls="panel-print"    aria-selected="false">Print</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ MY DUTY ============ -->
+  <section class="panel" id="panel-duty" role="tabpanel" aria-labelledby="tab-duty">
+    <div class="card finder">
+      <div class="eyebrow">Step 1</div>
+      <h2>Find your team's tower assignments</h2>
+      <p class="lede">Pick your division and team. You'll get every game your team runs the tower for, with a
+        calendar invite for each one &mdash; or a single subscription that keeps your calendar current if the
+        schedule changes.</p>
+      <div class="controls" style="margin-bottom:0">
+        <label class="fld">Division
+          <select id="selDivision"><option value="">Select division</option></select>
+        </label>
+        <label class="fld">Team
+          <select id="selTeam" disabled><option value="">Select team</option></select>
+        </label>
+      </div>
+    </div>
+
+    <div id="dutyResult"></div>
+  </section>
+
+  <!-- ============ FULL SCHEDULE ============ -->
+  <section class="panel" id="panel-schedule" role="tabpanel" aria-labelledby="tab-schedule" hidden>
+    <div class="eyebrow">Every tackle game, every tower assignment</div>
+    <div class="controls">
+      <label class="fld">Search
+        <input type="text" id="schSearch" placeholder="Team, field, division&hellip;" size="22">
+      </label>
+      <label class="fld">Field
+        <select id="schField"><option value="">All fields</option></select>
+      </label>
+      <label class="fld">Division
+        <select id="schDivision"><option value="">All divisions</option></select>
+      </label>
+      <label class="fld">Tower team
+        <select id="schDuty"><option value="">All teams</option></select>
+      </label>
+      <button class="btn ghost" id="schReset">Clear filters</button>
+    </div>
+    <div class="tbl-wrap">
+      <table id="schTable">
+        <thead><tr>
+          <th>Date</th><th>Day</th><th>Kickoff</th><th>Field</th><th>Div</th>
+          <th>Matchup</th><th>Tower Duty</th><th>Invite</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="empty" id="schEmpty" hidden>No games match those filters. Clear a filter to see more.</div>
+    </div>
+  </section>
+
+  <!-- ============ CALENDAR ============ -->
+  <section class="panel" id="panel-calendar" role="tabpanel" aria-labelledby="tab-calendar" hidden>
+    <div class="eyebrow">Month view &mdash; game, field, and the team on the tower</div>
+    <div class="controls">
+      <label class="fld">Highlight team
+        <select id="calHighlight"><option value="">No highlight</option></select>
+      </label>
+      <label class="fld">Show
+        <select id="calFilter">
+          <option value="all">All games</option>
+          <option value="duty">Only highlighted team's duty</option>
+        </select>
+      </label>
+      <label class="fld">Field
+        <select id="calField"><option value="">All fields</option></select>
+      </label>
+      <button class="btn ghost" id="calPrint">Print this calendar</button>
+    </div>
+    <div class="print-head" id="calPrintHead"></div>
+    <div class="legend" id="calLegend"></div>
+    <div id="calMonths"></div>
+  </section>
+
+  <!-- ============ PRINT ============ -->
+  <section class="panel" id="panel-print" role="tabpanel" aria-labelledby="tab-print" hidden>
+    <div class="print-note">
+      <h3>Printable copies</h3>
+      <p>Two formats, both built for a clipboard in the tower. The team duty sheet is one page: five rows and a
+        column to initial when the shift is covered. The month calendar prints landscape, one month per sheet
+        &mdash; August runs onto a second page when every game is showing, so filter it to one field or one team
+        on the Calendar tab first if you want a single page.</p>
+      <div class="controls" style="margin-bottom:0">
+        <label class="fld">Team duty sheet
+          <select id="prtTeam"><option value="">Select team</option></select>
+        </label>
+        <button class="btn" id="prtSheet">Print duty sheet</button>
+        <button class="btn ghost" id="prtMonth">Print month calendar</button>
+        <button class="btn ghost" id="prtAll">Print full schedule list</button>
+      </div>
+    </div>
+    <div id="prtPreview"></div>
+  </section>
+</main>
+
+<div class="toast" id="toast" hidden></div>
+
+<script type="application/json" id="scheduleData">{
+ "season": 2026,
+ "league": "Center Grove Bantam Football League",
+ "title": "2026 Tower Duty Schedule",
+ "status": "DRAFT \u2014 tackle divisions only",
+ "timezone": "America/Indiana/Indianapolis",
+ "arriveEarlyMinutes": 15,
+ "durationMinutes": 90,
+ "venue": {
+  "name": "Center Grove Bantam Football Complex",
+  "address": ""
+ },
+ "fields": [
+  "Adams",
+  "Collins",
+  "Moore",
+  "Skillman",
+  "Watson"
+ ],
+ "divisions": [
+  "Rookie",
+  "Minor",
+  "Major"
+ ],
+ "coaches": {
+  "Major Indiana": {
+   "name": "",
+   "email": ""
+  },
+  "Major Michigan State": {
+   "name": "",
+   "email": ""
+  },
+  "Major Northwestern": {
+   "name": "",
+   "email": ""
+  },
+  "Major Ohio State": {
+   "name": "",
+   "email": ""
+  },
+  "Major Oregon": {
+   "name": "",
+   "email": ""
+  },
+  "Major Penn State": {
+   "name": "",
+   "email": ""
+  },
+  "Major Purdue": {
+   "name": "",
+   "email": ""
+  },
+  "Major Wisconsin": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Illinois": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Indiana": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Iowa": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Michigan": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Michigan State": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Minnesota": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Northwestern": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Ohio State": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Oregon": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Penn State": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Purdue": {
+   "name": "",
+   "email": ""
+  },
+  "Minor UCLA": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Washington": {
+   "name": "",
+   "email": ""
+  },
+  "Minor Wisconsin": {
+   "name": "",
+   "email": ""
+  },
+  "Rookie Indiana": {
+   "name": "",
+   "email": ""
+  },
+  "Rookie Michigan": {
+   "name": "",
+   "email": ""
+  },
+  "Rookie Nebraska": {
+   "name": "",
+   "email": ""
+  },
+  "Rookie Ohio State": {
+   "name": "",
+   "email": ""
+  },
+  "Rookie Penn State": {
+   "name": "",
+   "email": ""
+  },
+  "Rookie Purdue": {
+   "name": "",
+   "email": ""
+  }
+ },
+ "games": [
+  {
+   "id": "G001",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Purdue",
+   "away": "Michigan State",
+   "towerDivision": "Minor",
+   "towerTeam": "Illinois"
+  },
+  {
+   "id": "G002",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Watson",
+   "division": "Minor",
+   "home": "Wisconsin",
+   "away": "Indiana",
+   "towerDivision": "Minor",
+   "towerTeam": "Iowa"
+  },
+  {
+   "id": "G003",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Northwestern",
+   "away": "Wisconsin",
+   "towerDivision": "Major",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G004",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Northwestern",
+   "away": "Oregon",
+   "towerDivision": "Minor",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G005",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Watson",
+   "division": "Minor",
+   "home": "Minnesota",
+   "away": "Michigan",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G006",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Skillman",
+   "division": "Rookie",
+   "home": "Indiana",
+   "away": "Ohio State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G007",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Penn State",
+   "away": "Michigan State",
+   "towerDivision": "Major",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G008",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "UCLA",
+   "away": "Penn State",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan"
+  },
+  {
+   "id": "G009",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Watson",
+   "division": "Minor",
+   "home": "Illinois",
+   "away": "Washington",
+   "towerDivision": "Minor",
+   "towerTeam": "Minnesota"
+  },
+  {
+   "id": "G010",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Oregon",
+   "away": "Ohio State",
+   "towerDivision": "Major",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G011",
+   "date": "2026-08-01",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Watson",
+   "division": "Minor",
+   "home": "Iowa",
+   "away": "Ohio State",
+   "towerDivision": "Minor",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G012",
+   "date": "2026-08-04",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Washington",
+   "away": "Purdue",
+   "towerDivision": "Minor",
+   "towerTeam": "UCLA"
+  },
+  {
+   "id": "G013",
+   "date": "2026-08-04",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Michigan",
+   "away": "Penn State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G014",
+   "date": "2026-08-04",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Michigan",
+   "away": "UCLA",
+   "towerDivision": "Minor",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G015",
+   "date": "2026-08-04",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Michigan State",
+   "away": "Minnesota",
+   "towerDivision": "Minor",
+   "towerTeam": "Washington"
+  },
+  {
+   "id": "G016",
+   "date": "2026-08-05",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Indiana",
+   "away": "Purdue",
+   "towerDivision": "Major",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G017",
+   "date": "2026-08-05",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Indiana",
+   "away": "Iowa",
+   "towerDivision": "Minor",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G018",
+   "date": "2026-08-05",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Ohio State",
+   "away": "Penn State",
+   "towerDivision": "Major",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G019",
+   "date": "2026-08-05",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Michigan State",
+   "away": "Oregon",
+   "towerDivision": "Major",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G020",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Iowa",
+   "away": "Purdue",
+   "towerDivision": "Minor",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G021",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Watson",
+   "division": "Minor",
+   "home": "Northwestern",
+   "away": "Michigan State",
+   "towerDivision": "Minor",
+   "towerTeam": "Illinois"
+  },
+  {
+   "id": "G022",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Collins",
+   "division": "Rookie",
+   "home": "Indiana",
+   "away": "Penn State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Nebraska"
+  },
+  {
+   "id": "G023",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Watson",
+   "division": "Major",
+   "home": "Michigan State",
+   "away": "Northwestern",
+   "towerDivision": "Major",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G024",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Ohio State",
+   "away": "Illinois",
+   "towerDivision": "Minor",
+   "towerTeam": "Iowa"
+  },
+  {
+   "id": "G025",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Collins",
+   "division": "Rookie",
+   "home": "Michigan",
+   "away": "Purdue",
+   "towerDivision": "Rookie",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G026",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Watson",
+   "division": "Major",
+   "home": "Purdue",
+   "away": "Penn State",
+   "towerDivision": "Major",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G027",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Michigan",
+   "away": "Oregon",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G028",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Collins",
+   "division": "Rookie",
+   "home": "Ohio State",
+   "away": "Nebraska",
+   "towerDivision": "Rookie",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G029",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Watson",
+   "division": "Major",
+   "home": "Wisconsin",
+   "away": "Indiana",
+   "towerDivision": "Major",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G030",
+   "date": "2026-08-08",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Minnesota",
+   "away": "UCLA",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan"
+  },
+  {
+   "id": "G031",
+   "date": "2026-08-10",
+   "day": "Monday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Ohio State",
+   "away": "Minnesota",
+   "towerDivision": "Minor",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G032",
+   "date": "2026-08-10",
+   "day": "Monday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Purdue",
+   "away": "Ohio State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Nebraska"
+  },
+  {
+   "id": "G033",
+   "date": "2026-08-10",
+   "day": "Monday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Illinois",
+   "away": "Wisconsin",
+   "towerDivision": "Minor",
+   "towerTeam": "Minnesota"
+  },
+  {
+   "id": "G034",
+   "date": "2026-08-10",
+   "day": "Monday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Penn State",
+   "away": "Nebraska",
+   "towerDivision": "Rookie",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G035",
+   "date": "2026-08-11",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Purdue",
+   "away": "Indiana",
+   "towerDivision": "Minor",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G036",
+   "date": "2026-08-11",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "UCLA",
+   "away": "Iowa",
+   "towerDivision": "Minor",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G037",
+   "date": "2026-08-11",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Michigan State",
+   "away": "Penn State",
+   "towerDivision": "Minor",
+   "towerTeam": "Minnesota"
+  },
+  {
+   "id": "G038",
+   "date": "2026-08-11",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Washington",
+   "away": "Northwestern",
+   "towerDivision": "Minor",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G039",
+   "date": "2026-08-12",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Northwestern",
+   "away": "Indiana",
+   "towerDivision": "Major",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G040",
+   "date": "2026-08-12",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Minnesota",
+   "away": "Illinois",
+   "towerDivision": "Minor",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G041",
+   "date": "2026-08-12",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Purdue",
+   "away": "Michigan State",
+   "towerDivision": "Major",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G042",
+   "date": "2026-08-12",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Penn State",
+   "away": "Wisconsin",
+   "towerDivision": "Major",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G043",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Oregon",
+   "away": "Michigan State",
+   "towerDivision": "Major",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G044",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Michigan State",
+   "away": "Illinois",
+   "towerDivision": "Minor",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G045",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Watson",
+   "division": "Rookie",
+   "home": "Purdue",
+   "away": "Nebraska",
+   "towerDivision": "Rookie",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G046",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Indiana",
+   "away": "Purdue",
+   "towerDivision": "Major",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G047",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Wisconsin",
+   "away": "Michigan",
+   "towerDivision": "Minor",
+   "towerTeam": "Washington"
+  },
+  {
+   "id": "G048",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "UCLA",
+   "away": "Ohio State",
+   "towerDivision": "Minor",
+   "towerTeam": "Illinois"
+  },
+  {
+   "id": "G049",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Watson",
+   "division": "Rookie",
+   "home": "Indiana",
+   "away": "Michigan",
+   "towerDivision": "Rookie",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G050",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Northwestern",
+   "away": "Ohio State",
+   "towerDivision": "Major",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G051",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Penn State",
+   "away": "Minnesota",
+   "towerDivision": "Minor",
+   "towerTeam": "UCLA"
+  },
+  {
+   "id": "G052",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Iowa",
+   "away": "Washington",
+   "towerDivision": "Minor",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G053",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Watson",
+   "division": "Rookie",
+   "home": "Ohio State",
+   "away": "Penn State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Michigan"
+  },
+  {
+   "id": "G054",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Oregon",
+   "away": "Indiana",
+   "towerDivision": "Minor",
+   "towerTeam": "Iowa"
+  },
+  {
+   "id": "G055",
+   "date": "2026-08-15",
+   "day": "Saturday",
+   "time": "09:15",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Northwestern",
+   "away": "Purdue",
+   "towerDivision": "Minor",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G056",
+   "date": "2026-08-17",
+   "day": "Monday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Rookie",
+   "home": "Michigan",
+   "away": "Ohio State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G057",
+   "date": "2026-08-17",
+   "day": "Monday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Rookie",
+   "home": "Indiana",
+   "away": "Purdue",
+   "towerDivision": "Rookie",
+   "towerTeam": "Michigan"
+  },
+  {
+   "id": "G058",
+   "date": "2026-08-18",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Wisconsin",
+   "away": "Ohio State",
+   "towerDivision": "Minor",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G059",
+   "date": "2026-08-18",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Purdue",
+   "away": "UCLA",
+   "towerDivision": "Minor",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G060",
+   "date": "2026-08-18",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Iowa",
+   "away": "Penn State",
+   "towerDivision": "Minor",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G061",
+   "date": "2026-08-18",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Washington",
+   "away": "Oregon",
+   "towerDivision": "Minor",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G062",
+   "date": "2026-08-19",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Indiana",
+   "away": "Michigan State",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan"
+  },
+  {
+   "id": "G063",
+   "date": "2026-08-19",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Northwestern",
+   "away": "Minnesota",
+   "towerDivision": "Minor",
+   "towerTeam": "UCLA"
+  },
+  {
+   "id": "G064",
+   "date": "2026-08-19",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Wisconsin",
+   "away": "Ohio State",
+   "towerDivision": "Major",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G065",
+   "date": "2026-08-19",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Purdue",
+   "away": "Oregon",
+   "towerDivision": "Major",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G066",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Michigan",
+   "away": "Iowa",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G067",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Watson",
+   "division": "Minor",
+   "home": "Penn State",
+   "away": "Indiana",
+   "towerDivision": "Minor",
+   "towerTeam": "Minnesota"
+  },
+  {
+   "id": "G068",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Skillman",
+   "division": "Rookie",
+   "home": "Purdue",
+   "away": "Michigan",
+   "towerDivision": "Rookie",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G069",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Wisconsin",
+   "away": "Indiana",
+   "towerDivision": "Major",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G070",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Moore",
+   "division": "Major",
+   "home": "Oregon",
+   "away": "Northwestern",
+   "towerDivision": "Major",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G071",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Ohio State",
+   "away": "Michigan State",
+   "towerDivision": "Minor",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G072",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Watson",
+   "division": "Minor",
+   "home": "UCLA",
+   "away": "Washington",
+   "towerDivision": "Minor",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G073",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Skillman",
+   "division": "Rookie",
+   "home": "Nebraska",
+   "away": "Ohio State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G074",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Michigan State",
+   "away": "Purdue",
+   "towerDivision": "Major",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G075",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Oregon",
+   "away": "Purdue",
+   "towerDivision": "Minor",
+   "towerTeam": "Washington"
+  },
+  {
+   "id": "G076",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Watson",
+   "division": "Minor",
+   "home": "Minnesota",
+   "away": "Wisconsin",
+   "towerDivision": "Minor",
+   "towerTeam": "Illinois"
+  },
+  {
+   "id": "G077",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Skillman",
+   "division": "Rookie",
+   "home": "Penn State",
+   "away": "Indiana",
+   "towerDivision": "Rookie",
+   "towerTeam": "Nebraska"
+  },
+  {
+   "id": "G078",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Ohio State",
+   "away": "Penn State",
+   "towerDivision": "Major",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G079",
+   "date": "2026-08-22",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Watson",
+   "division": "Minor",
+   "home": "Illinois",
+   "away": "Northwestern",
+   "towerDivision": "Minor",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G080",
+   "date": "2026-08-24",
+   "day": "Monday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Indiana",
+   "away": "Nebraska",
+   "towerDivision": "Rookie",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G081",
+   "date": "2026-08-24",
+   "day": "Monday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Rookie",
+   "home": "Ohio State",
+   "away": "Purdue",
+   "towerDivision": "Rookie",
+   "towerTeam": "Michigan"
+  },
+  {
+   "id": "G082",
+   "date": "2026-08-24",
+   "day": "Monday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Ohio State",
+   "away": "Michigan",
+   "towerDivision": "Minor",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G083",
+   "date": "2026-08-24",
+   "day": "Monday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Michigan",
+   "away": "Penn State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G084",
+   "date": "2026-08-25",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Oregon",
+   "away": "Illinois",
+   "towerDivision": "Minor",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G085",
+   "date": "2026-08-25",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Michigan State",
+   "away": "Washington",
+   "towerDivision": "Minor",
+   "towerTeam": "UCLA"
+  },
+  {
+   "id": "G086",
+   "date": "2026-08-25",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Indiana",
+   "away": "UCLA",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G087",
+   "date": "2026-08-25",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Penn State",
+   "away": "Wisconsin",
+   "towerDivision": "Minor",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G088",
+   "date": "2026-08-26",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Penn State",
+   "away": "Wisconsin",
+   "towerDivision": "Major",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G089",
+   "date": "2026-08-26",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Michigan",
+   "away": "Northwestern",
+   "towerDivision": "Minor",
+   "towerTeam": "Iowa"
+  },
+  {
+   "id": "G090",
+   "date": "2026-08-26",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Ohio State",
+   "away": "Oregon",
+   "towerDivision": "Major",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G091",
+   "date": "2026-08-26",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Indiana",
+   "away": "Northwestern",
+   "towerDivision": "Major",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G092",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Iowa",
+   "away": "Northwestern",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan"
+  },
+  {
+   "id": "G093",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Wisconsin",
+   "away": "UCLA",
+   "towerDivision": "Minor",
+   "towerTeam": "Minnesota"
+  },
+  {
+   "id": "G094",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Watson",
+   "division": "Major",
+   "home": "Oregon",
+   "away": "Penn State",
+   "towerDivision": "Major",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G095",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Washington",
+   "away": "Penn State",
+   "towerDivision": "Minor",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G096",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Michigan",
+   "away": "Michigan State",
+   "towerDivision": "Minor",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G097",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Penn State",
+   "away": "Ohio State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G098",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Moore",
+   "division": "Major",
+   "home": "Northwestern",
+   "away": "Ohio State",
+   "towerDivision": "Major",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G099",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Watson",
+   "division": "Major",
+   "home": "Indiana",
+   "away": "Michigan State",
+   "towerDivision": "Major",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G100",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Ohio State",
+   "away": "Indiana",
+   "towerDivision": "Minor",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G101",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Michigan",
+   "away": "Indiana",
+   "towerDivision": "Rookie",
+   "towerTeam": "Nebraska"
+  },
+  {
+   "id": "G102",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Watson",
+   "division": "Major",
+   "home": "Wisconsin",
+   "away": "Purdue",
+   "towerDivision": "Major",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G103",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Illinois",
+   "away": "Purdue",
+   "towerDivision": "Minor",
+   "towerTeam": "Washington"
+  },
+  {
+   "id": "G104",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Moore",
+   "division": "Minor",
+   "home": "Oregon",
+   "away": "Minnesota",
+   "towerDivision": "Minor",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G105",
+   "date": "2026-08-29",
+   "day": "Saturday",
+   "time": "09:15",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Nebraska",
+   "away": "Purdue",
+   "towerDivision": "Rookie",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G106",
+   "date": "2026-08-31",
+   "day": "Monday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Ohio State",
+   "away": "Indiana",
+   "towerDivision": "Rookie",
+   "towerTeam": "Michigan"
+  },
+  {
+   "id": "G107",
+   "date": "2026-08-31",
+   "day": "Monday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Rookie",
+   "home": "Purdue",
+   "away": "Penn State",
+   "towerDivision": "Rookie",
+   "towerTeam": "Nebraska"
+  },
+  {
+   "id": "G108",
+   "date": "2026-08-31",
+   "day": "Monday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Northwestern",
+   "away": "Ohio State",
+   "towerDivision": "Minor",
+   "towerTeam": "Illinois"
+  },
+  {
+   "id": "G109",
+   "date": "2026-08-31",
+   "day": "Monday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Rookie",
+   "home": "Nebraska",
+   "away": "Michigan",
+   "towerDivision": "Rookie",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G110",
+   "date": "2026-09-01",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Purdue",
+   "away": "Wisconsin",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan"
+  },
+  {
+   "id": "G111",
+   "date": "2026-09-01",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "UCLA",
+   "away": "Illinois",
+   "towerDivision": "Minor",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G112",
+   "date": "2026-09-01",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Penn State",
+   "away": "Michigan",
+   "towerDivision": "Minor",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G113",
+   "date": "2026-09-01",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Michigan State",
+   "away": "Oregon",
+   "towerDivision": "Minor",
+   "towerTeam": "UCLA"
+  },
+  {
+   "id": "G114",
+   "date": "2026-09-02",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Purdue",
+   "away": "Oregon",
+   "towerDivision": "Major",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G115",
+   "date": "2026-09-02",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Penn State",
+   "away": "Northwestern",
+   "towerDivision": "Major",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G116",
+   "date": "2026-09-02",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Michigan State",
+   "away": "Wisconsin",
+   "towerDivision": "Major",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G117",
+   "date": "2026-09-02",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Ohio State",
+   "away": "Indiana",
+   "towerDivision": "Major",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G118",
+   "date": "2026-09-08",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Minnesota",
+   "away": "Iowa",
+   "towerDivision": "Minor",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G119",
+   "date": "2026-09-08",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Indiana",
+   "away": "Washington",
+   "towerDivision": "Minor",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G120",
+   "date": "2026-09-08",
+   "day": "Tuesday",
+   "time": "18:00",
+   "field": "Watson",
+   "division": "Rookie",
+   "home": "Nebraska",
+   "away": "Indiana",
+   "towerDivision": "Rookie",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G121",
+   "date": "2026-09-08",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Wisconsin",
+   "away": "Oregon",
+   "towerDivision": "Minor",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G122",
+   "date": "2026-09-08",
+   "day": "Tuesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Illinois",
+   "away": "Penn State",
+   "towerDivision": "Minor",
+   "towerTeam": "Iowa"
+  },
+  {
+   "id": "G123",
+   "date": "2026-09-09",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Northwestern",
+   "away": "Wisconsin",
+   "towerDivision": "Major",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G124",
+   "date": "2026-09-09",
+   "day": "Wednesday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Penn State",
+   "away": "Michigan State",
+   "towerDivision": "Major",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G125",
+   "date": "2026-09-09",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Oregon",
+   "away": "Indiana",
+   "towerDivision": "Major",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G126",
+   "date": "2026-09-09",
+   "day": "Wednesday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Major",
+   "home": "Ohio State",
+   "away": "Purdue",
+   "towerDivision": "Major",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G127",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "09:00",
+   "field": "Moore",
+   "division": "Rookie",
+   "home": "Ohio State",
+   "away": "Michigan",
+   "towerDivision": "Rookie",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G128",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Watson",
+   "division": "Major",
+   "home": "Michigan State",
+   "away": "Ohio State",
+   "towerDivision": "Major",
+   "towerTeam": "Oregon"
+  },
+  {
+   "id": "G129",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Penn State",
+   "away": "Ohio State",
+   "towerDivision": "Minor",
+   "towerTeam": "Northwestern"
+  },
+  {
+   "id": "G130",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Purdue",
+   "away": "Michigan",
+   "towerDivision": "Minor",
+   "towerTeam": "Washington"
+  },
+  {
+   "id": "G131",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "10:30",
+   "field": "Moore",
+   "division": "Rookie",
+   "home": "Purdue",
+   "away": "Indiana",
+   "towerDivision": "Rookie",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G132",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Watson",
+   "division": "Major",
+   "home": "Purdue",
+   "away": "Northwestern",
+   "towerDivision": "Major",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G133",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Adams",
+   "division": "Minor",
+   "home": "Oregon",
+   "away": "Iowa",
+   "towerDivision": "Minor",
+   "towerTeam": "Ohio State"
+  },
+  {
+   "id": "G134",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Washington",
+   "away": "Wisconsin",
+   "towerDivision": "Minor",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G135",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "12:00",
+   "field": "Moore",
+   "division": "Rookie",
+   "home": "Penn State",
+   "away": "Nebraska",
+   "towerDivision": "Rookie",
+   "towerTeam": "Indiana"
+  },
+  {
+   "id": "G136",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Adams",
+   "division": "Major",
+   "home": "Indiana",
+   "away": "Penn State",
+   "towerDivision": "Major",
+   "towerTeam": "Purdue"
+  },
+  {
+   "id": "G137",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Watson",
+   "division": "Major",
+   "home": "Wisconsin",
+   "away": "Oregon",
+   "towerDivision": "Major",
+   "towerTeam": "Michigan State"
+  },
+  {
+   "id": "G138",
+   "date": "2026-09-12",
+   "day": "Saturday",
+   "time": "13:30",
+   "field": "Collins",
+   "division": "Minor",
+   "home": "Indiana",
+   "away": "Northwestern",
+   "towerDivision": "Minor",
+   "towerTeam": "Wisconsin"
+  },
+  {
+   "id": "G139",
+   "date": "2026-09-14",
+   "day": "Monday",
+   "time": "18:00",
+   "field": "Collins",
+   "division": "Rookie",
+   "home": "Nebraska",
+   "away": "Michigan",
+   "towerDivision": "Rookie",
+   "towerTeam": "Penn State"
+  },
+  {
+   "id": "G140",
+   "date": "2026-09-14",
+   "day": "Monday",
+   "time": "19:30",
+   "field": "Collins",
+   "division": "Rookie",
+   "home": "Penn State",
+   "away": "Purdue",
+   "towerDivision": "Rookie",
+   "towerTeam": "Michigan"
+  }
+ ]
+}</script>
+<script>
+/* =====================================================================
+   CGBFL Tower Duty 2026
+   Single-file app. Drop in a GitHub Pages repo, embed with an <iframe>.
+
+   CONFIG.icsBase must point at the folder holding the generated .ics
+   feeds (see generate_ics.py). No trailing-slash surprises: the code
+   normalizes it.
+   ===================================================================== */
+var CONFIG = {
+  dataUrl: 'tower-duty-2026.json',
+  icsBase: 'https://brianbevis-dotcom.github.io/CGBFL-Website/tower-duty/ics/',
+  allFeed: 'all-tower-duty.ics'
+};
+
+var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var MON_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var FIELD_SHADES = {}; /* filled once fields are known */
+
+var DATA = null;
+var GAMES = [];
+var DUTY_TEAMS = [];
+var state = { division:'', team:'', calHighlight:'', calFilter:'all', calField:'' };
+
+/* ---------- tiny helpers ---------- */
+function $(sel, root){ return (root||document).querySelector(sel); }
+function $$(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+function el(tag, cls, txt){ var n=document.createElement(tag); if(cls) n.className=cls; if(txt!=null) n.textContent=txt; return n; }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function pad(n){ return (n<10?'0':'')+n; }
+
+function parseDate(iso){ var p = iso.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+function to12h(hhmm){
+  var p = hhmm.split(':'), h = +p[0], m = +p[1];
+  var ap = h < 12 ? 'AM' : 'PM';
+  var h12 = h % 12; if(h12 === 0) h12 = 12;
+  return h12 + ':' + pad(m) + ' ' + ap;
+}
+function shortTime(hhmm){
+  var p = hhmm.split(':'), h = +p[0], m = +p[1];
+  var ap = h < 12 ? 'a' : 'p';
+  var h12 = h % 12; if(h12 === 0) h12 = 12;
+  return h12 + (m ? ':' + pad(m) : '') + ap;
+}
+function dutyKey(g){ return g.towerDivision + ' ' + g.towerTeam; }
+function slug(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+function addMinutes(d, mins){ return new Date(d.getTime() + mins*60000); }
+function gameStart(g){
+  var d = parseDate(g.date), t = g.time.split(':');
+  d.setHours(+t[0], +t[1], 0, 0);
+  return d;
+}
+/* US Eastern offset in hours (Indiana follows the same rules since 2006). */
+function easternOffset(d){
+  var y = d.getFullYear();
+  var marSecond = nthWeekday(y, 2, 0, 2);      /* 2nd Sunday in March */
+  var novFirst  = nthWeekday(y, 10, 0, 1);     /* 1st Sunday in November */
+  marSecond.setHours(2,0,0,0); novFirst.setHours(2,0,0,0);
+  return (d >= marSecond && d < novFirst) ? -4 : -5;
+}
+function nthWeekday(year, month, weekday, n){
+  var d = new Date(year, month, 1), count = 0;
+  while(true){
+    if(d.getDay() === weekday){ count++; if(count === n) return new Date(year, month, d.getDate()); }
+    d.setDate(d.getDate()+1);
+  }
+}
+function toast(msg){
+  var t = $('#toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast._h); toast._h = setTimeout(function(){ t.hidden = true; }, 2600);
+}
+
+/* ---------- iCalendar generation (mirrors generate_ics.py) ---------- */
+var VTIMEZONE = [
+'BEGIN:VTIMEZONE','TZID:America/Indiana/Indianapolis','X-LIC-LOCATION:America/Indiana/Indianapolis',
+'BEGIN:DAYLIGHT','TZOFFSETFROM:-0500','TZOFFSETTO:-0400','TZNAME:EDT','DTSTART:20070311T020000',
+'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU','END:DAYLIGHT',
+'BEGIN:STANDARD','TZOFFSETFROM:-0400','TZOFFSETTO:-0500','TZNAME:EST','DTSTART:20071104T020000',
+'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU','END:STANDARD','END:VTIMEZONE'];
+
+function icsEsc(s){
+  return String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+}
+function icsFold(line){
+  var out = [], cur = '';
+  for(var i=0;i<line.length;i++){
+    if(cur.length >= 74){ out.push(cur); cur = ' '; }
+    cur += line[i];
+  }
+  out.push(cur);
+  return out.join('\r\n');
+}
+function localStamp(d){
+  return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00';
+}
+function utcStamp(d){
+  var off = easternOffset(d);
+  var u = new Date(d.getTime() - off*3600000);
+  return u.getUTCFullYear()+pad(u.getUTCMonth()+1)+pad(u.getUTCDate())+'T'+
+         pad(u.getUTCHours())+pad(u.getUTCMinutes())+'00Z';
+}
+function eventWindow(g){
+  var kick = gameStart(g);
+  return { kick:kick, start:addMinutes(kick, -DATA.arriveEarlyMinutes), end:addMinutes(kick, DATA.durationMinutes) };
+}
+function eventLocation(g){
+  var loc = g.field + ' Field';
+  if(DATA.venue && DATA.venue.name) loc += ', ' + DATA.venue.name;
+  if(DATA.venue && DATA.venue.address) loc += ', ' + DATA.venue.address;
+  return loc;
+}
+function eventDescription(g){
+  var w = eventWindow(g), duty = dutyKey(g);
+  var coach = (DATA.coaches || {})[duty];
+  var lines = [
+    'Tower duty assignment for ' + duty + '.','',
+    'Game: ' + g.home + ' vs ' + g.away + ' (' + g.division + ' division)',
+    'Kickoff: ' + to12h(g.time),
+    'Field: ' + g.field,
+    'Report by: ' + to12h(pad(w.start.getHours())+':'+pad(w.start.getMinutes())) +
+      ' (' + DATA.arriveEarlyMinutes + ' minutes before kickoff)'
+  ];
+  if(coach && coach.name) lines.push('Coach on duty: ' + coach.name);
+  lines.push('', 'Tower duty covers the scoreboard, game clock, and announcements for this game.',
+             'If you cannot make it, arrange your own swap and notify the board.');
+  return lines.join('\n');
+}
+function buildVEvent(g, stamp){
+  var w = eventWindow(g), tz = DATA.timezone;
+  return [
+    'BEGIN:VEVENT',
+    'UID:towerduty-' + DATA.season + '-' + g.id + '@cgbfl.com',
+    'DTSTAMP:' + stamp,
+    'DTSTART;TZID=' + tz + ':' + localStamp(w.start),
+    'DTEND;TZID=' + tz + ':' + localStamp(w.end),
+    'SUMMARY:' + icsEsc('Tower Duty - ' + dutyKey(g) + ' (' + g.field + ' Field)'),
+    'LOCATION:' + icsEsc(eventLocation(g)),
+    'DESCRIPTION:' + icsEsc(eventDescription(g)),
+    'CATEGORIES:Tower Duty,' + icsEsc(g.towerDivision),
+    'STATUS:CONFIRMED','TRANSP:OPAQUE','SEQUENCE:0',
+    'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Tower duty in 1 hour','TRIGGER:-PT1H','END:VALARM',
+    'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Tower duty tomorrow','TRIGGER:-P1D','END:VALARM',
+    'END:VEVENT'
+  ];
+}
+function buildCalendar(name, games){
+  var stamp = utcStamp(new Date());
+  var out = ['BEGIN:VCALENDAR','VERSION:2.0',
+    'PRODID:-//Center Grove Bantam Football League//Tower Duty ' + DATA.season + '//EN',
+    'CALSCALE:GREGORIAN','METHOD:PUBLISH',
+    'X-WR-CALNAME:' + icsEsc(name),
+    'X-WR-TIMEZONE:' + DATA.timezone,
+    'REFRESH-INTERVAL;VALUE=DURATION:PT12H','X-PUBLISHED-TTL:PT12H'];
+  out = out.concat(VTIMEZONE);
+  games.slice().sort(function(a,b){ return (a.date+a.time) < (b.date+b.time) ? -1 : 1; })
+       .forEach(function(g){ out = out.concat(buildVEvent(g, stamp)); });
+  out.push('END:VCALENDAR');
+  return out.map(icsFold).join('\r\n') + '\r\n';
+}
+function downloadICS(filename, text){
+  var blob = new Blob([text], {type:'text/calendar;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = el('a'); a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+}
+function googleUrl(g){
+  var w = eventWindow(g);
+  var p = [
+    'action=TEMPLATE',
+    'text=' + encodeURIComponent('Tower Duty - ' + dutyKey(g) + ' (' + g.field + ' Field)'),
+    'dates=' + utcStamp(w.start) + '/' + utcStamp(w.end),
+    'details=' + encodeURIComponent(eventDescription(g)),
+    'location=' + encodeURIComponent(eventLocation(g)),
+    'ctz=' + encodeURIComponent(DATA.timezone)
+  ];
+  return 'https://calendar.google.com/calendar/render?' + p.join('&');
+}
+function feedUrl(team){
+  var base = CONFIG.icsBase.replace(/\/+$/,'') + '/';
+  return base + (team ? slug(team) + '.ics' : CONFIG.allFeed);
+}
+
+/* ---------- rendering: My Duty ---------- */
+function renderDuty(){
+  var host = $('#dutyResult');
+  host.innerHTML = '';
+  if(!state.division || !state.team){
+    var hint = el('div','card finder');
+    hint.appendChild(el('div','eyebrow','Waiting on you'));
+    var h = el('h2','','Pick a team to see its assignments');
+    hint.appendChild(h);
+    hint.appendChild(el('p','lede','Every tackle team runs the tower five times this season. Choose above and the '
+      + 'full list appears here with download and subscribe options.'));
+    host.appendChild(hint);
+    return;
+  }
+  var team = state.division + ' ' + state.team;
+  var mine = GAMES.filter(function(g){ return dutyKey(g) === team; });
+
+  var ph = el('div','print-head');
+  ph.appendChild(el('h1','','CGBFL Tower Duty \u2014 ' + DATA.season));
+  ph.appendChild(el('p','', team + ' \u00b7 ' + mine.length + ' assignments \u00b7 ' + DATA.status));
+  host.appendChild(ph);
+  var today = new Date(); today.setHours(0,0,0,0);
+  var nextIdx = -1;
+  for(var i=0;i<mine.length;i++){ if(gameStart(mine[i]) >= today){ nextIdx = i; break; } }
+
+  /* summary strip */
+  var fieldsUsed = {}; mine.forEach(function(g){ fieldsUsed[g.field] = 1; });
+  var strip = el('div','count-strip');
+  [[mine.length,'Assignments'],
+   [Object.keys(fieldsUsed).length,'Fields'],
+   [nextIdx >= 0 ? fmtShort(mine[nextIdx].date) : '\u2014','Next duty'],
+   [nextIdx >= 0 ? to12h(mine[nextIdx].time) : '\u2014','Next kickoff']
+  ].forEach(function(pair){
+    var d = el('div'); d.appendChild(el('div','n', String(pair[0]))); d.appendChild(el('div','l', pair[1])); strip.appendChild(d);
+  });
+  host.appendChild(strip);
+
+  /* tickets */
+  var list = el('div','tickets');
+  mine.forEach(function(g, idx){ list.appendChild(buildTicket(g, idx === nextIdx)); });
+  host.appendChild(list);
+
+  /* bulk actions */
+  var bulk = el('div'); bulk.style.margin = '18px 0 0'; bulk.style.display='flex'; bulk.style.gap='10px'; bulk.style.flexWrap='wrap';
+  var bAll = el('button','btn','Download all 5 invites (.ics)');
+  bAll.addEventListener('click', function(){
+    downloadICS('cgbfl-tower-duty-' + slug(team) + '.ics', buildCalendar('CGBFL Tower Duty - ' + team, mine));
+    toast('Downloaded ' + mine.length + ' invites');
+  });
+  var bPrint = el('button','btn ghost','Print this duty sheet');
+  bPrint.addEventListener('click', function(){ printDutySheet(team); });
+  bulk.appendChild(bAll); bulk.appendChild(bPrint);
+  host.appendChild(bulk);
+
+  /* subscribe */
+  host.appendChild(buildSubscribe(team));
+}
+
+function fmtShort(iso){ var d = parseDate(iso); return MON_ABBR[d.getMonth()] + ' ' + d.getDate(); }
+
+function buildTicket(g, isNext){
+  var d = parseDate(g.date);
+  var t = el('div','ticket' + (isNext ? ' next' : ''));
+
+  var dateCol = el('div','ticket-date');
+  dateCol.appendChild(el('div','dow', DOW[d.getDay()]));
+  dateCol.appendChild(el('div','dnum', String(d.getDate())));
+  dateCol.appendChild(el('div','mon', MON_ABBR[d.getMonth()]));
+  t.appendChild(dateCol);
+
+  var body = el('div','ticket-body');
+  var kick = el('div','kick', to12h(g.time));
+  var em = el('em'); em.textContent = 'kickoff \u00b7 report ' + to12h(reportTime(g));
+  kick.appendChild(em);
+  body.appendChild(kick);
+  body.appendChild(el('div','matchup', g.home + ' vs ' + g.away));
+  var meta = el('div','meta');
+  var chip = el('span','field-chip', g.field + ' Field');
+  meta.appendChild(chip);
+  meta.appendChild(document.createTextNode(' \u00a0' + g.division + ' division'));
+  var coach = (DATA.coaches || {})[dutyKey(g)];
+  if(coach && coach.name) meta.appendChild(document.createTextNode(' \u00a0\u00b7\u00a0 Coach ' + coach.name));
+  body.appendChild(meta);
+  t.appendChild(body);
+
+  var acts = el('div','ticket-acts');
+  var b1 = el('button','btn small','Add to calendar');
+  b1.addEventListener('click', function(){
+    downloadICS('tower-duty-' + g.id + '-' + slug(dutyKey(g)) + '.ics',
+                buildCalendar('CGBFL Tower Duty', [g]));
+    toast('Invite downloaded');
+  });
+  var b2 = el('a','btn small ghost','Google Calendar');
+  b2.href = googleUrl(g); b2.target = '_blank'; b2.rel = 'noopener';
+  b2.style.textDecoration = 'none';
+  acts.appendChild(b1); acts.appendChild(b2);
+  t.appendChild(acts);
+
+  if(isNext){ var tag = el('div','tag-next','Up next'); t.appendChild(tag); }
+  return t;
+}
+function reportTime(g){
+  var w = eventWindow(g);
+  return pad(w.start.getHours()) + ':' + pad(w.start.getMinutes());
+}
+
+function buildSubscribe(team){
+  var box = el('div','card subscribe');
+  box.appendChild(el('div','eyebrow','Step 2 \u2014 optional but recommended'));
+  box.appendChild(el('h3','','Subscribe instead of downloading'));
+  box.appendChild(el('p','','A subscription is a live link. If the board moves a game or reassigns a duty, '
+    + 'your calendar updates on its own \u2014 downloaded invites do not.'));
+
+  var url = feedUrl(team);
+  var row = el('div','url-row');
+  var input = el('input'); input.type='text'; input.readOnly = true; input.value = url;
+  input.addEventListener('focus', function(){ input.select(); });
+  var copy = el('button','btn','Copy link');
+  copy.addEventListener('click', function(){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ toast('Link copied'); },
+                                              function(){ input.select(); toast('Press Ctrl+C to copy'); });
+    } else { input.select(); toast('Press Ctrl+C to copy'); }
+  });
+  var open = el('a','btn ghost','Open in calendar app');
+  open.href = url.replace(/^https?:/, 'webcal:'); open.style.textDecoration='none';
+  row.appendChild(input); row.appendChild(copy); row.appendChild(open);
+  box.appendChild(row);
+
+  var how = el('div','how');
+  [['Apple / iPhone','Settings \u203a Calendar \u203a Accounts \u203a Add Account \u203a Other \u203a Add Subscribed Calendar, then paste the link.'],
+   ['Google Calendar','Other calendars \u203a + \u203a From URL, then paste the link. Google refreshes roughly once a day.'],
+   ['Outlook','Add calendar \u203a Subscribe from web, then paste the link.']
+  ].forEach(function(pair){
+    var d = el('div'); d.appendChild(el('h4','',pair[0])); d.appendChild(el('p','',pair[1])); how.appendChild(d);
+  });
+  box.appendChild(how);
+
+  var allRow = el('p'); allRow.style.marginTop = '14px'; allRow.style.fontSize = '15px';
+  allRow.appendChild(document.createTextNode('Board members and field marshals can subscribe to every assignment at once: '));
+  var a = el('a','', feedUrl('')); a.href = feedUrl(''); allRow.appendChild(a);
+  box.appendChild(allRow);
+  return box;
+}
+
+/* ---------- rendering: Full Schedule ---------- */
+function renderSchedule(){
+  var q = $('#schSearch').value.trim().toLowerCase();
+  var f = $('#schField').value, dv = $('#schDivision').value, dt = $('#schDuty').value;
+  var tbody = $('#schTable tbody');
+  tbody.innerHTML = '';
+  var shown = 0;
+
+  GAMES.forEach(function(g){
+    if(f && g.field !== f) return;
+    if(dv && g.division !== dv) return;
+    if(dt && dutyKey(g) !== dt) return;
+    if(q){
+      var hay = [g.date,g.day,g.field,g.division,g.home,g.away,dutyKey(g),to12h(g.time)].join(' ').toLowerCase();
+      if(hay.indexOf(q) === -1) return;
+    }
+    shown++;
+    var tr = el('tr');
+    if(dt && dutyKey(g) === dt) tr.className = 'hit';
+    var d = parseDate(g.date);
+    [MON_ABBR[d.getMonth()] + ' ' + d.getDate(), g.day, to12h(g.time), g.field, g.division,
+     g.home + ' vs ' + g.away].forEach(function(v){ tr.appendChild(el('td','',v)); });
+
+    var tdDuty = el('td','duty');
+    tdDuty.appendChild(el('span','dot'));
+    tdDuty.appendChild(document.createTextNode(dutyKey(g)));
+    tr.appendChild(tdDuty);
+
+    var tdBtn = el('td');
+    var b = el('button','btn small','.ics');
+    b.setAttribute('aria-label','Download calendar invite for ' + dutyKey(g) + ' on ' + g.date);
+    b.addEventListener('click', function(){
+      downloadICS('tower-duty-' + g.id + '-' + slug(dutyKey(g)) + '.ics', buildCalendar('CGBFL Tower Duty',[g]));
+      toast('Invite downloaded');
+    });
+    tdBtn.appendChild(b);
+    tr.appendChild(tdBtn);
+    tbody.appendChild(tr);
+  });
+  $('#schEmpty').hidden = shown > 0;
+}
+
+/* ---------- rendering: Calendar ---------- */
+function monthsInSeason(){
+  var seen = {}, list = [];
+  GAMES.forEach(function(g){
+    var d = parseDate(g.date), k = d.getFullYear() + '-' + d.getMonth();
+    if(!seen[k]){ seen[k] = 1; list.push({ y:d.getFullYear(), m:d.getMonth() }); }
+  });
+  list.sort(function(a,b){ return a.y === b.y ? a.m - b.m : a.y - b.y; });
+  return list;
+}
+function renderCalendar(){
+  var host = $('#calMonths');
+  host.innerHTML = '';
+  var hl = state.calHighlight, only = state.calFilter === 'duty', fieldF = state.calField;
+
+  /* print-only header describing what's on the page */
+  var ph = $('#calPrintHead');
+  ph.innerHTML = '';
+  ph.appendChild(el('h1','','CGBFL Tower Duty \u2014 ' + DATA.season));
+  var bits = [];
+  if(fieldF) bits.push(fieldF + ' Field only');
+  if(hl) bits.push(only ? hl + ' duty only' : hl + ' highlighted');
+  if(!bits.length) bits.push('All games, all fields');
+  bits.push(DATA.status);
+  ph.appendChild(el('p','', bits.join(' \u00b7 ')));
+
+  /* legend */
+  var legend = $('#calLegend');
+  legend.innerHTML = '';
+  if(hl){
+    var lg = el('span'); var b = el('b'); b.style.background = 'var(--red)';
+    lg.appendChild(b); lg.appendChild(document.createTextNode(hl + ' on the tower'));
+    legend.appendChild(lg);
+  }
+  var lg2 = el('span'); var b2 = el('b'); b2.style.background = '#F7F7F7'; b2.style.border = '1px solid #999';
+  lg2.appendChild(b2); lg2.appendChild(document.createTextNode('Time \u00b7 Field \u00b7 Division \u2014 tower team'));
+  legend.appendChild(lg2);
+
+  var byDate = {};
+  GAMES.forEach(function(g){
+    if(fieldF && g.field !== fieldF) return;
+    if(only && hl && dutyKey(g) !== hl) return;
+    (byDate[g.date] = byDate[g.date] || []).push(g);
+  });
+
+  monthsInSeason().forEach(function(mo){
+    var wrap = el('div','month');
+    wrap.appendChild(el('h2','', MONTHS[mo.m] + ' ' + mo.y));
+    var grid = el('div','grid');
+    var head = el('div','week head');
+    DOW.forEach(function(d){ head.appendChild(el('div','dow-head', d.toUpperCase())); });
+    grid.appendChild(head);
+
+    var first = new Date(mo.y, mo.m, 1);
+    var start = new Date(mo.y, mo.m, 1 - first.getDay());
+    var last = new Date(mo.y, mo.m + 1, 0);
+    var weeks = Math.ceil((first.getDay() + last.getDate()) / 7);
+
+    var row = null;
+    for(var i = 0; i < weeks * 7; i++){
+      if(i % 7 === 0){ row = el('div','week'); grid.appendChild(row); }
+      var cur = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      var iso = cur.getFullYear() + '-' + pad(cur.getMonth()+1) + '-' + pad(cur.getDate());
+      /* Spillover cells belong to the neighbouring month's grid; leaving their games
+         out here keeps each game printed exactly once across the season. */
+      var games = (cur.getMonth() === mo.m) ? (byDate[iso] || []) : [];
+      var cell = el('div','cell' + (cur.getMonth() !== mo.m ? ' out' : '') + (games.length ? ' has' : ''));
+      cell.appendChild(el('div','dnum', String(cur.getDate())));
+      games.slice().sort(function(a,b){ return a.time < b.time ? -1 : 1; }).forEach(function(g){
+        var isMine = hl && dutyKey(g) === hl;
+        var ev = el('div','ev' + (isMine ? ' mine' : ''));
+        ev.appendChild(el('div','t', shortTime(g.time) + ' \u00b7 ' + g.field));
+        ev.appendChild(el('div','m', g.home + ' vs ' + g.away));
+        ev.appendChild(el('div','d', '\u25B2 ' + dutyKey(g)));
+        ev.title = to12h(g.time) + ' \u00b7 ' + g.field + ' Field \u00b7 ' + g.division + ' \u2014 '
+                 + g.home + ' vs ' + g.away + ' \u2014 tower duty: ' + dutyKey(g);
+        cell.appendChild(ev);
+      });
+      row.appendChild(cell);
+    }
+    wrap.appendChild(grid);
+    host.appendChild(wrap);
+  });
+}
+
+/* ---------- print ---------- */
+function printDutySheet(team){
+  var mine = GAMES.filter(function(g){ return dutyKey(g) === team; });
+  var host = $('#prtPreview');
+  host.innerHTML = '';
+  var sheet = el('div','sheet');
+
+  var ph = el('div','print-head');
+  ph.appendChild(el('h1','','CGBFL Tower Duty \u2014 ' + DATA.season));
+  ph.appendChild(el('p','', team + ' \u00b7 ' + mine.length + ' assignments \u00b7 ' + DATA.status));
+  sheet.appendChild(ph);
+
+  var head = el('div','sheet-head');
+  head.appendChild(el('h2','', team));
+  head.appendChild(el('div','who', mine.length + ' tower assignments'));
+  sheet.appendChild(head);
+
+  var tbl = el('table');
+  var thead = el('thead'); var htr = el('tr');
+  ['Date','Day','Report','Kickoff','Field','Division','Matchup','Initials'].forEach(function(h){
+    htr.appendChild(el('th','',h));
+  });
+  thead.appendChild(htr); tbl.appendChild(thead);
+  var tb = el('tbody');
+  mine.forEach(function(g){
+    var d = parseDate(g.date), tr = el('tr');
+    [MON_ABBR[d.getMonth()] + ' ' + d.getDate(), g.day, to12h(reportTime(g)), to12h(g.time),
+     g.field + ' Field', g.division, g.home + ' vs ' + g.away, '\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0'
+    ].forEach(function(v){ tr.appendChild(el('td','',v)); });
+    tb.appendChild(tr);
+  });
+  tbl.appendChild(tb);
+  sheet.appendChild(tbl);
+
+  var note = el('p'); note.style.marginTop = '12px'; note.style.fontSize = '14px';
+  note.textContent = 'Report ' + DATA.arriveEarlyMinutes + ' minutes before kickoff. Tower duty covers the '
+    + 'scoreboard, game clock, and announcements. If you cannot make it, arrange your own swap and notify the board.';
+  sheet.appendChild(note);
+
+  host.appendChild(sheet);
+  showPanel('print');
+  setTimeout(function(){ window.print(); }, 120);
+}
+function printFullList(){
+  var host = $('#prtPreview');
+  host.innerHTML = '';
+  var sheet = el('div','sheet');
+  var ph = el('div','print-head');
+  ph.appendChild(el('h1','','CGBFL Tower Duty \u2014 ' + DATA.season));
+  ph.appendChild(el('p','','Full schedule \u00b7 ' + GAMES.length + ' games \u00b7 ' + DATA.status));
+  sheet.appendChild(ph);
+
+  var tbl = el('table'), thead = el('thead'), htr = el('tr');
+  ['Date','Day','Kickoff','Field','Div','Matchup','Tower Duty'].forEach(function(h){ htr.appendChild(el('th','',h)); });
+  thead.appendChild(htr); tbl.appendChild(thead);
+  var tb = el('tbody');
+  GAMES.forEach(function(g){
+    var d = parseDate(g.date), tr = el('tr');
+    [MON_ABBR[d.getMonth()] + ' ' + d.getDate(), g.day, to12h(g.time), g.field, g.division,
+     g.home + ' vs ' + g.away, dutyKey(g)].forEach(function(v){ tr.appendChild(el('td','',v)); });
+    tb.appendChild(tr);
+  });
+  tbl.appendChild(tb); sheet.appendChild(tbl);
+  host.appendChild(sheet);
+  showPanel('print');
+  setTimeout(function(){ window.print(); }, 120);
+}
+
+/* ---------- tabs ---------- */
+function showPanel(name){
+  ['duty','schedule','calendar','print'].forEach(function(n){
+    var tab = $('#tab-' + n), panel = $('#panel-' + n);
+    var on = n === name;
+    tab.setAttribute('aria-selected', on ? 'true' : 'false');
+    panel.hidden = !on;
+  });
+}
+
+/* ---------- wiring ---------- */
+function fillSelect(sel, values, placeholder){
+  sel.innerHTML = '';
+  var o = el('option','',placeholder); o.value = ''; sel.appendChild(o);
+  values.forEach(function(v){ var op = el('option','',v); op.value = v; sel.appendChild(op); });
+}
+
+function boot(data){
+  DATA = data;
+  GAMES = data.games.slice().sort(function(a,b){ return (a.date + a.time) < (b.date + b.time) ? -1 : 1; });
+
+  var teamSet = {};
+  GAMES.forEach(function(g){ teamSet[dutyKey(g)] = 1; });
+  DUTY_TEAMS = Object.keys(teamSet).sort();
+
+  $('#statusBadge').textContent = data.status || 'Schedule';
+
+  /* duty finder selects */
+  var divisions = data.divisions || [];
+  fillSelect($('#selDivision'), divisions, 'Select division');
+  $('#selDivision').addEventListener('change', function(){
+    state.division = this.value; state.team = '';
+    var teams = DUTY_TEAMS.filter(function(t){ return t.indexOf(state.division + ' ') === 0; })
+                          .map(function(t){ return t.slice(state.division.length + 1); });
+    fillSelect($('#selTeam'), teams, 'Select team');
+    $('#selTeam').disabled = !state.division;
+    renderDuty();
+  });
+  $('#selTeam').addEventListener('change', function(){ state.team = this.value; renderDuty(); });
+
+  /* schedule filters */
+  fillSelect($('#schField'), data.fields, 'All fields');
+  fillSelect($('#schDivision'), divisions, 'All divisions');
+  fillSelect($('#schDuty'), DUTY_TEAMS, 'All teams');
+  ['#schSearch','#schField','#schDivision','#schDuty'].forEach(function(s){
+    $(s).addEventListener('input', renderSchedule);
+    $(s).addEventListener('change', renderSchedule);
+  });
+  $('#schReset').addEventListener('click', function(){
+    $('#schSearch').value = ''; $('#schField').value = ''; $('#schDivision').value = ''; $('#schDuty').value = '';
+    renderSchedule();
+  });
+
+  /* calendar controls */
+  fillSelect($('#calHighlight'), DUTY_TEAMS, 'No highlight');
+  fillSelect($('#calField'), data.fields, 'All fields');
+  $('#calHighlight').addEventListener('change', function(){ state.calHighlight = this.value; renderCalendar(); });
+  $('#calFilter').addEventListener('change', function(){ state.calFilter = this.value; renderCalendar(); });
+  $('#calField').addEventListener('change', function(){ state.calField = this.value; renderCalendar(); });
+  $('#calPrint').addEventListener('click', function(){ window.print(); });
+
+  /* print controls */
+  fillSelect($('#prtTeam'), DUTY_TEAMS, 'Select team');
+  $('#prtSheet').addEventListener('click', function(){
+    var t = $('#prtTeam').value;
+    if(!t){ toast('Choose a team first'); return; }
+    printDutySheet(t);
+  });
+  $('#prtMonth').addEventListener('click', function(){ showPanel('calendar'); setTimeout(function(){ window.print(); }, 120); });
+  $('#prtAll').addEventListener('click', printFullList);
+
+  /* tabs */
+  ['duty','schedule','calendar','print'].forEach(function(n){
+    $('#tab-' + n).addEventListener('click', function(){ showPanel(n); });
+  });
+
+  renderDuty();
+  renderSchedule();
+  renderCalendar();
+}
+
+function start(){
+  var embedded = null;
+  try { embedded = JSON.parse($('#scheduleData').textContent); } catch(e){ embedded = null; }
+
+  /* Prefer the external JSON so the schedule can be updated without touching this file;
+     fall back to the copy embedded above (also what makes the file work offline). */
+  if(window.fetch && location.protocol.indexOf('http') === 0){
+    fetch(CONFIG.dataUrl, {cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw new Error('no external data'); return r.json(); })
+      .then(function(j){ if(j && j.games && j.games.length) boot(j); else boot(embedded); })
+      .catch(function(){ boot(embedded); });
+  } else {
+    boot(embedded);
+  }
+}
+
+if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', start); }
+else { start(); }
+</script>
+</body>
+</html>
