@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProBowl Nomination | CGBFL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#C8102E;
+    --red-dark:#8c0b20;
+    --black:#111111;
+    --charcoal:#1c1c1c;
+    --white:#ffffff;
+    --off-white:#f4f4f4;
+    --gray:#8a8a8a;
+    --line:#2a2a2a;
+    --green:#3ecf6a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--black);
+    color:var(--white);
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:17px;
+  }
+  h1,h2,h3,.display{
+    font-family:'Anton',sans-serif;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    margin:0;
+  }
+  header.app-header{
+    background:linear-gradient(180deg,var(--red) 0%, var(--red-dark) 100%);
+    padding:16px 20px 14px;
+    border-bottom:4px solid var(--black);
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+  header.app-header .title-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  header.app-header .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .logo-wrap{
+    width:52px;
+    height:52px;
+    flex-shrink:0;
+    border-radius:50%;
+    background:var(--black);
+    border:2px solid var(--white);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .logo-wrap img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+  }
+  .logo-fallback{
+    font-family:'Anton',sans-serif;
+    color:var(--white);
+    font-size:18px;
+    letter-spacing:0.5px;
+  }
+  header.app-header h1{
+    font-size:clamp(24px,4.5vw,36px);
+    color:var(--white);
+    text-shadow:2px 2px 0 rgba(0,0,0,0.35);
+    line-height:1;
+  }
+  header.app-header .subtitle{
+    font-size:14px;
+    color:rgba(255,255,255,0.85);
+    letter-spacing:1px;
+    text-transform:uppercase;
+    display:block;
+    margin-top:4px;
+  }
+  nav.tabs{
+    display:flex;
+    gap:6px;
+    background:var(--charcoal);
+    padding:8px 10px;
+    overflow-x:auto;
+    border-bottom:2px solid var(--line);
+  }
+  nav.tabs button{
+    font-family:'Anton',sans-serif;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    background:transparent;
+    border:2px solid transparent;
+    color:var(--gray);
+    padding:9px 16px;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:14px;
+    white-space:nowrap;
+    transition:all .15s ease;
+  }
+  nav.tabs button.active{
+    color:var(--white);
+    background:var(--red);
+    border-color:var(--black);
+  }
+  nav.tabs button:hover:not(.active){
+    color:var(--white);
+    border-color:var(--line);
+  }
+  main{
+    max-width:1000px;
+    margin:0 auto;
+    padding:20px 16px 80px;
+  }
+  .card{
+    background:var(--charcoal);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px;
+    margin-bottom:18px;
+  }
+  .card h2{
+    font-size:22px;
+    color:var(--white);
+    border-left:5px solid var(--red);
+    padding-left:10px;
+    margin-bottom:14px;
+  }
+  .card.danger{ border:2px solid var(--red); }
+  label{
+    display:block;
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--gray);
+    margin-bottom:6px;
+    margin-top:14px;
+  }
+  select, input[type=date], input[type=text], input[type=password], input[type=number]{
+    width:100%;
+    padding:10px 12px;
+    background:var(--black);
+    border:1px solid var(--line);
+    color:var(--white);
+    border-radius:5px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:16px;
+  }
+  select:focus, input:focus{
+    outline:2px solid var(--red);
+    outline-offset:1px;
+  }
+  input:read-only{ opacity:0.65; }
+  select:disabled{ opacity:0.55; }
+  .btn{
+    font-family:'Anton',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    border:none;
+    border-radius:5px;
+    padding:12px 20px;
+    cursor:pointer;
+    font-size:15px;
+    color:var(--white);
+    background:var(--red);
+    transition:background .15s ease;
+  }
+  .btn:hover{background:var(--red-dark);}
+  .btn:disabled{background:#444;cursor:not-allowed;color:#999;}
+  .btn.secondary{
+    background:transparent;
+    border:2px solid var(--gray);
+    color:var(--white);
+  }
+  .btn.secondary:hover{border-color:var(--white);}
+  .btn.small{padding:7px 12px;font-size:12px;}
+  .btn.danger-btn{background:var(--red-dark);}
+  .btn.danger-btn:hover{background:#5e0715;}
+  .roster-columns{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:16px;
+    margin-top:8px;
+  }
+  @media(min-width:640px){
+    .roster-columns{grid-template-columns:1fr 1fr;}
+  }
+  .roster-box{
+    background:var(--black);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:12px;
+  }
+  .roster-box h3{
+    font-size:16px;
+    color:var(--white);
+    margin-bottom:8px;
+  }
+  .roster-box .count{
+    color:var(--gray);
+    font-size:13px;
+    text-transform:none;
+    letter-spacing:0;
+    font-family:'Barlow Condensed',sans-serif;
+  }
+  .player-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 6px;
+    border-bottom:1px solid var(--line);
+    font-size:16px;
+  }
+  .player-row:last-child{border-bottom:none;}
+  .player-row input[type=checkbox]{
+    width:20px;
+    height:20px;
+    accent-color:var(--red);
+    flex-shrink:0;
+  }
+  .player-row.disabled{opacity:0.35;}
+  .pos-tag{
+    color:var(--gray);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    margin-left:4px;
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:1px 5px;
+  }
+  .empty-note{
+    color:var(--gray);
+    font-size:14px;
+    padding:8px 4px;
+  }
+  .status-msg{
+    margin-top:12px;
+    padding:10px 12px;
+    border-radius:5px;
+    font-size:15px;
+  }
+  .status-msg.ok{background:rgba(28,150,80,0.18);border:1px solid #1c9650;color:#7fe3ac;}
+  .status-msg.err{background:rgba(200,16,46,0.18);border:1px solid var(--red);color:#ff9aa8;}
+  .status-msg.info{background:rgba(255,255,255,0.06);border:1px solid var(--line);color:var(--white);}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+  }
+  th,td{
+    text-align:left;
+    padding:8px 10px;
+    border-bottom:1px solid var(--line);
+    font-size:15px;
+  }
+  th{
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--gray);
+    font-size:12px;
+  }
+  tr.rank-1 td{color:var(--white);font-weight:700;}
+  .badge{
+    display:inline-block;
+    background:var(--red);
+    color:var(--white);
+    font-size:11px;
+    font-family:'Anton',sans-serif;
+    padding:2px 7px;
+    border-radius:3px;
+    letter-spacing:0.5px;
+  }
+  .badge.submitted{background:var(--green);color:#06210f;}
+  .badge.pending{background:#555;color:var(--white);}
+  .row-flex{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .divider{
+    border:none;
+    border-top:1px solid var(--line);
+    margin:16px 0;
+  }
+  textarea{
+    width:100%;
+    min-height:110px;
+    background:var(--black);
+    color:var(--white);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:10px;
+    font-family:monospace;
+    font-size:13px;
+  }
+  .team-list-item, .game-list-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    padding:9px 4px;
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .team-list-item:last-child, .game-list-item:last-child{border-bottom:none;}
+  .game-list-item .game-info{flex:1;min-width:180px;}
+  .game-list-item .game-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .filter-bar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    margin-bottom:6px;
+  }
+  .filter-bar > div{flex:1;min-width:140px;}
+  .sync-dot{
+    display:inline-block;
+    width:9px;height:9px;
+    border-radius:50%;
+    background:var(--gray);
+    margin-right:6px;
+  }
+  .sync-dot.ok{background:var(--green);}
+  .sync-dot.err{background:var(--red);}
+  ::-webkit-scrollbar{height:8px;width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="title-row">
+    <div class="brand">
+      <div class="logo-wrap">
+        <img id="orgLogo" alt="Center Grove Bantam Football League logo" style="display:none;">
+        <span class="logo-fallback" id="logoFallback">CG</span>
+      </div>
+      <div>
+        <h1>ProBowl Nomination</h1>
+        <span class="subtitle">Center Grove Bantam Football League</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn" data-tab="schedule">Schedule</button>
+  <button class="tab-btn active" data-tab="nominate">Nominate</button>
+  <button class="tab-btn" data-tab="totals">Season Totals</button>
+  <button class="tab-btn" data-tab="teams">Team Setup</button>
+</nav>
+
+<main>
+
+  <!-- ============ SCHEDULE TAB ============ -->
+  <section id="tab-schedule" class="tab-panel" style="display:none;">
+    <div class="card">
+      <h2>Load Schedule</h2>
+      <p style="color:var(--gray);margin-top:-6px;">
+        Import a CSV to build (or add to) the schedule used by the Nominate tab.
+        Columns needed: <b>Division, Date, Team 1, Team 2</b> (optional <b>Label</b> for week/game name).
+        Dates can be MM/DD/YYYY or YYYY-MM-DD.
+      </p>
+      <label for="scheduleCsvFile">CSV File</label>
+      <input type="file" id="scheduleCsvFile" accept=".csv">
+      <div class="row-flex" style="margin-top:12px;">
+        <button class="btn secondary" id="previewScheduleBtn" disabled>Preview Import</button>
+        <button class="btn" id="applyScheduleBtn" disabled>Add Games From CSV</button>
+      </div>
+      <div id="scheduleCsvStatus"></div>
+    </div>
+
+    <div class="card">
+      <h2>Add Game Manually</h2>
+      <label for="scheduleManualDivision">Division</label>
+      <select id="scheduleManualDivision">
+        <option value="">Select division…</option>
+        <option value="JRT">JRT</option>
+        <option value="Rookie">Rookie</option>
+        <option value="Minor">Minor</option>
+        <option value="Major">Major</option>
+        <option value="2-4 GFL">2-4 GFL</option>
+        <option value="5-6 GFL">5-6 GFL</option>
+        <option value="7-8 GFL">7-8 GFL</option>
+      </select>
+      <label for="scheduleManualDate">Date</label>
+      <input type="date" id="scheduleManualDate">
+      <label for="scheduleManualTeam1">Team 1</label>
+      <select id="scheduleManualTeam1" disabled><option value="">Select division first…</option></select>
+      <label for="scheduleManualTeam2">Team 2</label>
+      <select id="scheduleManualTeam2" disabled><option value="">Select division first…</option></select>
+      <label for="scheduleManualLabel">Label (optional — e.g. "Week 3")</label>
+      <input type="text" id="scheduleManualLabel" placeholder="Week 3">
+      <div class="row-flex" style="margin-top:12px;">
+        <button class="btn" id="saveManualGameBtn">Save This Game</button>
+      </div>
+      <div id="scheduleManualStatus"></div>
+    </div>
+
+    <div class="card">
+      <h2>Games</h2>
+      <div class="filter-bar">
+        <div>
+          <label for="scheduleDivisionFilter">Division</label>
+          <select id="scheduleDivisionFilter">
+            <option value="">All divisions</option>
+            <option value="JRT">JRT</option>
+            <option value="Rookie">Rookie</option>
+            <option value="Minor">Minor</option>
+            <option value="Major">Major</option>
+            <option value="2-4 GFL">2-4 GFL</option>
+            <option value="5-6 GFL">5-6 GFL</option>
+            <option value="7-8 GFL">7-8 GFL</option>
+          </select>
+        </div>
+        <div style="flex:0;">
+          <button class="btn secondary small" id="reloadScheduleBtn">Reload</button>
+        </div>
+        <div style="flex:0;">
+          <button class="btn secondary small" id="pushScheduleBtn">Save All</button>
+        </div>
+      </div>
+      <div id="scheduleSyncStatus" class="status-msg info"><span class="sync-dot"></span>Not yet loaded.</div>
+      <div id="scheduleListContainer"></div>
+    </div>
+  </section>
+
+  <!-- ============ NOMINATE TAB ============ -->
+  <section id="tab-nominate" class="tab-panel">
+    <div class="card">
+      <h2>Game Info</h2>
+
+      <label for="divisionSelect">Division</label>
+      <select id="divisionSelect">
+        <option value="">Select division…</option>
+        <option value="JRT">JRT</option>
+        <option value="Rookie">Rookie</option>
+        <option value="Minor">Minor</option>
+        <option value="Major">Major</option>
+        <option value="2-4 GFL">2-4 GFL</option>
+        <option value="5-6 GFL">5-6 GFL</option>
+        <option value="7-8 GFL">7-8 GFL</option>
+      </select>
+
+      <label for="gameSelect">Scheduled Game (optional)</label>
+      <select id="gameSelect" disabled>
+        <option value="">Select division first…</option>
+      </select>
+
+      <label for="teamSelect">Your Team</label>
+      <select id="teamSelect" disabled>
+        <option value="">Select division first…</option>
+      </select>
+
+      <label for="gameDate">Date of Game</label>
+      <input type="date" id="gameDate">
+
+      <label for="opponentSelect">Opponent</label>
+      <select id="opponentSelect" disabled>
+        <option value="">Select your team first…</option>
+      </select>
+    </div>
+
+    <div class="card" id="rosterCard" style="display:none;">
+      <h2>Select Players of the Game</h2>
+      <p style="color:var(--gray);margin-top:-6px;">Pick 1–5 players from each team.</p>
+
+      <div class="roster-columns">
+        <div class="roster-box">
+          <h3 id="ownRosterTitle">Your Players</h3>
+          <div class="count" id="ownCount">0 of 5 selected</div>
+          <div id="ownRosterList"></div>
+        </div>
+        <div class="roster-box">
+          <h3 id="oppRosterTitle">Opponent Players</h3>
+          <div class="count" id="oppCount">0 of 5 selected</div>
+          <div id="oppRosterList"></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <button class="btn" id="submitBtn">Submit Nomination</button>
+      <div id="submitStatus"></div>
+    </div>
+
+    <div class="card" id="afterSubmitCard" style="display:none;">
+      <h2>Updated Totals — This Game's Players</h2>
+      <table>
+        <thead><tr><th>Player</th><th>Team</th><th>POTG Count (Season)</th></tr></thead>
+        <tbody id="afterSubmitBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ SEASON TOTALS TAB ============ -->
+  <section id="tab-totals" class="tab-panel" style="display:none;">
+    <div class="card">
+      <h2>Season Player of the Game Totals</h2>
+      <div class="filter-bar">
+        <div>
+          <label for="totalsDivisionFilter">Division</label>
+          <select id="totalsDivisionFilter">
+            <option value="">All divisions</option>
+            <option value="JRT">JRT</option>
+            <option value="Rookie">Rookie</option>
+            <option value="Minor">Minor</option>
+            <option value="Major">Major</option>
+            <option value="2-4 GFL">2-4 GFL</option>
+            <option value="5-6 GFL">5-6 GFL</option>
+            <option value="7-8 GFL">7-8 GFL</option>
+          </select>
+        </div>
+        <div>
+          <label for="totalsTeamFilter">Team</label>
+          <select id="totalsTeamFilter">
+            <option value="">All teams</option>
+          </select>
+        </div>
+        <div>
+          <label for="totalsPositionFilter">Position</label>
+          <select id="totalsPositionFilter">
+            <option value="">All positions</option>
+          </select>
+        </div>
+        <div style="flex:0;">
+          <button class="btn secondary small" id="refreshTotalsBtn">Refresh</button>
+        </div>
+      </div>
+      <div id="totalsStatus" class="status-msg info"><span class="sync-dot"></span>Not yet loaded.</div>
+      <table>
+        <thead><tr><th>#</th><th>Player</th><th>Team</th><th>Division</th><th>Position</th><th>POTG Count</th></tr></thead>
+        <tbody id="totalsBody"></tbody>
+      </table>
+      <div class="row-flex" style="margin-top:10px;">
+        <button class="btn secondary small" id="exportTotalsCsvBtn">Download Totals CSV</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Nomination Log</h2>
+      <p style="color:var(--gray);margin-top:-6px;">All submitted games this season.</p>
+      <table>
+        <thead><tr><th>Date</th><th>Division</th><th>Matchup</th><th>Nominees</th></tr></thead>
+        <tbody id="logBody"></tbody>
+      </table>
+    </div>
+
+    <div class="card danger">
+      <h2 style="border-left-color:var(--red);">Danger Zone — Reset Season</h2>
+      <p style="color:var(--gray);margin-top:-6px;">
+        Clears every Player of the Game nomination, resetting all totals to zero. The schedule and team
+        rosters are not affected. This cannot be undone.
+      </p>
+      <label for="resetPassword">Admin Password</label>
+      <input type="password" id="resetPassword" placeholder="Enter password" autocomplete="off">
+      <div class="row-flex" style="margin-top:12px;">
+        <button class="btn danger-btn" id="resetSeasonBtn">Reset Season</button>
+      </div>
+      <div id="resetStatus"></div>
+    </div>
+  </section>
+
+  <!-- ============ TEAM SETUP TAB ============ -->
+  <section id="tab-teams" class="tab-panel" style="display:none;">
+    <div class="card">
+      <h2>Load Team Data</h2>
+      <p style="color:var(--gray);margin-top:-6px;">
+        Import a CSV to build (or rebuild) the full team/roster list used across the app.
+        Columns needed: <b>Division, Team, Player Name</b> (first/last name columns also work).
+        Add an optional <b>Position</b> column (QB, RB, WR, TE, OL, DL, LB, DB, ATH) to power
+        position-based reporting.
+      </p>
+      <label for="csvFile">CSV File</label>
+      <input type="file" id="csvFile" accept=".csv">
+      <div class="row-flex" style="margin-top:12px;">
+        <button class="btn secondary" id="previewCsvBtn" disabled>Preview Import</button>
+        <button class="btn" id="applyCsvBtn" disabled>Replace Team Data With CSV</button>
+      </div>
+      <div id="csvStatus"></div>
+    </div>
+
+    <div class="card">
+      <h2>Add / Edit Team Manually</h2>
+      <label for="manualDivision">Division</label>
+      <select id="manualDivision">
+        <option value="JRT">JRT</option>
+        <option value="Rookie">Rookie</option>
+        <option value="Minor">Minor</option>
+        <option value="Major">Major</option>
+        <option value="2-4 GFL">2-4 GFL</option>
+        <option value="5-6 GFL">5-6 GFL</option>
+        <option value="7-8 GFL">7-8 GFL</option>
+      </select>
+      <label for="manualTeam">Team Name</label>
+      <input type="text" id="manualTeam" placeholder="e.g. Trojans">
+
+      <label style="margin-top:20px;">Add Player to Roster</label>
+      <div class="row-flex">
+        <input type="text" id="manualPlayerName" placeholder="Player name" style="flex:2;min-width:160px;">
+        <select id="manualPlayerPosition" style="flex:1;min-width:120px;">
+          <option value="">Position (optional)</option>
+          <option value="QB">QB</option>
+          <option value="RB">RB</option>
+          <option value="WR">WR</option>
+          <option value="TE">TE</option>
+          <option value="OL">OL</option>
+          <option value="DL">DL</option>
+          <option value="LB">LB</option>
+          <option value="DB">DB</option>
+          <option value="ATH">ATH</option>
+        </select>
+        <button class="btn secondary small" id="addPlayerToBufferBtn" style="flex:0;">Add Player</button>
+      </div>
+      <div id="manualRosterBuffer" style="margin-top:10px;"></div>
+
+      <div class="row-flex" style="margin-top:14px;">
+        <button class="btn" id="saveManualTeamBtn">Save This Team</button>
+        <button class="btn secondary" id="clearManualTeamBtn">Clear / New Team</button>
+      </div>
+      <div id="manualStatus"></div>
+    </div>
+
+    <div class="card">
+      <h2>Current Team Data</h2>
+      <div class="row-flex" style="margin-bottom:10px;">
+        <button class="btn secondary small" id="reloadTeamsBtn">Reload from GitHub</button>
+        <button class="btn secondary small" id="pushTeamsBtn">Save All Team Data to GitHub</button>
+      </div>
+      <div id="teamsSyncStatus" class="status-msg info"><span class="sync-dot"></span>Not yet loaded.</div>
+      <div id="teamsListContainer"></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* =====================================================================
+   CONFIG
+   ---------------------------------------------------------------------
+   This app writes to three JSON files in your GitHub repo through the
+   same Cloudflare Worker proxy pattern used by Trojans Command Center:
+     - TEAMS_FILE    : full division/team/roster list (now with positions)
+     - SCHEDULE_FILE : full division/game schedule
+     - POTG_FILE     : every submitted Player-of-the-Game nomination
+
+   IMPORTANT: your Worker's allowlist currently only permits
+   "rankings-data.json" and "draft-data.json". Add "teams-data.json",
+   "schedule-data.json", and "potg-data.json" to that allowlist (or
+   point WORKER_URL at a separate worker) before Save/Submit will work.
+
+   This app assumes the Worker mirrors the GitHub Contents API shape:
+     GET  {WORKER_URL}/{file}   -> { content(base64), sha }
+     PUT  {WORKER_URL}/{file}   -> body: { content(base64), sha, message }
+   If your deployed Worker uses a different route shape, adjust
+   ghGet()/ghPut() below to match.
+
+   LOGO: paste the same base64 PNG/SVG string you already use in
+   Trojans Command Center / the homepage mockup into LOGO_BASE64 below
+   and set LOGO_MIME to match ("image/png" or "image/svg+xml"). Until
+   then a plain "CG" mark is shown in the top-left corner.
+===================================================================== */
+const GITHUB_OWNER = "brianbevis-dotcom";
+const GITHUB_REPO  = "CGBFL-Website";
+const GITHUB_BRANCH = "main";
+const WORKER_URL = "PASTE_YOUR_WORKER_URL_HERE"; // e.g. https://gh-proxy.yoursubdomain.workers.dev
+const TEAMS_FILE = "teams-data.json";
+const SCHEDULE_FILE = "schedule-data.json";
+const POTG_FILE  = "potg-data.json";
+const RESET_PASSWORD = "CGBFL1969";
+
+const LOGO_BASE64 = ""; // paste your existing Trojan helmet / CGBFL logo base64 here
+const LOGO_MIME = "image/png";
+
+const DIVISIONS = ["JRT","Rookie","Minor","Major","2-4 GFL","5-6 GFL","7-8 GFL"];
+const POSITIONS = ["QB","RB","WR","TE","OL","DL","LB","DB","ATH"];
+
+let teamsData    = { divisions: {} };  // { "Major": [ {name:"Trojans", players:[{name,position}]} ] }
+let scheduleData = { games: [] };
+let potgData     = { nominations: [] };
+let teamsSha = null, scheduleSha = null, potgSha = null;
+let activeGame = null;
+
+/* ------------------------------ Logo ------------------------------ */
+if(LOGO_BASE64){
+  const img = document.getElementById("orgLogo");
+  img.src = `data:${LOGO_MIME};base64,${LOGO_BASE64}`;
+  img.style.display = "block";
+  document.getElementById("logoFallback").style.display = "none";
+}
+
+/* ---------------------- GitHub proxy helpers ---------------------- */
+
+function b64EncodeUnicode(str){ return btoa(unescape(encodeURIComponent(str))); }
+function b64DecodeUnicode(str){ return decodeURIComponent(escape(atob(str))); }
+
+async function ghGet(filename){
+  const res = await fetch(`${WORKER_URL}/${filename}?ref=${GITHUB_BRANCH}`);
+  if(res.status === 404){ return { content: null, sha: null }; }
+  if(!res.ok){ throw new Error(`GitHub GET failed (${res.status})`); }
+  const data = await res.json();
+  const content = data.content ? JSON.parse(b64DecodeUnicode(data.content)) : null;
+  return { content, sha: data.sha };
+}
+
+async function ghPut(filename, jsonObj, sha, message){
+  const body = {
+    message: message || `Update ${filename} via ProBowl Nomination`,
+    content: b64EncodeUnicode(JSON.stringify(jsonObj, null, 2)),
+    branch: GITHUB_BRANCH
+  };
+  if(sha) body.sha = sha;
+  const res = await fetch(`${WORKER_URL}/${filename}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  if(!res.ok){
+    const errText = await res.text().catch(()=> "");
+    throw new Error(`GitHub PUT failed (${res.status}): ${errText}`);
+  }
+  const data = await res.json();
+  return data.content ? data.content.sha : null;
+}
+
+/* ------------------------------ Tabs ------------------------------ */
+
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".tab-panel").forEach(p=>p.style.display = "none");
+    document.getElementById(`tab-${btn.dataset.tab}`).style.display = "block";
+    if(btn.dataset.tab === "totals") renderTotals();
+    if(btn.dataset.tab === "teams") renderTeamsList();
+    if(btn.dataset.tab === "schedule") renderScheduleList();
+  });
+});
+
+/* ------------------------- Load on startup ------------------------- */
+
+async function loadAll(){
+  try{
+    const t = await ghGet(TEAMS_FILE);
+    teamsData = normalizeTeamsData(t.content || { divisions: {} });
+    teamsSha = t.sha;
+  }catch(e){ console.error(e); teamsData = { divisions: {} }; }
+
+  try{
+    const s = await ghGet(SCHEDULE_FILE);
+    scheduleData = s.content || { games: [] };
+    scheduleSha = s.sha;
+  }catch(e){ console.error(e); scheduleData = { games: [] }; }
+
+  try{
+    const p = await ghGet(POTG_FILE);
+    potgData = p.content || { nominations: [] };
+    potgSha = p.sha;
+  }catch(e){ console.error(e); potgData = { nominations: [] }; }
+
+  populateTotalsTeamFilter();
+  populateTotalsPositionFilter();
+  renderTeamsList();
+  renderScheduleList();
+  renderManualRosterBuffer();
+}
+loadAll();
+
+/* ============================ Utils ============================ */
+
+function showStatus(el, type, msg){
+  el.className = `status-msg ${type}`;
+  el.textContent = msg;
+}
+function escHtml(str){
+  return String(str).replace(/[&<>"']/g, c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function escAttr(str){ return escHtml(str); }
+
+function formatDateShort(d){
+  if(!d) return "";
+  const m = d.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return `${parseInt(m[2],10)}/${parseInt(m[3],10)}/${m[1]}`;
+  return d;
+}
+
+function normalizeDate(str){
+  if(/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+  const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m){
+    const mm = m[1].padStart(2,"0"), dd = m[2].padStart(2,"0");
+    return `${m[3]}-${mm}-${dd}`;
+  }
+  return str;
+}
+
+function splitCsvLine(line){
+  const result = [];
+  let cur = "";
+  let inQuotes = false;
+  for(let i=0;i<line.length;i++){
+    const ch = line[i];
+    if(ch === '"'){ inQuotes = !inQuotes; }
+    else if(ch === ',' && !inQuotes){ result.push(cur); cur = ""; }
+    else{ cur += ch; }
+  }
+  result.push(cur);
+  return result;
+}
+
+function normalizePlayer(p){
+  if(typeof p === "string") return { name: p, position: "" };
+  return { name: p.name || "", position: (p.position || "").toUpperCase() };
+}
+
+function normalizeTeamsData(data){
+  const out = { divisions: {} };
+  Object.keys(data.divisions || {}).forEach(div=>{
+    out.divisions[div] = (data.divisions[div] || []).map(t=>({
+      name: t.name,
+      players: (t.players || []).map(normalizePlayer)
+    }));
+  });
+  return out;
+}
+
+function findTeam(div, name){
+  return (teamsData.divisions[div] || []).find(t=>t.name === name);
+}
+
+function lookupPosition(division, team, name){
+  const t = findTeam(division, team);
+  if(!t) return "";
+  const p = t.players.find(pl=>pl.name === name);
+  return p ? (p.position || "") : "";
+}
+
+function downloadCsv(filename, rows){
+  const csv = rows.map(r=>r.map(c=>`"${String(c==null?"":c).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ======================= NOMINATE TAB LOGIC ======================= */
+
+const divisionSelect  = document.getElementById("divisionSelect");
+const gameSelect       = document.getElementById("gameSelect");
+const teamSelect       = document.getElementById("teamSelect");
+const opponentSelect   = document.getElementById("opponentSelect");
+const gameDateInput    = document.getElementById("gameDate");
+const rosterCard       = document.getElementById("rosterCard");
+const ownRosterList    = document.getElementById("ownRosterList");
+const oppRosterList    = document.getElementById("oppRosterList");
+const ownRosterTitle   = document.getElementById("ownRosterTitle");
+const oppRosterTitle   = document.getElementById("oppRosterTitle");
+const ownCount         = document.getElementById("ownCount");
+const oppCount         = document.getElementById("oppCount");
+const submitBtn        = document.getElementById("submitBtn");
+const submitStatus     = document.getElementById("submitStatus");
+
+function isGameSubmitted(game){
+  return potgData.nominations.some(rec=>{
+    if(rec.gameId && rec.gameId === game.id) return true;
+    if(rec.gameId) return false;
+    return rec.division === game.division && rec.date === game.date &&
+      ((rec.team === game.team1 && rec.opponent === game.team2) ||
+       (rec.team === game.team2 && rec.opponent === game.team1));
+  });
+}
+
+function populateTeamSelectOptions(div, restrictNames){
+  if(!div){
+    teamSelect.innerHTML = `<option value="">Select division first…</option>`;
+    teamSelect.disabled = true;
+    return;
+  }
+  let teams = (teamsData.divisions[div] || []).slice();
+  if(restrictNames){
+    teams = teams.filter(t=>restrictNames.includes(t.name));
+  }
+  teams.sort((a,b)=>a.name.localeCompare(b.name));
+  if(teams.length === 0){
+    teamSelect.innerHTML = `<option value="">No teams loaded for this division</option>`;
+    teamSelect.disabled = true;
+    return;
+  }
+  teamSelect.disabled = false;
+  teamSelect.innerHTML = `<option value="">Select your team…</option>` +
+    teams.map(t=>`<option value="${escAttr(t.name)}">${escHtml(t.name)}</option>`).join("");
+}
+
+function populateGameSelect(div){
+  if(!div){
+    gameSelect.innerHTML = `<option value="">Select division first…</option>`;
+    gameSelect.disabled = true;
+    return;
+  }
+  const games = (scheduleData.games || []).filter(g=>g.division === div).slice()
+    .sort((a,b)=> new Date(a.date) - new Date(b.date));
+  gameSelect.disabled = false;
+  const noneOption = `<option value="">No scheduled game (enter manually)</option>`;
+  if(games.length === 0){
+    gameSelect.innerHTML = noneOption;
+    return;
+  }
+  gameSelect.innerHTML = noneOption + games.map(g=>{
+    const submitted = isGameSubmitted(g);
+    const labelPart = g.label ? `${escHtml(g.label)} — ` : "";
+    return `<option value="${g.id}">${labelPart}${formatDateShort(g.date)} — ${escHtml(g.team1)} vs ${escHtml(g.team2)}${submitted ? " ✓ Submitted" : ""}</option>`;
+  }).join("");
+}
+
+function resetOpponentPlaceholder(){
+  opponentSelect.disabled = true;
+  opponentSelect.innerHTML = `<option value="">Select your team first…</option>`;
+  rosterCard.style.display = "none";
+}
+
+divisionSelect.addEventListener("change", ()=>{
+  const div = divisionSelect.value;
+  activeGame = null;
+  document.getElementById("afterSubmitCard").style.display = "none";
+  gameDateInput.value = "";
+  gameDateInput.removeAttribute("readonly");
+
+  populateGameSelect(div);
+  populateTeamSelectOptions(div);
+  resetOpponentPlaceholder();
+});
+
+gameSelect.addEventListener("change", ()=>{
+  const div = divisionSelect.value;
+  const gameId = gameSelect.value;
+  document.getElementById("afterSubmitCard").style.display = "none";
+  submitStatus.textContent = ""; submitStatus.className = "";
+
+  if(!gameId){
+    activeGame = null;
+    gameDateInput.value = "";
+    gameDateInput.removeAttribute("readonly");
+    populateTeamSelectOptions(div);
+    resetOpponentPlaceholder();
+    updateSelectionCounts();
+    return;
+  }
+
+  const game = (scheduleData.games || []).find(g=>g.id === gameId);
+  if(!game) return;
+  activeGame = game;
+  gameDateInput.value = game.date;
+  gameDateInput.setAttribute("readonly","readonly");
+
+  populateTeamSelectOptions(div, [game.team1, game.team2]);
+  teamSelect.value = game.team1;
+  teamSelect.dispatchEvent(new Event("change"));
+});
+
+teamSelect.addEventListener("change", ()=>{
+  const div = divisionSelect.value;
+  const teamName = teamSelect.value;
+  document.getElementById("afterSubmitCard").style.display = "none";
+
+  if(!teamName){
+    resetOpponentPlaceholder();
+    updateSelectionCounts();
+    return;
+  }
+
+  ownRosterTitle.textContent = teamName;
+  buildRoster(ownRosterList, findTeam(div, teamName), "own");
+
+  if(activeGame){
+    const other = activeGame.team1 === teamName ? activeGame.team2 : activeGame.team1;
+    opponentSelect.innerHTML = `<option value="${escAttr(other)}">${escHtml(other)}</option>`;
+    opponentSelect.value = other;
+    opponentSelect.disabled = true;
+    loadOpponentRoster(div, other);
+  }else{
+    const teams = (teamsData.divisions[div] || []);
+    const opponents = teams.filter(t=>t.name !== teamName).sort((a,b)=>a.name.localeCompare(b.name));
+    opponentSelect.disabled = false;
+    opponentSelect.innerHTML = `<option value="">Select opponent…</option>` +
+      opponents.map(t=>`<option value="${escAttr(t.name)}">${escHtml(t.name)}</option>`).join("");
+    rosterCard.style.display = "none";
+  }
+  updateSelectionCounts();
+});
+
+opponentSelect.addEventListener("change", ()=>{
+  const div = divisionSelect.value;
+  const oppName = opponentSelect.value;
+  if(!oppName){ rosterCard.style.display = "none"; return; }
+  loadOpponentRoster(div, oppName);
+});
+
+function loadOpponentRoster(div, oppName){
+  oppRosterTitle.textContent = oppName;
+  buildRoster(oppRosterList, findTeam(div, oppName), "opp");
+  rosterCard.style.display = "block";
+  document.getElementById("afterSubmitCard").style.display = "none";
+  updateSelectionCounts();
+}
+
+function buildRoster(container, team, groupKey){
+  if(!team || !team.players || team.players.length === 0){
+    container.innerHTML = `<div class="empty-note">No roster loaded for this team. Add it in Team Setup.</div>`;
+    return;
+  }
+  const players = team.players.slice().sort((a,b)=>a.name.localeCompare(b.name));
+  container.innerHTML = players.map((p)=>`
+    <label class="player-row" data-group="${groupKey}">
+      <input type="checkbox" class="${groupKey}-check" value="${escAttr(p.name)}">
+      <span>${escHtml(p.name)}${p.position ? `<span class="pos-tag">${escHtml(p.position)}</span>` : ""}</span>
+    </label>
+  `).join("");
+  container.querySelectorAll(`.${groupKey}-check`).forEach(cb=>{
+    cb.addEventListener("change", updateSelectionCounts);
+  });
+}
+
+function updateSelectionCounts(){
+  const ownChecked = document.querySelectorAll(".own-check:checked");
+  const oppChecked = document.querySelectorAll(".opp-check:checked");
+  ownCount.textContent = `${ownChecked.length} of 5 selected`;
+  oppCount.textContent = `${oppChecked.length} of 5 selected`;
+
+  enforceMax(".own-check", 5);
+  enforceMax(".opp-check", 5);
+
+  const dateOk = !!gameDateInput.value;
+  const oppSelected = !!opponentSelect.value;
+  const validCount = ownChecked.length >= 1 && ownChecked.length <= 5 &&
+                     oppChecked.length >= 1 && oppChecked.length <= 5;
+  submitBtn.disabled = !(dateOk && oppSelected && validCount);
+}
+
+function enforceMax(selector, max){
+  const boxes = document.querySelectorAll(selector);
+  const checked = Array.from(boxes).filter(b=>b.checked);
+  boxes.forEach(b=>{
+    if(!b.checked && checked.length >= max){
+      b.disabled = true;
+      b.closest(".player-row").classList.add("disabled");
+    } else {
+      b.disabled = false;
+      b.closest(".player-row").classList.remove("disabled");
+    }
+  });
+}
+
+gameDateInput.addEventListener("change", updateSelectionCounts);
+
+submitBtn.addEventListener("click", async ()=>{
+  const div = divisionSelect.value;
+  const team = teamSelect.value;
+  const opponent = opponentSelect.value;
+  const date = gameDateInput.value;
+  const ownPlayers = Array.from(document.querySelectorAll(".own-check:checked")).map(c=>c.value);
+  const oppPlayers = Array.from(document.querySelectorAll(".opp-check:checked")).map(c=>c.value);
+
+  if(ownPlayers.length < 1 || ownPlayers.length > 5 || oppPlayers.length < 1 || oppPlayers.length > 5){
+    showStatus(submitStatus, "err", "Select 1–5 players from each team.");
+    return;
+  }
+
+  submitBtn.disabled = true;
+  showStatus(submitStatus, "info", "Submitting to GitHub…");
+
+  const record = {
+    id: `potg_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+    gameId: activeGame ? activeGame.id : null,
+    timestamp: new Date().toISOString(),
+    division: div,
+    date: date,
+    team: team,
+    opponent: opponent,
+    ownPlayers: ownPlayers,
+    opponentPlayers: oppPlayers
+  };
+
+  try{
+    const latest = await ghGet(POTG_FILE);
+    potgData = latest.content || { nominations: [] };
+    potgSha = latest.sha;
+    potgData.nominations.push(record);
+    potgSha = await ghPut(POTG_FILE, potgData, potgSha, `Add POTG nomination: ${team} vs ${opponent} (${date})`);
+
+    showStatus(submitStatus, "ok", "Nomination submitted and saved to GitHub.");
+    showAfterSubmitTotals(record);
+    populateGameSelect(div);
+    renderScheduleList();
+    resetNominationForm();
+  }catch(e){
+    console.error(e);
+    showStatus(submitStatus, "err", `Save failed: ${e.message}. Check WORKER_URL / allowlist and try again.`);
+    submitBtn.disabled = false;
+  }
+});
+
+function resetNominationForm(){
+  document.querySelectorAll(".own-check, .opp-check").forEach(cb=>{cb.checked=false; cb.disabled=false;});
+  document.querySelectorAll(".player-row").forEach(r=>r.classList.remove("disabled"));
+  gameSelect.value = "";
+  gameSelect.dispatchEvent(new Event("change"));
+}
+
+function showAfterSubmitTotals(record){
+  const totals = computeTotals();
+  const involved = [
+    ...record.ownPlayers.map(p=>({name:p, team:record.team})),
+    ...record.opponentPlayers.map(p=>({name:p, team:record.opponent}))
+  ];
+  const body = document.getElementById("afterSubmitBody");
+  body.innerHTML = involved.map(pl=>{
+    const key = `${pl.team}|||${pl.name}`;
+    const count = totals[key] ? totals[key].count : 1;
+    return `<tr><td>${escHtml(pl.name)}</td><td>${escHtml(pl.team)}</td><td>${count}</td></tr>`;
+  }).join("");
+  document.getElementById("afterSubmitCard").style.display = "block";
+}
+
+/* ======================= TOTALS TAB LOGIC ======================= */
+
+function computeTotals(){
+  const totals = {};
+  potgData.nominations.forEach(rec=>{
+    (rec.ownPlayers||[]).forEach(p=>{
+      const key = `${rec.team}|||${p}`;
+      if(!totals[key]) totals[key] = { name:p, team:rec.team, division:rec.division, count:0 };
+      totals[key].count++;
+    });
+    (rec.opponentPlayers||[]).forEach(p=>{
+      const key = `${rec.opponent}|||${p}`;
+      if(!totals[key]) totals[key] = { name:p, team:rec.opponent, division:rec.division, count:0 };
+      totals[key].count++;
+    });
+  });
+  return totals;
+}
+
+function populateTotalsTeamFilter(){
+  const sel = document.getElementById("totalsTeamFilter");
+  const allTeams = new Set();
+  Object.values(teamsData.divisions || {}).forEach(list=>{
+    list.forEach(t=>allTeams.add(t.name));
+  });
+  sel.innerHTML = `<option value="">All teams</option>` +
+    Array.from(allTeams).sort().map(t=>`<option value="${escAttr(t)}">${escHtml(t)}</option>`).join("");
+}
+
+function populateTotalsPositionFilter(){
+  const sel = document.getElementById("totalsPositionFilter");
+  sel.innerHTML = `<option value="">All positions</option>` +
+    POSITIONS.map(p=>`<option value="${p}">${p}</option>`).join("");
+}
+
+document.getElementById("refreshTotalsBtn").addEventListener("click", async ()=>{
+  const statusEl = document.getElementById("totalsStatus");
+  statusEl.innerHTML = `<span class="sync-dot"></span>Refreshing from GitHub…`;
+  try{
+    const p = await ghGet(POTG_FILE);
+    potgData = p.content || { nominations: [] };
+    potgSha = p.sha;
+    renderTotals();
+    statusEl.innerHTML = `<span class="sync-dot ok"></span>Up to date.`;
+  }catch(e){
+    statusEl.innerHTML = `<span class="sync-dot err"></span>Refresh failed: ${e.message}`;
+  }
+});
+
+document.getElementById("totalsDivisionFilter").addEventListener("change", renderTotals);
+document.getElementById("totalsTeamFilter").addEventListener("change", renderTotals);
+document.getElementById("totalsPositionFilter").addEventListener("change", renderTotals);
+
+let lastRenderedTotalsRows = [];
+
+function renderTotals(){
+  const totals = computeTotals();
+  const divFilter = document.getElementById("totalsDivisionFilter").value;
+  const teamFilter = document.getElementById("totalsTeamFilter").value;
+  const posFilter = document.getElementById("totalsPositionFilter").value;
+
+  let rows = Object.values(totals).map(r=>({
+    ...r,
+    position: lookupPosition(r.division, r.team, r.name)
+  }));
+  if(divFilter) rows = rows.filter(r=>r.division === divFilter);
+  if(teamFilter) rows = rows.filter(r=>r.team === teamFilter);
+  if(posFilter) rows = rows.filter(r=>r.position === posFilter);
+  rows.sort((a,b)=> b.count - a.count || a.name.localeCompare(b.name));
+  lastRenderedTotalsRows = rows;
+
+  const body = document.getElementById("totalsBody");
+  if(rows.length === 0){
+    body.innerHTML = `<tr><td colspan="6" class="empty-note">No nominations recorded yet.</td></tr>`;
+  }else{
+    body.innerHTML = rows.map((r,i)=>`
+      <tr class="${i===0 ? 'rank-1':''}">
+        <td>${i+1}</td><td>${escHtml(r.name)}</td><td>${escHtml(r.team)}</td>
+        <td>${escHtml(r.division||"")}</td><td>${escHtml(r.position||"")}</td><td>${r.count}</td>
+      </tr>
+    `).join("");
+  }
+
+  const logBody = document.getElementById("logBody");
+  const games = potgData.nominations.slice().sort((a,b)=> new Date(b.date) - new Date(a.date));
+  if(games.length === 0){
+    logBody.innerHTML = `<tr><td colspan="4" class="empty-note">No games logged yet.</td></tr>`;
+  }else{
+    logBody.innerHTML = games.map(g=>`
+      <tr>
+        <td>${escHtml(g.date||"")}</td>
+        <td>${escHtml(g.division||"")}</td>
+        <td>${escHtml(g.team)} <span class="badge">vs</span> ${escHtml(g.opponent)}</td>
+        <td>${g.ownPlayers.concat(g.opponentPlayers).map(escHtml).join(", ")}</td>
+      </tr>
+    `).join("");
+  }
+}
+
+document.getElementById("exportTotalsCsvBtn").addEventListener("click", ()=>{
+  const rows = [["Rank","Player","Team","Division","Position","POTG Count"]];
+  lastRenderedTotalsRows.forEach((r,i)=> rows.push([i+1, r.name, r.team, r.division||"", r.position||"", r.count]));
+  downloadCsv("cgbfl-potg-totals.csv", rows);
+});
+
+/* -------------------- Password-protected season reset -------------------- */
+
+document.getElementById("resetSeasonBtn").addEventListener("click", async ()=>{
+  const statusEl = document.getElementById("resetStatus");
+  const pwdField = document.getElementById("resetPassword");
+  const pwd = pwdField.value;
+
+  if(pwd !== RESET_PASSWORD){
+    showStatus(statusEl, "err", "Incorrect password. Season was not reset.");
+    return;
+  }
+  const sure = confirm("This will permanently clear ALL Player of the Game nominations, resetting every total to zero. This cannot be undone. Continue?");
+  if(!sure) return;
+
+  showStatus(statusEl, "info", "Resetting season…");
+  try{
+    potgData = { nominations: [] };
+    potgSha = await ghPut(POTG_FILE, potgData, potgSha, "Reset season — clear all POTG nominations");
+    pwdField.value = "";
+    showStatus(statusEl, "ok", "Season reset. All totals are now zero.");
+    renderTotals();
+    renderScheduleList();
+    document.getElementById("afterSubmitCard").style.display = "none";
+  }catch(e){
+    console.error(e);
+    showStatus(statusEl, "err", `Reset failed: ${e.message}`);
+  }
+});
+
+/* ======================= SCHEDULE TAB LOGIC ======================= */
+
+let parsedCsvSchedule = null;
+
+document.getElementById("scheduleCsvFile").addEventListener("change", ()=>{
+  const has = !!document.getElementById("scheduleCsvFile").files.length;
+  document.getElementById("previewScheduleBtn").disabled = !has;
+  document.getElementById("applyScheduleBtn").disabled = true;
+  parsedCsvSchedule = null;
+});
+
+document.getElementById("previewScheduleBtn").addEventListener("click", async ()=>{
+  const file = document.getElementById("scheduleCsvFile").files[0];
+  const statusEl = document.getElementById("scheduleCsvStatus");
+  if(!file) return;
+  try{
+    const text = await file.text();
+    parsedCsvSchedule = parseCsvToSchedule(text);
+    showStatus(statusEl, "ok", `Parsed ${parsedCsvSchedule.length} game(s). Review, then click Add.`);
+    document.getElementById("applyScheduleBtn").disabled = false;
+  }catch(e){
+    console.error(e);
+    showStatus(statusEl, "err", `Could not parse CSV: ${e.message}`);
+    document.getElementById("applyScheduleBtn").disabled = true;
+  }
+});
+
+document.getElementById("applyScheduleBtn").addEventListener("click", async ()=>{
+  const statusEl = document.getElementById("scheduleCsvStatus");
+  if(!parsedCsvSchedule) return;
+  showStatus(statusEl, "info", "Saving schedule to GitHub…");
+  try{
+    scheduleData.games = (scheduleData.games || []).concat(parsedCsvSchedule);
+    scheduleSha = await ghPut(SCHEDULE_FILE, scheduleData, scheduleSha, "Add games via CSV import (ProBowl Nomination)");
+    showStatus(statusEl, "ok", `Added ${parsedCsvSchedule.length} game(s) to the schedule.`);
+    parsedCsvSchedule = null;
+    document.getElementById("applyScheduleBtn").disabled = true;
+    document.getElementById("scheduleCsvFile").value = "";
+    renderScheduleList();
+    populateGameSelect(divisionSelect.value);
+  }catch(e){
+    console.error(e);
+    showStatus(statusEl, "err", `Save failed: ${e.message}`);
+  }
+});
+
+function parseCsvToSchedule(text){
+  const lines = text.split(/\r?\n/).filter(l=>l.trim().length>0);
+  if(lines.length < 2) throw new Error("CSV has no data rows.");
+  const headers = splitCsvLine(lines[0]).map(h=>h.trim().toLowerCase());
+  const idx = (names)=> headers.findIndex(h=> names.includes(h));
+  const divIdx = idx(["division","div"]);
+  const dateIdx = idx(["date","game date"]);
+  const t1Idx = idx(["team 1","team1","home team","home"]);
+  const t2Idx = idx(["team 2","team2","away team","away","opponent"]);
+  const labelIdx = idx(["label","week","game","notes"]);
+
+  if(divIdx === -1 || dateIdx === -1 || t1Idx === -1 || t2Idx === -1){
+    throw new Error("CSV needs Division, Date, Team 1, and Team 2 columns.");
+  }
+
+  const games = [];
+  for(let i=1;i<lines.length;i++){
+    const cols = splitCsvLine(lines[i]);
+    const division = (cols[divIdx]||"").trim();
+    const date = normalizeDate((cols[dateIdx]||"").trim());
+    const team1 = (cols[t1Idx]||"").trim();
+    const team2 = (cols[t2Idx]||"").trim();
+    const label = labelIdx !== -1 ? (cols[labelIdx]||"").trim() : "";
+    if(!division || !date || !team1 || !team2) continue;
+    games.push({
+      id: `game_${Date.now()}_${i}_${Math.random().toString(36).slice(2,6)}`,
+      division, date, team1, team2, label
+    });
+  }
+  if(games.length === 0) throw new Error("No valid rows found.");
+  return games;
+}
+
+document.getElementById("scheduleManualDivision").addEventListener("change", ()=>{
+  const div = document.getElementById("scheduleManualDivision").value;
+  const t1 = document.getElementById("scheduleManualTeam1");
+  const t2 = document.getElementById("scheduleManualTeam2");
+  const teams = (teamsData.divisions[div] || []).slice().sort((a,b)=>a.name.localeCompare(b.name));
+  if(!div || teams.length === 0){
+    t1.innerHTML = `<option value="">No teams loaded</option>`;
+    t2.innerHTML = `<option value="">No teams loaded</option>`;
+    t1.disabled = true; t2.disabled = true;
+    return;
+  }
+  t1.disabled = false; t2.disabled = false;
+  const opts = `<option value="">Select team…</option>` +
+    teams.map(t=>`<option value="${escAttr(t.name)}">${escHtml(t.name)}</option>`).join("");
+  t1.innerHTML = opts;
+  t2.innerHTML = opts;
+});
+
+document.getElementById("saveManualGameBtn").addEventListener("click", async ()=>{
+  const statusEl = document.getElementById("scheduleManualStatus");
+  const division = document.getElementById("scheduleManualDivision").value;
+  const date = document.getElementById("scheduleManualDate").value;
+  const team1 = document.getElementById("scheduleManualTeam1").value;
+  const team2 = document.getElementById("scheduleManualTeam2").value;
+  const label = document.getElementById("scheduleManualLabel").value.trim();
+
+  if(!division || !date || !team1 || !team2){
+    showStatus(statusEl, "err", "Division, date, and both teams are required.");
+    return;
+  }
+  if(team1 === team2){
+    showStatus(statusEl, "err", "Team 1 and Team 2 must be different.");
+    return;
+  }
+
+  const game = {
+    id: `game_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+    division, date, team1, team2, label
+  };
+  scheduleData.games = (scheduleData.games || []).concat([game]);
+
+  showStatus(statusEl, "info", "Saving to GitHub…");
+  try{
+    scheduleSha = await ghPut(SCHEDULE_FILE, scheduleData, scheduleSha, `Add game: ${team1} vs ${team2} (${date})`);
+    showStatus(statusEl, "ok", "Game saved.");
+    document.getElementById("scheduleManualDate").value = "";
+    document.getElementById("scheduleManualLabel").value = "";
+    renderScheduleList();
+    populateGameSelect(divisionSelect.value);
+  }catch(e){
+    console.error(e);
+    showStatus(statusEl, "err", `Save failed: ${e.message}`);
+  }
+});
+
+document.getElementById("scheduleDivisionFilter").addEventListener("change", renderScheduleList);
+
+document.getElementById("reloadScheduleBtn").addEventListener("click", async ()=>{
+  const statusEl = document.getElementById("scheduleSyncStatus");
+  statusEl.innerHTML = `<span class="sync-dot"></span>Reloading…`;
+  try{
+    const s = await ghGet(SCHEDULE_FILE);
+    scheduleData = s.content || { games: [] };
+    scheduleSha = s.sha;
+    renderScheduleList();
+    populateGameSelect(divisionSelect.value);
+    statusEl.innerHTML = `<span class="sync-dot ok"></span>Reloaded from GitHub.`;
+  }catch(e){
+    statusEl.innerHTML = `<span class="sync-dot err"></span>Reload failed: ${e.message}`;
+  }
+});
+
+document.getElementById("pushScheduleBtn").addEventListener("click", async ()=>{
+  const statusEl = document.getElementById("scheduleSyncStatus");
+  statusEl.innerHTML = `<span class="sync-dot"></span>Saving…`;
+  try{
+    scheduleSha = await ghPut(SCHEDULE_FILE, scheduleData, scheduleSha, "Manual save of schedule data (ProBowl Nomination)");
+    statusEl.innerHTML = `<span class="sync-dot ok"></span>Saved to GitHub.`;
+  }catch(e){
+    statusEl.innerHTML = `<span class="sync-dot err"></span>Save failed: ${e.message}`;
+  }
+});
+
+function renderScheduleList(){
+  const container = document.getElementById("scheduleListContainer");
+  const filterDiv = document.getElementById("scheduleDivisionFilter").value;
+  let games = (scheduleData.games || []).slice();
+  if(filterDiv) games = games.filter(g=>g.division === filterDiv);
+  games.sort((a,b)=> a.division.localeCompare(b.division) || new Date(a.date) - new Date(b.date));
+
+  if(games.length === 0){
+    container.innerHTML = `<div class="empty-note">No games scheduled yet. Import a CSV or add one manually above.</div>`;
+    return;
+  }
+
+  let currentDiv = null;
+  let html = "";
+  games.forEach(g=>{
+    if(g.division !== currentDiv){
+      currentDiv = g.division;
+      html += `<h3 style="margin-top:14px;">${escHtml(currentDiv)}</h3>`;
+    }
+    const submitted = isGameSubmitted(g);
+    const labelPart = g.label ? `<span class="badge" style="background:var(--gray);">${escHtml(g.label)}</span> ` : "";
+    html += `
+      <div class="game-list-item">
+        <div class="game-info">
+          ${labelPart}${formatDateShort(g.date)} — ${escHtml(g.team1)} vs ${escHtml(g.team2)}
+          <span class="badge ${submitted ? 'submitted':'pending'}">${submitted ? 'Submitted':'Pending'}</span>
+        </div>
+        <div class="game-actions">
+          <button class="btn secondary small load-game-btn" data-id="${g.id}">Load This Game</button>
+          <button class="btn secondary small remove-game-btn" data-id="${g.id}">Remove</button>
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+
+  container.querySelectorAll(".load-game-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const game = (scheduleData.games || []).find(g=>g.id === btn.dataset.id);
+      if(game) jumpToGameInNominate(game);
+    });
+  });
+  container.querySelectorAll(".remove-game-btn").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      if(!confirm("Remove this game from the schedule? This will save immediately.")) return;
+      scheduleData.games = (scheduleData.games || []).filter(g=>g.id !== btn.dataset.id);
+      try{
+        scheduleSha = await ghPut(SCHEDULE_FILE, scheduleData, scheduleSha, "Remove scheduled game");
+        renderScheduleList();
+        populateGameSelect(divisionSelect.value);
+      }catch(e){
+        alert(`Remove failed: ${e.message}`);
+      }
+    });
+  });
+}
+
+function jumpToGameInNominate(game){
+  document.querySelector('.tab-btn[data-tab="nominate"]').click();
+  divisionSelect.value = game.division;
+  divisionSelect.dispatchEvent(new Event("change"));
+  gameSelect.value = game.id;
+  gameSelect.dispatchEvent(new Event("change"));
+}
+
+/* ======================= TEAM SETUP TAB LOGIC ======================= */
+
+let parsedCsvTeams = null;
+let manualRosterBuffer = [];
+
+document.getElementById("csvFile").addEventListener("change", ()=>{
+  const has = !!document.getElementById("csvFile").files.length;
+  document.getElementById("previewCsvBtn").disabled = !has;
+  document.getElementById("applyCsvBtn").disabled = true;
+  parsedCsvTeams = null;
+});
+
+document.getElementById("previewCsvBtn").addEventListener("click", async ()=>{
+  const file = document.getElementById("csvFile").files[0];
+  const statusEl = document.getElementById("csvStatus");
+  if(!file) return;
+  try{
+    const text = await file.text();
+    parsedCsvTeams = parseCsvToTeams(text);
+    const divCount = Object.keys(parsedCsvTeams.divisions).length;
+    let teamCount = 0, playerCount = 0;
+    Object.values(parsedCsvTeams.divisions).forEach(list=>{
+      teamCount += list.length;
+      list.forEach(t=>playerCount += t.players.length);
+    });
+    showStatus(statusEl, "ok", `Parsed ${divCount} division(s), ${teamCount} team(s), ${playerCount} player(s). Review, then click Replace.`);
+    document.getElementById("applyCsvBtn").disabled = false;
+  }catch(e){
+    console.error(e);
+    showStatus(statusEl, "err", `Could not parse CSV: ${e.message}`);
+    document.getElementById("applyCsvBtn").disabled = true;
+  }
+});
+
+document.getElementById("applyCsvBtn").addEventListener("click", async ()=>{
+  const statusEl = document.getElementById("csvStatus");
+  if(!parsedCsvTeams) return;
+  showStatus(statusEl, "info", "Saving team data to GitHub…");
+  try{
+    teamsData = normalizeTeamsData(parsedCsvTeams);
+    teamsSha = await ghPut(TEAMS_FILE, teamsData, teamsSha, "Replace team data via CSV import (ProBowl Nomination)");
+    showStatus(statusEl, "ok", "Team data replaced and saved to GitHub.");
+    renderTeamsList();
+    populateTotalsTeamFilter();
+    resetDivisionSelectors();
+  }catch(e){
+    console.error(e);
+    showStatus(statusEl, "err", `Save failed: ${e.message}`);
+  }
+});
+
+function parseCsvToTeams(text){
+  const lines = text.split(/\r?\n/).filter(l=>l.trim().length>0);
+  if(lines.length < 2) throw new Error("CSV has no data rows.");
+  const headers = splitCsvLine(lines[0]).map(h=>h.trim().toLowerCase());
+
+  const idx = (names)=> headers.findIndex(h=> names.includes(h));
+  const divIdx = idx(["division","div"]);
+  const teamIdx = idx(["team","team name","teamname"]);
+  const fullNameIdx = idx(["player name","player","name","full name"]);
+  const firstIdx = idx(["first name","firstname","first"]);
+  const lastIdx = idx(["last name","lastname","last"]);
+  const positionIdx = idx(["position","pos"]);
+
+  if(divIdx === -1 || teamIdx === -1) throw new Error("CSV needs Division and Team columns.");
+  if(fullNameIdx === -1 && (firstIdx === -1 || lastIdx === -1)){
+    throw new Error("CSV needs a Player Name column, or First Name + Last Name columns.");
+  }
+
+  const result = { divisions: {} };
+  for(let i=1;i<lines.length;i++){
+    const cols = splitCsvLine(lines[i]);
+    const division = (cols[divIdx]||"").trim();
+    const team = (cols[teamIdx]||"").trim();
+    let playerName;
+    if(fullNameIdx !== -1){
+      playerName = (cols[fullNameIdx]||"").trim();
+    }else{
+      playerName = `${(cols[firstIdx]||"").trim()} ${(cols[lastIdx]||"").trim()}`.trim();
+    }
+    const position = positionIdx !== -1 ? (cols[positionIdx]||"").trim().toUpperCase() : "";
+    if(!division || !team || !playerName) continue;
+
+    if(!result.divisions[division]) result.divisions[division] = [];
+    let teamObj = result.divisions[division].find(t=>t.name === team);
+    if(!teamObj){
+      teamObj = { name: team, players: [] };
+      result.divisions[division].push(teamObj);
+    }
+    if(!teamObj.players.find(p=>p.name === playerName)){
+      teamObj.players.push({ name: playerName, position });
+    }
+  }
+  return result;
+}
+
+document.getElementById("addPlayerToBufferBtn").addEventListener("click", ()=>{
+  const nameInput = document.getElementById("manualPlayerName");
+  const posInput = document.getElementById("manualPlayerPosition");
+  const name = nameInput.value.trim();
+  if(!name) return;
+  manualRosterBuffer.push({ name, position: posInput.value });
+  nameInput.value = "";
+  posInput.value = "";
+  renderManualRosterBuffer();
+  nameInput.focus();
+});
+
+function renderManualRosterBuffer(){
+  const container = document.getElementById("manualRosterBuffer");
+  if(manualRosterBuffer.length === 0){
+    container.innerHTML = `<div class="empty-note">No players added yet.</div>`;
+    return;
+  }
+  container.innerHTML = manualRosterBuffer.map((p,i)=>`
+    <div class="team-list-item">
+      <span>${escHtml(p.name)}${p.position ? `<span class="pos-tag">${escHtml(p.position)}</span>` : ""}</span>
+      <button class="btn secondary small remove-buffer-btn" data-i="${i}">Remove</button>
+    </div>
+  `).join("");
+  container.querySelectorAll(".remove-buffer-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      manualRosterBuffer.splice(parseInt(btn.dataset.i,10), 1);
+      renderManualRosterBuffer();
+    });
+  });
+}
+
+document.getElementById("clearManualTeamBtn").addEventListener("click", ()=>{
+  document.getElementById("manualTeam").value = "";
+  manualRosterBuffer = [];
+  renderManualRosterBuffer();
+  const statusEl = document.getElementById("manualStatus");
+  statusEl.textContent = ""; statusEl.className = "";
+});
+
+document.getElementById("saveManualTeamBtn").addEventListener("click", async ()=>{
+  const div = document.getElementById("manualDivision").value;
+  const teamName = document.getElementById("manualTeam").value.trim();
+  const statusEl = document.getElementById("manualStatus");
+
+  if(!teamName){ showStatus(statusEl, "err", "Enter a team name."); return; }
+  if(manualRosterBuffer.length === 0){ showStatus(statusEl, "err", "Add at least one player."); return; }
+
+  if(!teamsData.divisions[div]) teamsData.divisions[div] = [];
+  let teamObj = teamsData.divisions[div].find(t=>t.name === teamName);
+  const players = manualRosterBuffer.slice();
+  if(teamObj){
+    teamObj.players = players;
+  }else{
+    teamsData.divisions[div].push({ name: teamName, players });
+  }
+
+  showStatus(statusEl, "info", "Saving to GitHub…");
+  try{
+    teamsSha = await ghPut(TEAMS_FILE, teamsData, teamsSha, `Add/update team ${teamName} (${div})`);
+    showStatus(statusEl, "ok", `${teamName} saved with ${players.length} players.`);
+    document.getElementById("manualTeam").value = "";
+    manualRosterBuffer = [];
+    renderManualRosterBuffer();
+    renderTeamsList();
+    populateTotalsTeamFilter();
+    resetDivisionSelectors();
+  }catch(e){
+    console.error(e);
+    showStatus(statusEl, "err", `Save failed: ${e.message}`);
+  }
+});
+
+document.getElementById("reloadTeamsBtn").addEventListener("click", async ()=>{
+  const statusEl = document.getElementById("teamsSyncStatus");
+  statusEl.innerHTML = `<span class="sync-dot"></span>Reloading…`;
+  try{
+    const t = await ghGet(TEAMS_FILE);
+    teamsData = normalizeTeamsData(t.content || { divisions: {} });
+    teamsSha = t.sha;
+    renderTeamsList();
+    populateTotalsTeamFilter();
+    resetDivisionSelectors();
+    statusEl.innerHTML = `<span class="sync-dot ok"></span>Reloaded from GitHub.`;
+  }catch(e){
+    statusEl.innerHTML = `<span class="sync-dot err"></span>Reload failed: ${e.message}`;
+  }
+});
+
+document.getElementById("pushTeamsBtn").addEventListener("click", async ()=>{
+  const statusEl = document.getElementById("teamsSyncStatus");
+  statusEl.innerHTML = `<span class="sync-dot"></span>Saving…`;
+  try{
+    teamsSha = await ghPut(TEAMS_FILE, teamsData, teamsSha, "Manual save of team data (ProBowl Nomination)");
+    statusEl.innerHTML = `<span class="sync-dot ok"></span>Saved to GitHub.`;
+  }catch(e){
+    statusEl.innerHTML = `<span class="sync-dot err"></span>Save failed: ${e.message}`;
+  }
+});
+
+function renderTeamsList(){
+  const container = document.getElementById("teamsListContainer");
+  const divs = Object.keys(teamsData.divisions || {});
+  if(divs.length === 0){
+    container.innerHTML = `<div class="empty-note">No team data loaded yet. Import a CSV or add teams manually above.</div>`;
+    return;
+  }
+  container.innerHTML = divs.map(div=>{
+    const teams = teamsData.divisions[div];
+    return `
+      <h3 style="margin-top:14px;">${escHtml(div)} <span class="badge">${teams.length} team${teams.length===1?'':'s'}</span></h3>
+      ${teams.map(t=>`
+        <div class="team-list-item">
+          <div>
+            <div>${escHtml(t.name)} <span class="badge">${t.players.length} player${t.players.length===1?'':'s'}</span></div>
+            <div style="color:var(--gray);font-size:13px;margin-top:2px;">
+              ${t.players.length ? t.players.map(p=>escHtml(p.name)+(p.position?` (${escHtml(p.position)})`:"")).join(", ") : "No players yet"}
+            </div>
+          </div>
+          <div class="row-flex">
+            <button class="btn secondary small edit-team-btn" data-div="${escAttr(div)}" data-team="${escAttr(t.name)}">Edit</button>
+            <button class="btn secondary small remove-team-btn" data-div="${escAttr(div)}" data-team="${escAttr(t.name)}">Remove</button>
+          </div>
+        </div>
+      `).join("")}
+    `;
+  }).join("");
+
+  container.querySelectorAll(".edit-team-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const div = btn.dataset.div, team = btn.dataset.team;
+      const teamObj = findTeam(div, team);
+      if(!teamObj) return;
+      document.getElementById("manualDivision").value = div;
+      document.getElementById("manualTeam").value = team;
+      manualRosterBuffer = teamObj.players.map(p=>({name:p.name, position:p.position||""}));
+      renderManualRosterBuffer();
+      document.getElementById("manualDivision").scrollIntoView({behavior:"smooth", block:"center"});
+    });
+  });
+
+  container.querySelectorAll(".remove-team-btn").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const div = btn.dataset.div, team = btn.dataset.team;
+      if(!confirm(`Remove ${team} from ${div}? This will save immediately.`)) return;
+      teamsData.divisions[div] = teamsData.divisions[div].filter(t=>t.name !== team);
+      try{
+        teamsSha = await ghPut(TEAMS_FILE, teamsData, teamsSha, `Remove team ${team} (${div})`);
+        renderTeamsList();
+        populateTotalsTeamFilter();
+        resetDivisionSelectors();
+      }catch(e){
+        alert(`Remove failed: ${e.message}`);
+      }
+    });
+  });
+}
+
+function resetDivisionSelectors(){
+  divisionSelect.value = "";
+  activeGame = null;
+  gameSelect.innerHTML = `<option value="">Select division first…</option>`;
+  gameSelect.disabled = true;
+  teamSelect.innerHTML = `<option value="">Select division first…</option>`;
+  teamSelect.disabled = true;
+  gameDateInput.value = "";
+  gameDateInput.removeAttribute("readonly");
+  resetOpponentPlaceholder();
+  document.getElementById("afterSubmitCard").style.display = "none";
+}
+</script>
+</body>
+</html>
