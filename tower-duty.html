@@ -105,15 +105,44 @@ label.fld{display:flex;flex-direction:column;gap:5px;font-size:13px;letter-spaci
 .tag-next{position:absolute;top:-1px;right:-1px;background:var(--red);color:#fff;font-family:'Anton';font-size:11px;
   letter-spacing:.14em;padding:3px 8px}
 
-/* subscribe */
-.subscribe{padding:18px;margin-top:24px;border-left:6px solid var(--red)}
-.subscribe h3{font-size:20px;margin-bottom:6px}
-.url-row{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}
-.url-row input{flex:1;min-width:240px;font-size:15px;font-weight:500;background:var(--paper)}
-.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-top:6px}
-.how div{border-top:3px solid var(--ink);padding-top:8px}
-.how h4{font-family:'Anton';font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 4px}
-.how p{margin:0;font-size:15px;color:var(--ink-soft)}
+/* admin */
+.gate{max-width:430px;margin:40px auto;padding:26px 24px;text-align:center}
+.gate h2{font-size:24px;margin-bottom:6px}
+.gate p{color:var(--grey);margin:0 0 18px}
+.gate .row{display:flex;gap:8px}
+.gate input{flex:1;text-align:center;letter-spacing:.22em;font-size:19px}
+.gate .err{color:var(--red);font-weight:700;font-size:15px;margin-top:12px;min-height:20px;
+  letter-spacing:.06em;text-transform:uppercase}
+.admin-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--ink);color:#fff;
+  padding:11px 15px;margin-bottom:18px;box-shadow:var(--shadow);position:sticky;top:47px;z-index:30}
+.admin-bar .state{font-family:'Anton';font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.admin-bar .state.dirty{color:#FF9AA8}
+.admin-bar .spacer{flex:1}
+.settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;padding:18px;margin-bottom:18px}
+.settings label.fld input,.settings label.fld select{width:100%}
+.admin-sec{margin:26px 0 10px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.admin-sec h3{font-size:21px}
+.admin-sec .note{font-size:15px;color:var(--grey)}
+.edit-wrap{overflow-x:auto;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);max-height:62vh}
+table.edit{border-collapse:collapse;width:100%;font-size:15px}
+table.edit th{font-size:11px;padding:7px 6px}
+table.edit td{padding:3px 4px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.edit input,table.edit select{font-size:15px;padding:4px 6px;border:1px solid var(--line);font-weight:500}
+table.edit tr.changed td{background:#FFF4D6}
+table.edit tr.changed input,table.edit tr.changed select{border-color:#D9A400}
+table.edit tr.added td{background:#E8F5E9}
+table.edit input.date{width:130px} table.edit input.time{width:96px}
+table.edit input.team{width:130px} table.edit select.sel{width:112px}
+table.edit .day{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);font-weight:700}
+.rowdel{background:none;border:1px solid var(--line);color:var(--grey);font-size:16px;line-height:1;
+  padding:3px 8px;cursor:pointer}
+.rowdel:hover{background:var(--red);border-color:var(--red);color:#fff}
+.coach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;padding:16px}
+.coach-grid label{display:flex;flex-direction:column;gap:3px;font-size:12px;letter-spacing:.12em;
+  text-transform:uppercase;font-weight:700;color:var(--grey)}
+.coach-grid input{font-size:16px;padding:6px 8px}
+.warn{background:#FFF4D6;border:1px solid #D9A400;border-left:6px solid #D9A400;padding:13px 16px;margin-bottom:18px;font-size:16px}
+.warn b{font-family:'Anton';font-weight:400;letter-spacing:.04em;text-transform:uppercase;display:block;margin-bottom:3px}
 
 /* ---------- table ---------- */
 .tbl-wrap{overflow-x:auto;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
@@ -178,8 +207,8 @@ td.duty .dot{display:inline-block;width:8px;height:8px;background:var(--red);mar
 @media print{
   @page{size:landscape;margin:.45in}
   body{background:#fff;font-size:11px}
-  .masthead,.tabs,.subscribe,.controls,.print-note,.btn,.toast,.finder .lede,.count-strip,
-  .eyebrow,.legend,.card.finder{display:none!important}
+  .masthead,.tabs,.controls,.print-note,.btn,.toast,.finder .lede,.count-strip,
+  .eyebrow,.legend,.card.finder,#panel-admin{display:none!important}
   .wrap{max-width:none;padding:0}
   .panel[hidden]{display:none}
   .card,.sheet,.tbl-wrap{border:0;box-shadow:none;padding:0}
@@ -227,6 +256,7 @@ td.duty .dot{display:inline-block;width:8px;height:8px;background:var(--red);mar
     <button class="tab" role="tab" id="tab-schedule" aria-controls="panel-schedule" aria-selected="false">Full Schedule</button>
     <button class="tab" role="tab" id="tab-calendar" aria-controls="panel-calendar" aria-selected="false">Calendar</button>
     <button class="tab" role="tab" id="tab-print"    aria-controls="panel-print"    aria-selected="false">Print</button>
+    <button class="tab" role="tab" id="tab-admin"    aria-controls="panel-admin"    aria-selected="false">Admin</button>
   </div>
 </nav>
 
@@ -235,11 +265,10 @@ td.duty .dot{display:inline-block;width:8px;height:8px;background:var(--red);mar
   <!-- ============ MY DUTY ============ -->
   <section class="panel" id="panel-duty" role="tabpanel" aria-labelledby="tab-duty">
     <div class="card finder">
-      <div class="eyebrow">Step 1</div>
+      <div class="eyebrow">Start here</div>
       <h2>Find your team's tower assignments</h2>
       <p class="lede">Pick your division and team. You'll get every game your team runs the tower for, with a
-        calendar invite for each one &mdash; or a single subscription that keeps your calendar current if the
-        schedule changes.</p>
+        calendar invite you can add to your phone in one tap.</p>
       <div class="controls" style="margin-bottom:0">
         <label class="fld">Division
           <select id="selDivision"><option value="">Select division</option></select>
@@ -324,6 +353,81 @@ td.duty .dot{display:inline-block;width:8px;height:8px;background:var(--red);mar
       </div>
     </div>
     <div id="prtPreview"></div>
+  </section>
+
+  <!-- ============ ADMIN ============ -->
+  <section class="panel" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>
+
+    <div class="card gate" id="adminGate">
+      <div class="eyebrow">Board access</div>
+      <h2>Enter the admin password</h2>
+      <p>Editing changes the schedule everyone sees.</p>
+      <div class="row">
+        <input type="password" id="adminPass" placeholder="Password" autocomplete="off"
+               aria-label="Admin password">
+        <button class="btn" id="adminGo">Unlock</button>
+      </div>
+      <div class="err" id="adminErr" role="alert"></div>
+    </div>
+
+    <div id="adminBody" hidden>
+      <div class="admin-bar">
+        <span class="state" id="adminState">No changes</span>
+        <span class="spacer"></span>
+        <button class="btn" id="admSave">Publish changes</button>
+        <button class="btn ghost" id="admDownload">Download JSON</button>
+        <button class="btn ghost" id="admRevert">Discard changes</button>
+        <button class="btn ghost" id="admLock">Lock</button>
+      </div>
+
+      <div class="warn" id="admWarn" hidden></div>
+
+      <div class="admin-sec"><h3>Season settings</h3>
+        <span class="note">These appear in the header, on every printout, and inside each calendar invite.</span>
+      </div>
+      <div class="card settings">
+        <label class="fld">Status label
+          <input type="text" id="setStatus" placeholder="DRAFT — tackle divisions only">
+        </label>
+        <label class="fld">Report early (minutes)
+          <input type="text" id="setEarly" inputmode="numeric">
+        </label>
+        <label class="fld">Event length (minutes)
+          <input type="text" id="setDuration" inputmode="numeric">
+        </label>
+        <label class="fld">Venue name
+          <input type="text" id="setVenue">
+        </label>
+        <label class="fld">Venue address
+          <input type="text" id="setAddress" placeholder="Street, city, state ZIP">
+        </label>
+      </div>
+
+      <div class="admin-sec"><h3>Games</h3>
+        <span class="note" id="admCount"></span>
+      </div>
+      <div class="controls">
+        <label class="fld">Filter
+          <input type="text" id="admFilter" placeholder="Team, field, date…" size="20">
+        </label>
+        <button class="btn" id="admAdd">Add a game</button>
+      </div>
+      <div class="edit-wrap">
+        <table class="edit" id="admTable">
+          <thead><tr>
+            <th>Date</th><th>Day</th><th>Kickoff</th><th>Field</th><th>Division</th>
+            <th>Home</th><th>Away</th><th>Tower duty team</th><th></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty" id="admEmpty" hidden>No games match that filter.</div>
+      </div>
+
+      <div class="admin-sec"><h3>Coach on duty</h3>
+        <span class="note">Optional. A name here shows on the team's tickets, printouts, and calendar invites.</span>
+      </div>
+      <div class="card coach-grid" id="admCoaches"></div>
+    </div>
   </section>
 </main>
 
@@ -2155,14 +2259,20 @@ td.duty .dot{display:inline-block;width:8px;height:8px;background:var(--red);mar
    CGBFL Tower Duty 2026
    Single-file app. Drop in a GitHub Pages repo, embed with an <iframe>.
 
-   CONFIG.icsBase must point at the folder holding the generated .ics
-   feeds (see generate_ics.py). No trailing-slash surprises: the code
-   normalizes it.
+   Set WORKER_URL to the Cloudflare Worker proxy so the Admin tab can
+   publish schedule changes. The Worker holds the GitHub token; no token
+   ever lives in this file. Add 'tower-duty-2026.json' to the Worker's
+   ALLOWED_FILES or every save will fail.
+
+   Without a Worker URL the Admin tab still works — it just falls back to
+   downloading the JSON for you to commit by hand.
    ===================================================================== */
+var WORKER_URL = 'https://YOUR-WORKER.workers.dev';
+
 var CONFIG = {
   dataUrl: 'tower-duty-2026.json',
-  icsBase: 'https://brianbevis-dotcom.github.io/CGBFL-Website/tower-duty/ics/',
-  allFeed: 'all-tower-duty.ics'
+  dataFile: 'tower-duty-2026.json',
+  adminPass: 'CGBFL1969'
 };
 
 var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -2329,10 +2439,6 @@ function googleUrl(g){
   ];
   return 'https://calendar.google.com/calendar/render?' + p.join('&');
 }
-function feedUrl(team){
-  var base = CONFIG.icsBase.replace(/\/+$/,'') + '/';
-  return base + (team ? slug(team) + '.ics' : CONFIG.allFeed);
-}
 
 /* ---------- rendering: My Duty ---------- */
 function renderDuty(){
@@ -2344,7 +2450,7 @@ function renderDuty(){
     var h = el('h2','','Pick a team to see its assignments');
     hint.appendChild(h);
     hint.appendChild(el('p','lede','Every tackle team runs the tower five times this season. Choose above and the '
-      + 'full list appears here with download and subscribe options.'));
+      + 'full list appears here, ready to drop onto your phone.'));
     host.appendChild(hint);
     return;
   }
@@ -2388,8 +2494,6 @@ function renderDuty(){
   bulk.appendChild(bAll); bulk.appendChild(bPrint);
   host.appendChild(bulk);
 
-  /* subscribe */
-  host.appendChild(buildSubscribe(team));
 }
 
 function fmtShort(iso){ var d = parseDate(iso); return MON_ABBR[d.getMonth()] + ' ' + d.getDate(); }
@@ -2438,45 +2542,6 @@ function buildTicket(g, isNext){
 function reportTime(g){
   var w = eventWindow(g);
   return pad(w.start.getHours()) + ':' + pad(w.start.getMinutes());
-}
-
-function buildSubscribe(team){
-  var box = el('div','card subscribe');
-  box.appendChild(el('div','eyebrow','Step 2 \u2014 optional but recommended'));
-  box.appendChild(el('h3','','Subscribe instead of downloading'));
-  box.appendChild(el('p','','A subscription is a live link. If the board moves a game or reassigns a duty, '
-    + 'your calendar updates on its own \u2014 downloaded invites do not.'));
-
-  var url = feedUrl(team);
-  var row = el('div','url-row');
-  var input = el('input'); input.type='text'; input.readOnly = true; input.value = url;
-  input.addEventListener('focus', function(){ input.select(); });
-  var copy = el('button','btn','Copy link');
-  copy.addEventListener('click', function(){
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(url).then(function(){ toast('Link copied'); },
-                                              function(){ input.select(); toast('Press Ctrl+C to copy'); });
-    } else { input.select(); toast('Press Ctrl+C to copy'); }
-  });
-  var open = el('a','btn ghost','Open in calendar app');
-  open.href = url.replace(/^https?:/, 'webcal:'); open.style.textDecoration='none';
-  row.appendChild(input); row.appendChild(copy); row.appendChild(open);
-  box.appendChild(row);
-
-  var how = el('div','how');
-  [['Apple / iPhone','Settings \u203a Calendar \u203a Accounts \u203a Add Account \u203a Other \u203a Add Subscribed Calendar, then paste the link.'],
-   ['Google Calendar','Other calendars \u203a + \u203a From URL, then paste the link. Google refreshes roughly once a day.'],
-   ['Outlook','Add calendar \u203a Subscribe from web, then paste the link.']
-  ].forEach(function(pair){
-    var d = el('div'); d.appendChild(el('h4','',pair[0])); d.appendChild(el('p','',pair[1])); how.appendChild(d);
-  });
-  box.appendChild(how);
-
-  var allRow = el('p'); allRow.style.marginTop = '14px'; allRow.style.fontSize = '15px';
-  allRow.appendChild(document.createTextNode('Board members and field marshals can subscribe to every assignment at once: '));
-  var a = el('a','', feedUrl('')); a.href = feedUrl(''); allRow.appendChild(a);
-  box.appendChild(allRow);
-  return box;
 }
 
 /* ---------- rendering: Full Schedule ---------- */
@@ -2675,8 +2740,429 @@ function printFullList(){
 }
 
 /* ---------- tabs ---------- */
+/* =====================================================================
+   ADMIN
+   Password-gated schedule editor. Edits happen on a working copy; nothing
+   reaches the league until "Publish changes".
+
+   Honest note: the password lives in this file, so anyone who views source
+   can read it. It keeps a curious parent from wandering into the editor —
+   it is not real security. The Worker is what actually guards writes.
+   ===================================================================== */
+var ADMIN = { unlocked:false, draft:null, baseline:'', remoteSha:null, remoteRaw:null, filter:'' };
+
+function b64encode(str){
+  return btoa(String.fromCharCode.apply(null, new TextEncoder().encode(str)));
+}
+function b64decode(b64){
+  var bin = atob(b64.replace(/\s/g,''));
+  var bytes = new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+function workerConfigured(){
+  return WORKER_URL && WORKER_URL.indexOf('YOUR-WORKER') === -1;
+}
+function ghUrl(file){
+  return WORKER_URL.replace(/\/+$/,'') + '/gh/' + file;
+}
+
+function cloneData(d){ return JSON.parse(JSON.stringify(d)); }
+function serialize(d){ return JSON.stringify(d, null, 1); }
+
+function nextGameId(games){
+  var max = 0;
+  games.forEach(function(g){
+    var m = /^G(\d+)$/.exec(g.id || '');
+    if(m && +m[1] > max) max = +m[1];
+  });
+  return 'G' + (max + 1 < 100 ? ('00' + (max+1)).slice(-3) : String(max+1));
+}
+function dayFromDate(iso){
+  var d = parseDate(iso);
+  return isNaN(d) ? '' : ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()];
+}
+/* Accepts "6:00 PM", "6pm", "18:00", "1830" and normalizes to 24h HH:MM. */
+function normalizeTime(raw){
+  var t = String(raw).trim().toLowerCase().replace(/\./g,'');
+  var m = /^(\d{1,2}):(\d{2})\s*(am|pm)?$/.exec(t);
+  if(!m) m = /^(\d{1,2})\s*(am|pm)$/.exec(t) ? (function(){
+    var x = /^(\d{1,2})\s*(am|pm)$/.exec(t); return [null, x[1], '00', x[2]];
+  })() : null;
+  if(!m && /^(\d{3,4})$/.test(t)){
+    var v = t.length === 3 ? '0' + t : t;
+    m = [null, v.slice(0,2), v.slice(2), null];
+  }
+  if(!m) return null;
+  var h = +m[1], mi = +m[2], ap = m[3];
+  if(mi > 59) return null;
+  if(ap === 'pm' && h !== 12) h += 12;
+  if(ap === 'am' && h === 12) h = 0;
+  if(h > 23) return null;
+  return pad(h) + ':' + pad(mi);
+}
+function validDate(iso){ return /^\d{4}-\d{2}-\d{2}$/.test(iso) && !isNaN(parseDate(iso)); }
+
+function adminDirty(){ return ADMIN.draft && serialize(ADMIN.draft) !== ADMIN.baseline; }
+
+function setAdminState(){
+  var st = $('#adminState');
+  if(adminDirty()){ st.textContent = 'Unpublished changes'; st.className = 'state dirty'; }
+  else { st.textContent = 'No changes'; st.className = 'state'; }
+}
+function adminWarn(msg){
+  var w = $('#admWarn');
+  if(!msg){ w.hidden = true; w.innerHTML = ''; return; }
+  w.hidden = false; w.innerHTML = '';
+  w.appendChild(el('b','','Heads up'));
+  w.appendChild(document.createTextNode(msg));
+}
+
+function openAdmin(){
+  ADMIN.unlocked = true;
+  ADMIN.draft = cloneData(DATA);
+  ADMIN.baseline = serialize(ADMIN.draft);
+  $('#adminGate').hidden = true;
+  $('#adminBody').hidden = false;
+  $('#adminPass').value = '';
+  $('#adminErr').textContent = '';
+  if(!workerConfigured()){
+    adminWarn('This copy has no Worker URL set, so "Publish changes" will hand you the JSON to '
+      + 'commit yourself. Set WORKER_URL near the top of this file to publish directly.');
+  } else {
+    /* Snapshot what is live right now, so publishing can tell whether someone
+       else changed the file while this tab sat open. */
+    ADMIN.remoteRaw = null;
+    fetch(ghUrl(CONFIG.dataFile), {cache:'no-store'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if(j && j.content) ADMIN.remoteRaw = b64decode(j.content); })
+      .catch(function(){ /* offline or not allowlisted yet; publish will report it properly */ });
+  }
+  fillSettings();
+  renderCoachEditor();
+  renderAdminTable();
+  setAdminState();
+}
+function lockAdmin(){
+  if(adminDirty() && !window.confirm('You have unpublished changes. Lock anyway and lose them?')) return;
+  ADMIN.unlocked = false; ADMIN.draft = null;
+  $('#adminBody').hidden = true;
+  $('#adminGate').hidden = false;
+}
+
+function fillSettings(){
+  var d = ADMIN.draft;
+  $('#setStatus').value = d.status || '';
+  $('#setEarly').value = d.arriveEarlyMinutes;
+  $('#setDuration').value = d.durationMinutes;
+  $('#setVenue').value = (d.venue && d.venue.name) || '';
+  $('#setAddress').value = (d.venue && d.venue.address) || '';
+}
+function wireSettings(){
+  function bind(sel, apply){
+    $(sel).addEventListener('input', function(){ apply(this.value); setAdminState(); });
+  }
+  bind('#setStatus', function(v){ ADMIN.draft.status = v; });
+  bind('#setVenue',  function(v){ ADMIN.draft.venue = ADMIN.draft.venue || {}; ADMIN.draft.venue.name = v; });
+  bind('#setAddress',function(v){ ADMIN.draft.venue = ADMIN.draft.venue || {}; ADMIN.draft.venue.address = v; });
+  bind('#setEarly',  function(v){ var n = parseInt(v,10); if(!isNaN(n) && n >= 0) ADMIN.draft.arriveEarlyMinutes = n; });
+  bind('#setDuration',function(v){ var n = parseInt(v,10); if(!isNaN(n) && n > 0) ADMIN.draft.durationMinutes = n; });
+}
+
+function baselineGame(id){
+  var base = JSON.parse(ADMIN.baseline);
+  for(var i=0;i<base.games.length;i++) if(base.games[i].id === id) return base.games[i];
+  return null;
+}
+
+function renderAdminTable(){
+  var tbody = $('#admTable tbody');
+  tbody.innerHTML = '';
+  var q = ADMIN.filter.toLowerCase();
+  var games = ADMIN.draft.games;
+  var shown = 0;
+
+  games.forEach(function(g){
+    if(q){
+      var hay = [g.date,g.day,g.field,g.division,g.home,g.away,
+                 g.towerDivision + ' ' + g.towerTeam, to12h(g.time)].join(' ').toLowerCase();
+      if(hay.indexOf(q) === -1) return;
+    }
+    shown++;
+    var base = baselineGame(g.id);
+    var tr = el('tr');
+    tr.dataset.id = g.id;
+    if(!base) tr.className = 'added';
+    else if(JSON.stringify(base) !== JSON.stringify(g)) tr.className = 'changed';
+
+    function cell(child){ var td = el('td'); td.appendChild(child); tr.appendChild(td); return td; }
+    function txt(cls, value, onchange){
+      var inp = el('input'); inp.type = 'text'; inp.className = cls; inp.value = value;
+      inp.addEventListener('change', function(){ onchange(this); });
+      return inp;
+    }
+    function dropdown(cls, options, value, onchange){
+      var sel = el('select'); sel.className = cls;
+      options.forEach(function(o){ var op = el('option','',o); op.value = o; sel.appendChild(op); });
+      sel.value = value;
+      sel.addEventListener('change', function(){ onchange(this.value); afterEdit(); });
+      return sel;
+    }
+    function afterEdit(){ renderAdminTable(); setAdminState(); }
+
+    cell(txt('date', g.date, function(inp){
+      if(!validDate(inp.value)){ toast('Use YYYY-MM-DD'); inp.value = g.date; return; }
+      g.date = inp.value; g.day = dayFromDate(g.date); afterEdit();
+    }));
+
+    var tdDay = el('td','day', g.day || dayFromDate(g.date)); tr.appendChild(tdDay);
+
+    cell(txt('time', to12h(g.time), function(inp){
+      var n = normalizeTime(inp.value);
+      if(!n){ toast('Try 6:00 PM or 18:00'); inp.value = to12h(g.time); return; }
+      g.time = n; afterEdit();
+    }));
+
+    cell(dropdown('sel', fieldOptions(), g.field, function(v){ g.field = v; }));
+    cell(dropdown('sel', ADMIN.draft.divisions, g.division, function(v){ g.division = v; }));
+    cell(txt('team', g.home, function(inp){ g.home = inp.value.trim(); afterEdit(); }));
+    cell(txt('team', g.away, function(inp){ g.away = inp.value.trim(); afterEdit(); }));
+    cell(dropdown('sel', dutyOptions(), g.towerDivision + ' ' + g.towerTeam, function(v){
+      var parts = splitDuty(v); g.towerDivision = parts[0]; g.towerTeam = parts[1];
+    })).firstChild.style.width = '168px';
+
+    var del = el('button','rowdel','\u00d7');
+    del.title = 'Delete this game';
+    del.setAttribute('aria-label','Delete game on ' + g.date);
+    del.addEventListener('click', function(){
+      if(!window.confirm('Delete ' + g.home + ' vs ' + g.away + ' on ' + g.date + '?')) return;
+      ADMIN.draft.games = ADMIN.draft.games.filter(function(x){ return x !== g; });
+      afterEdit();
+    });
+    cell(del);
+
+    tbody.appendChild(tr);
+  });
+
+  $('#admEmpty').hidden = shown > 0;
+  $('#admCount').textContent = games.length + ' games' + (q ? ' \u00b7 ' + shown + ' shown' : '')
+    + ' \u00b7 ' + dutyOptions().length + ' duty teams';
+}
+function fieldOptions(){
+  var set = {};
+  (ADMIN.draft.fields || []).forEach(function(f){ set[f] = 1; });
+  ADMIN.draft.games.forEach(function(g){ set[g.field] = 1; });
+  return Object.keys(set).sort();
+}
+function dutyOptions(){
+  var set = {};
+  ADMIN.draft.games.forEach(function(g){ set[g.towerDivision + ' ' + g.towerTeam] = 1; });
+  return Object.keys(set).sort();
+}
+function splitDuty(s){
+  var divs = ADMIN.draft.divisions || [];
+  for(var i=0;i<divs.length;i++){
+    if(s.indexOf(divs[i] + ' ') === 0) return [divs[i], s.slice(divs[i].length + 1)];
+  }
+  var sp = s.indexOf(' ');
+  return sp === -1 ? ['', s] : [s.slice(0,sp), s.slice(sp+1)];
+}
+
+function addGame(){
+  var games = ADMIN.draft.games;
+  var last = games[games.length - 1] || {};
+  var g = {
+    id: nextGameId(games),
+    date: last.date || (ADMIN.draft.season + '-08-01'),
+    day: '',
+    time: last.time || '18:00',
+    field: fieldOptions()[0] || 'Adams',
+    division: ADMIN.draft.divisions[0] || 'Minor',
+    home: '', away: '',
+    towerDivision: ADMIN.draft.divisions[0] || 'Minor',
+    towerTeam: (dutyOptions()[0] || 'Minor Indiana').split(' ').slice(1).join(' ')
+  };
+  g.day = dayFromDate(g.date);
+  games.push(g);
+  ADMIN.filter = ''; $('#admFilter').value = '';
+  renderAdminTable(); setAdminState();
+  toast('Game added — set the date, teams, and duty');
+  var rows = $$('#admTable tbody tr');
+  if(rows.length) rows[rows.length-1].scrollIntoView({block:'center'});
+}
+
+function renderCoachEditor(){
+  var host = $('#admCoaches');
+  host.innerHTML = '';
+  ADMIN.draft.coaches = ADMIN.draft.coaches || {};
+  dutyOptions().forEach(function(team){
+    var entry = ADMIN.draft.coaches[team] || (ADMIN.draft.coaches[team] = {name:'', email:''});
+    var lab = el('label','', team);
+    var inp = el('input'); inp.type = 'text'; inp.value = entry.name || '';
+    inp.placeholder = 'Coach name';
+    inp.addEventListener('input', function(){ entry.name = this.value; setAdminState(); });
+    lab.appendChild(inp);
+    host.appendChild(lab);
+  });
+}
+
+/* ---------- validation before publishing ---------- */
+function validateDraft(){
+  var problems = [];
+  var seen = {};
+  ADMIN.draft.games.forEach(function(g, i){
+    var where = 'Row ' + (i+1) + ' (' + (g.date || 'no date') + ')';
+    if(!validDate(g.date)) problems.push(where + ': date must be YYYY-MM-DD');
+    if(!/^\d{2}:\d{2}$/.test(g.time)) problems.push(where + ': kickoff time is not valid');
+    if(!g.home || !g.away) problems.push(where + ': home and away teams are both required');
+    if(!g.towerTeam) problems.push(where + ': no tower duty team assigned');
+    if(seen[g.id]) problems.push('Two games share the id ' + g.id);
+    seen[g.id] = 1;
+  });
+  /* Double-booking is a real scheduling error, so surface it rather than silently publishing. */
+  var slots = {};
+  ADMIN.draft.games.forEach(function(g){
+    var k = g.date + ' ' + g.time + ' ' + g.field;
+    if(slots[k]) problems.push('Field conflict: ' + g.field + ' has two games at ' + to12h(g.time) + ' on ' + g.date);
+    slots[k] = 1;
+  });
+  return problems;
+}
+
+function normalizeDraft(){
+  var d = ADMIN.draft;
+  d.games.forEach(function(g){ g.day = dayFromDate(g.date); });
+  d.games.sort(function(a,b){ return (a.date + a.time) < (b.date + b.time) ? -1 : 1; });
+  d.fields = fieldOptions();
+  /* Drop coach entries for teams that no longer hold any duty. */
+  var live = {}; dutyOptions().forEach(function(t){ live[t] = 1; });
+  Object.keys(d.coaches || {}).forEach(function(t){ if(!live[t]) delete d.coaches[t]; });
+}
+
+function applyDraftLocally(){
+  loadData(cloneData(ADMIN.draft));
+  ADMIN.baseline = serialize(ADMIN.draft);
+  fillSettings(); renderCoachEditor(); renderAdminTable(); setAdminState();
+}
+
+function downloadJSON(){
+  normalizeDraft();
+  var text = serialize(ADMIN.draft);
+  var blob = new Blob([text], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = el('a'); a.href = url; a.download = CONFIG.dataFile;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1200);
+}
+
+function publishChanges(){
+  var problems = validateDraft();
+  if(problems.length){
+    adminWarn('Fix these before publishing: ' + problems.slice(0,6).join(' \u00b7 ')
+      + (problems.length > 6 ? ' \u00b7 and ' + (problems.length - 6) + ' more' : ''));
+    $('#admWarn').scrollIntoView({block:'center'});
+    return;
+  }
+  adminWarn('');
+  normalizeDraft();
+
+  if(!workerConfigured()){
+    downloadJSON();
+    applyDraftLocally();
+    toast('JSON downloaded — commit it to publish');
+    adminWarn('No Worker URL is set, so nothing was published. The file just downloaded is the one to '
+      + 'commit to the repo.');
+    return;
+  }
+
+  var btn = $('#admSave');
+  btn.disabled = true; btn.textContent = 'Publishing…';
+
+  /* Read the live file first: another board member may have saved since this page loaded. */
+  fetch(ghUrl(CONFIG.dataFile), {cache:'no-store'})
+    .then(function(r){
+      if(r.status === 404) return null;               /* first save — file not there yet */
+      if(!r.ok) throw new Error('Could not read the live file (' + r.status + ')');
+      return r.json();
+    })
+    .then(function(remote){
+      if(remote && ADMIN.remoteRaw !== null && remote.content){
+        var liveText = b64decode(remote.content);
+        if(liveText !== ADMIN.remoteRaw){
+          if(!window.confirm('Someone else published a change since this page loaded. '
+            + 'Publishing now overwrites their edit. Continue?')){
+            throw new Error('__cancelled__');
+          }
+        }
+      }
+      var body = {
+        message: 'Tower duty schedule updated via admin (' + ADMIN.draft.games.length + ' games)',
+        content: b64encode(serialize(ADMIN.draft))
+      };
+      if(remote && remote.sha) body.sha = remote.sha;
+      return fetch(ghUrl(CONFIG.dataFile), {
+        method:'PUT',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+    })
+    .then(function(r){
+      if(!r.ok){
+        return r.text().then(function(t){
+          throw new Error('Save rejected (' + r.status + '). ' +
+            (r.status === 403 ? 'Add tower-duty-2026.json to the Worker ALLOWED_FILES. ' : '') +
+            t.slice(0,160));
+        });
+      }
+      ADMIN.remoteRaw = serialize(ADMIN.draft);
+      applyDraftLocally();
+      toast('Published');
+      adminWarn('Published. GitHub Pages takes a minute or two to serve the new file, so give it a '
+        + 'moment before checking the public page.');
+    })
+    .catch(function(err){
+      if(err.message === '__cancelled__'){ toast('Publish cancelled'); return; }
+      adminWarn(err.message + ' Nothing was published. Use "Download JSON" and commit it by hand if this keeps failing.');
+    })
+    .then(function(){
+      btn.disabled = false; btn.textContent = 'Publish changes';
+    });
+}
+
+function wireAdmin(){
+  function tryUnlock(){
+    var v = $('#adminPass').value;
+    if(v === CONFIG.adminPass){ openAdmin(); }
+    else { $('#adminErr').textContent = 'That password does not match'; $('#adminPass').select(); }
+  }
+  $('#adminGo').addEventListener('click', tryUnlock);
+  $('#adminPass').addEventListener('keydown', function(e){ if(e.key === 'Enter') tryUnlock(); });
+
+  $('#admLock').addEventListener('click', lockAdmin);
+  $('#admAdd').addEventListener('click', addGame);
+  $('#admDownload').addEventListener('click', function(){ downloadJSON(); toast('JSON downloaded'); });
+  $('#admSave').addEventListener('click', publishChanges);
+  $('#admRevert').addEventListener('click', function(){
+    if(!adminDirty()){ toast('Nothing to discard'); return; }
+    if(!window.confirm('Discard every change made since this page loaded?')) return;
+    ADMIN.draft = JSON.parse(ADMIN.baseline);
+    fillSettings(); renderCoachEditor(); renderAdminTable(); setAdminState();
+    adminWarn('');
+    toast('Changes discarded');
+  });
+  $('#admFilter').addEventListener('input', function(){ ADMIN.filter = this.value.trim(); renderAdminTable(); });
+
+  wireSettings();
+
+  window.addEventListener('beforeunload', function(e){
+    if(ADMIN.unlocked && adminDirty()){ e.preventDefault(); e.returnValue = ''; }
+  });
+}
+
+/* ---------- tabs ---------- */
+var PANELS = ['duty','schedule','calendar','print','admin'];
 function showPanel(name){
-  ['duty','schedule','calendar','print'].forEach(function(n){
+  PANELS.forEach(function(n){
     var tab = $('#tab-' + n), panel = $('#panel-' + n);
     var on = n === name;
     tab.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -2691,7 +3177,9 @@ function fillSelect(sel, values, placeholder){
   values.forEach(function(v){ var op = el('option','',v); op.value = v; sel.appendChild(op); });
 }
 
-function boot(data){
+/* boot() is called once. loadData() can be called again after an admin publish,
+   so nothing in here may attach an event listener. */
+function loadData(data){
   DATA = data;
   GAMES = data.games.slice().sort(function(a,b){ return (a.date + a.time) < (b.date + b.time) ? -1 : 1; });
 
@@ -2701,9 +3189,54 @@ function boot(data){
 
   $('#statusBadge').textContent = data.status || 'Schedule';
 
-  /* duty finder selects */
   var divisions = data.divisions || [];
+
+  /* Repopulate every selector, keeping the current choice when it still exists. */
+  var keep = {
+    division: state.division, team: state.team,
+    schField: $('#schField').value, schDivision: $('#schDivision').value, schDuty: $('#schDuty').value,
+    calHighlight: state.calHighlight, calField: state.calField, prtTeam: $('#prtTeam').value
+  };
+
   fillSelect($('#selDivision'), divisions, 'Select division');
+  fillSelect($('#schField'), data.fields, 'All fields');
+  fillSelect($('#schDivision'), divisions, 'All divisions');
+  fillSelect($('#schDuty'), DUTY_TEAMS, 'All teams');
+  fillSelect($('#calHighlight'), DUTY_TEAMS, 'No highlight');
+  fillSelect($('#calField'), data.fields, 'All fields');
+  fillSelect($('#prtTeam'), DUTY_TEAMS, 'Select team');
+
+  $('#selDivision').value = divisions.indexOf(keep.division) > -1 ? keep.division : '';
+  state.division = $('#selDivision').value;
+  var teams = DUTY_TEAMS.filter(function(t){ return t.indexOf(state.division + ' ') === 0; })
+                        .map(function(t){ return t.slice(state.division.length + 1); });
+  fillSelect($('#selTeam'), teams, 'Select team');
+  $('#selTeam').disabled = !state.division;
+  $('#selTeam').value = teams.indexOf(keep.team) > -1 ? keep.team : '';
+  state.team = $('#selTeam').value;
+
+  function restore(sel, value, apply){
+    var node = $(sel);
+    var ok = Array.prototype.some.call(node.options, function(o){ return o.value === value; });
+    node.value = ok ? value : '';
+    if(apply) apply(node.value);
+  }
+  restore('#schField', keep.schField);
+  restore('#schDivision', keep.schDivision);
+  restore('#schDuty', keep.schDuty);
+  restore('#calHighlight', keep.calHighlight, function(v){ state.calHighlight = v; });
+  restore('#calField', keep.calField, function(v){ state.calField = v; });
+  restore('#prtTeam', keep.prtTeam);
+
+  renderDuty();
+  renderSchedule();
+  renderCalendar();
+}
+
+function boot(data){
+  loadData(data);
+
+  /* duty finder */
   $('#selDivision').addEventListener('change', function(){
     state.division = this.value; state.team = '';
     var teams = DUTY_TEAMS.filter(function(t){ return t.indexOf(state.division + ' ') === 0; })
@@ -2715,9 +3248,6 @@ function boot(data){
   $('#selTeam').addEventListener('change', function(){ state.team = this.value; renderDuty(); });
 
   /* schedule filters */
-  fillSelect($('#schField'), data.fields, 'All fields');
-  fillSelect($('#schDivision'), divisions, 'All divisions');
-  fillSelect($('#schDuty'), DUTY_TEAMS, 'All teams');
   ['#schSearch','#schField','#schDivision','#schDuty'].forEach(function(s){
     $(s).addEventListener('input', renderSchedule);
     $(s).addEventListener('change', renderSchedule);
@@ -2728,15 +3258,12 @@ function boot(data){
   });
 
   /* calendar controls */
-  fillSelect($('#calHighlight'), DUTY_TEAMS, 'No highlight');
-  fillSelect($('#calField'), data.fields, 'All fields');
   $('#calHighlight').addEventListener('change', function(){ state.calHighlight = this.value; renderCalendar(); });
   $('#calFilter').addEventListener('change', function(){ state.calFilter = this.value; renderCalendar(); });
   $('#calField').addEventListener('change', function(){ state.calField = this.value; renderCalendar(); });
   $('#calPrint').addEventListener('click', function(){ window.print(); });
 
   /* print controls */
-  fillSelect($('#prtTeam'), DUTY_TEAMS, 'Select team');
   $('#prtSheet').addEventListener('click', function(){
     var t = $('#prtTeam').value;
     if(!t){ toast('Choose a team first'); return; }
@@ -2746,13 +3273,11 @@ function boot(data){
   $('#prtAll').addEventListener('click', printFullList);
 
   /* tabs */
-  ['duty','schedule','calendar','print'].forEach(function(n){
+  PANELS.forEach(function(n){
     $('#tab-' + n).addEventListener('click', function(){ showPanel(n); });
   });
 
-  renderDuty();
-  renderSchedule();
-  renderCalendar();
+  wireAdmin();
 }
 
 function start(){
