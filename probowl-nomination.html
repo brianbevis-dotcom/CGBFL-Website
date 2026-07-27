@@ -663,9 +663,10 @@
    "schedule-data.json", and "potg-data.json" to that allowlist (or
    point WORKER_URL at a separate worker) before Save/Submit will work.
 
-   This app assumes the Worker mirrors the GitHub Contents API shape:
-     GET  {WORKER_URL}/{file}   -> { content(base64), sha }
-     PUT  {WORKER_URL}/{file}   -> body: { content(base64), sha, message }
+   This app assumes the Worker mirrors the GitHub Contents API shape via
+   the same /gh/{file} route your other CGBFL apps use:
+     GET  {WORKER_URL}/gh/{file}   -> { content(base64), sha }
+     PUT  {WORKER_URL}/gh/{file}   -> body: { content(base64), sha, message }
    If your deployed Worker uses a different route shape, adjust
    ghGet()/ghPut() below to match.
 
@@ -677,7 +678,7 @@
 const GITHUB_OWNER = "brianbevis-dotcom";
 const GITHUB_REPO  = "CGBFL-Website";
 const GITHUB_BRANCH = "main";
-const WORKER_URL = "trojnas-gh-proxy.brianbevis.workers.dev/"; // e.g. https://gh-proxy.yoursubdomain.workers.dev
+const WORKER_URL = "https://trojnas-gh-proxy.brianbevis.workers.dev/"; // e.g. https://gh-proxy.yoursubdomain.workers.dev
 const TEAMS_FILE = "teams-data.json";
 const SCHEDULE_FILE = "schedule-data.json";
 const POTG_FILE  = "potg-data.json";
@@ -709,7 +710,7 @@ function b64EncodeUnicode(str){ return btoa(unescape(encodeURIComponent(str))); 
 function b64DecodeUnicode(str){ return decodeURIComponent(escape(atob(str))); }
 
 async function ghGet(filename){
-  const res = await fetch(`${WORKER_URL}/${filename}?ref=${GITHUB_BRANCH}`);
+  const res = await fetch(`${WORKER_URL}/gh/${filename}?ref=${GITHUB_BRANCH}`);
   if(res.status === 404){ return { content: null, sha: null }; }
   if(!res.ok){ throw new Error(`GitHub GET failed (${res.status})`); }
   const data = await res.json();
@@ -724,7 +725,7 @@ async function ghPut(filename, jsonObj, sha, message){
     branch: GITHUB_BRANCH
   };
   if(sha) body.sha = sha;
-  const res = await fetch(`${WORKER_URL}/${filename}`, {
+  const res = await fetch(`${WORKER_URL}/gh/${filename}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
