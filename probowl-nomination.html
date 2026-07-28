@@ -856,7 +856,10 @@ function normalizeTeamsData(data){
 }
 
 function findTeam(div, name){
-  return (teamsData.divisions[div] || []).find(t=>t.name === name);
+  const list = teamsData.divisions[div] || [];
+  return list.find(t=>t.name === name)
+      || list.find(t=>normTeamName(t.name) === normTeamName(name))
+      || null;
 }
 
 function lookupPosition(division, team, name){
@@ -903,17 +906,46 @@ function isGameSubmitted(game){
   });
 }
 
+// Team names can drift between the schedule CSV and the roster CSV
+// (stray whitespace, capitalization, double spaces). Normalize before
+// comparing so a scheduled game always resolves to its rosters.
+function normTeamName(s){
+  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
+}
+
+// Given a name from the schedule, return the matching roster team object
+// (so we get the canonical spelling and the player list), or null.
+function resolveTeam(div, name){
+  const target = normTeamName(name);
+  return (teamsData.divisions[div] || []).find(t=>normTeamName(t.name) === target) || null;
+}
+
 function populateTeamSelectOptions(div, restrictNames){
   if(!div){
     teamSelect.innerHTML = `<option value="">Select division first…</option>`;
     teamSelect.disabled = true;
     return;
   }
-  let teams = (teamsData.divisions[div] || []).slice();
+
+  // When a scheduled game is loaded, the only valid choices are its two
+  // teams. Build the options from the game itself so the coach can always
+  // pick, even if one side's roster hasn't been loaded yet.
   if(restrictNames){
-    teams = teams.filter(t=>restrictNames.includes(t.name));
+    const opts = restrictNames.map(n=>{
+      const match = resolveTeam(div, n);
+      return {
+        value: match ? match.name : n,   // canonical roster name when available
+        label: match ? match.name : `${n} (no roster loaded)`
+      };
+    });
+    teamSelect.disabled = false;
+    teamSelect.innerHTML = `<option value="">Select your team…</option>` +
+      opts.map(o=>`<option value="${escAttr(o.value)}">${escHtml(o.label)}</option>`).join("");
+    return;
   }
-  teams.sort((a,b)=>a.name.localeCompare(b.name));
+
+  const teams = (teamsData.divisions[div] || []).slice()
+    .sort((a,b)=>a.name.localeCompare(b.name));
   if(teams.length === 0){
     teamSelect.innerHTML = `<option value="">No teams loaded for this division</option>`;
     teamSelect.disabled = true;
@@ -986,7 +1018,10 @@ gameSelect.addEventListener("change", ()=>{
   gameDateInput.setAttribute("readonly","readonly");
 
   populateTeamSelectOptions(div, [game.team1, game.team2]);
-  teamSelect.value = game.team1;
+  // Default to team1, using the canonical roster spelling so the value
+  // actually matches one of the options we just built.
+  const team1Match = resolveTeam(div, game.team1);
+  teamSelect.value = team1Match ? team1Match.name : game.team1;
   teamSelect.dispatchEvent(new Event("change"));
 });
 
@@ -1005,14 +1040,21 @@ teamSelect.addEventListener("change", ()=>{
   buildRoster(ownRosterList, findTeam(div, teamName), "own");
 
   if(activeGame){
-    const other = activeGame.team1 === teamName ? activeGame.team2 : activeGame.team1;
-    opponentSelect.innerHTML = `<option value="${escAttr(other)}">${escHtml(other)}</option>`;
+    // Compare normalized so canonical roster spelling still matches the
+    // schedule's spelling; then resolve the opponent to its canonical name.
+    const isTeam1 = normTeamName(activeGame.team1) === normTeamName(teamName);
+    const otherRaw = isTeam1 ? activeGame.team2 : activeGame.team1;
+    const otherMatch = resolveTeam(div, otherRaw);
+    const other = otherMatch ? otherMatch.name : otherRaw;
+
+    opponentSelect.innerHTML = `<option value="${escAttr(other)}">${escHtml(other)}${otherMatch ? "" : " (no roster loaded)"}</option>`;
     opponentSelect.value = other;
     opponentSelect.disabled = true;
     loadOpponentRoster(div, other);
   }else{
     const teams = (teamsData.divisions[div] || []);
-    const opponents = teams.filter(t=>t.name !== teamName).sort((a,b)=>a.name.localeCompare(b.name));
+    const opponents = teams.filter(t=>normTeamName(t.name) !== normTeamName(teamName))
+      .sort((a,b)=>a.name.localeCompare(b.name));
     opponentSelect.disabled = false;
     opponentSelect.innerHTML = `<option value="">Select opponent…</option>` +
       opponents.map(t=>`<option value="${escAttr(t.name)}">${escHtml(t.name)}</option>`).join("");
