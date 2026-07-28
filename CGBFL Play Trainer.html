@@ -156,12 +156,6 @@
   /* stage pill on boards */
   .diagram{position:relative}
   .stagepill{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);color:var(--yellow);font-weight:800;font-size:12px;letter-spacing:1px;padding:5px 10px;border-radius:999px;pointer-events:none}
-  /* coach's diagram from the printed playbook */
-  .coachwrap{margin-top:14px;border:2px solid var(--line);border-radius:12px;background:rgba(0,0,0,.18);padding:10px 12px 12px}
-  .coachwrap b{display:block;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);margin-bottom:8px}
-  .coachwrap a{display:block;text-decoration:none;color:var(--yellow)}
-  .coachwrap img{display:block;width:100%;height:auto;border-radius:8px;background:#f7f6ef}
-  .coachwrap .open{margin-top:8px;font-weight:700;font-size:13.5px;letter-spacing:.3px;color:var(--yellow)}
   /* louder answer feedback */
   .fx-good{animation:fxgood .55s ease}
   @keyframes fxgood{0%,100%{box-shadow:0 10px 30px rgba(0,0,0,.45)}35%{box-shadow:0 0 0 8px rgba(247,246,239,.75),0 10px 30px rgba(0,0,0,.45)}}
@@ -232,55 +226,6 @@ const FORMS = {
     key:"Just the QB and one receiver shown — a simple look for a quick, ball-out-fast pass.",
     watch:"A 3-step quick pass, no run fake at all."},
 };
-// =============== COACH'S PRINTED DIAGRAMS (from the CGBFL playbook PDFs) ===============
-const COACH_DIA = {
-  "Deuce Right - 43":"deuce-right-43",
-  "Deuce Right - 47":"deuce-right-47",
-  "Deuce Right - 12":"deuce-right-12",
-  "Deuce Right - Slip Right":"deuce-right-slip-right",
-  "Deuce Left - Slip Left":"deuce-left-slip-left",
-  "Deuce Right - 43 Boot":"deuce-right-43-boot",
-  "Deuce Left - 47 Boot":"deuce-left-47-boot",
-  "Deuce Left - Bubble":"deuce-left-bubble",
-  "Deuce Right - Hitch":"deuce-right-hitch",
-  "Deuce Left - Hitch":"deuce-left-hitch",
-  "Deuce Right - Stutter":"deuce-right-stutter",
-  "Deuce Right - 83":"deuce-right-83",
-  "Deuce Left - 83":"deuce-left-83",
-  "100 - 121 Sweep":"100-121-sweep",
-  "900 - 929 Sweep":"900-929-sweep",
-  "100 - 121 Ice":"100-121-ice",
-  "900 - 929 Ice":"900-929-ice",
-  "100 Open - 29":"100-open-29",
-  "900 Open - 21":"900-open-21",
-  "900 Open - 13 Double Dive":"900-open-13-double-dive",
-  "100 Open - 17 Double Dive":"100-open-17-double-dive",
-  "100 - 143 Belly":"100-143-belly",
-  "900 - 947 Belly":"900-947-belly",
-  "100 Open - 43":"100-open-43",
-  "900 Open - 47":"900-open-47",
-  "900 - 943 Weak Belly":"900-943-weak-belly",
-  "900 Open - Roger 47":"900-open-roger-47",
-  "100 Open - Jet 21":"100-open-jet-21",
-  "900 Open - Jet 29":"900-open-jet-29",
-  "100 - 142":"100-142",
-  "900 - 948":"900-948",
-  "100 - 143 Scissors":"100-143-scissors",
-  "100 - 121 Boot":"100-121-boot",
-  "900 - 929 Boot":"900-929-boot",
-  "100 Open - 29 Boot":"100-open-29-boot",
-  "900 Open - 21 Boot":"900-open-21-boot",
-  "900 Open - 13 Double Dive Pass":"900-open-13-double-dive-pass",
-  "100 - 143 Scissors Pass":"100-143-scissors-pass"
-};
-function coachHTML(p){
-  const f = COACH_DIA[p.name];
-  if(!f) return "";
-  const src = "coach/" + f + ".png";
-  return `<div class="coachwrap"><b>Coach's diagram — printed playbook</b>
-      <a href="${src}" target="_blank" rel="noopener"><img src="${src}" alt="Coach's printed diagram for ${p.name}" loading="lazy">
-      <span class="open">Tap to open full size ▸</span></a></div>`;
-}
 // =============== PLAYS ===============
 const PLAYS = [
   {name:"Deuce Right - 43", dest:"run-right", form:"deuceR", carrier:"HB", sec:"Deuce Shotgun", cat:"Inside Run Right",
@@ -351,16 +296,16 @@ const PLAYS = [
    pre:"Looks exactly like Hitches before the snap — that's the trap. This one comes after Hitches has worked.",
    post:"Receivers stutter like they're running a hitch... then explode deep. Never bite on the stutter step.",
    dia:{ball:"M370,660 L221.3,226", routes:["M177.5,548.4 C177.5,531.9 177.5,460.6 177.5,449.2 C177.5,437.8 170.2,517.4 177.5,480.2 C184.8,443 214,268.4 221.3,226","M483.8,560.8 C483.8,542.2 483.8,462.6 483.8,449.2 C483.8,435.8 491,517.4 483.8,480.2 C476.5,443 447.3,268.4 440,226","M562.5,548.4 C562.5,531.9 562.5,460.6 562.5,449.2 C562.5,437.8 569.8,517.4 562.5,480.2 C555.2,443 526,268.4 518.8,226"]}},
-  {name:"Deuce Right - 83", dest:"pass", form:"deuceR", carrier:"SL", sec:"Deuce Shotgun", cat:"Pass",
+  {name:"Deuce Right - 83", dest:"pass", form:"deuceR", carrier:"X", sec:"Deuce Shotgun", cat:"Pass",
    tip:"Vertical/corner shot off a play-action look — a deep shot to the X receiver.",
    pre:"Deuce Right, same shotgun alignment as every other Deuce play.",
    post:"Receivers push vertical and break to the corner. QB has to trust his arm on this one — it's a shot play.",
-   dia:{ball:"M370,660 L611,430", routes:["M177.5,548.4 L238.8,213.6","M483.8,560.8 L483.8,436 L611,430","M562.5,548.4 L501.3,213.6"]}},
+   dia:{ball:"M370,660 L238.8,213.6", routes:["M177.5,548.4 L238.8,213.6","M483.8,560.8 L422.5,213.6","M562.5,548.4 L501.3,213.6"]}},
   {name:"Deuce Left - 83", dest:"pass", form:"deuceL", carrier:"X", sec:"Deuce Shotgun", cat:"Pass",
    tip:"Mirror of 83 — vertical/corner shot off a play-action look, deep to the X receiver on the left.",
    pre:"Deuce Left, same shotgun alignment as every other Deuce play.",
    post:"Receivers push vertical and break to the corner. QB has to trust his arm on this one — it's a shot play.",
-   dia:{ball:"M370,660 L501.3,213.6", routes:["M562.5,548.4 L501.3,213.6","M256.3,560.8 L256.3,436 L129,430","M177.5,548.4 L238.8,213.6"]}},
+   dia:{ball:"M370,660 L501.3,213.6", routes:["M562.5,548.4 L501.3,213.6","M256.3,560.8 L317.5,213.6","M177.5,548.4 L238.8,213.6"]}},
   {name:"100 - 143 Belly", dest:"run-right", form:"wingTR", carrier:"FB", sec:"Wing-T", cat:"Inside Run Right",
    tip:"Hole 3 = right side, between the tackle and guard. FB gets a downhill track. HB fakes the 121 sweep, and the RG/RT double-team the DT to blow the hole open.",
    pre:"100 Wing-T look — TE and WB set the strength to the right, FB and HB stacked behind the QB.",
@@ -461,7 +406,7 @@ const PLAYS = [
    tip:"Mirror of 143 Scissors — FB fakes opposite, HB is the real carrier through the 7-hole on the left.",
    pre:"Looks identical to 947 Belly before the snap — same Wing-T alignment, same first step.",
    post:"FB flows RIGHT with no ball — the HB comes off his hip and hits the 7-hole on the LEFT. If the first back is empty-handed, find the second one!",
-   dia:{ball:"M440,635.2 C419.6,614.5 342.3,548.4 317.5,511.2 C292.7,474 298.5,451.3 291.3,412 C284,372.7 276.7,298.3 273.8,275.6", fakes:["M370,635.2 C378.8,616.6 411.6,556.7 422.5,523.6 C433.4,490.5 429.8,474 435.6,436.8"]}},
+   dia:{ball:"M440,635.2 C419.6,614.5 342.3,548.4 317.5,511.2 C292.7,474 298.5,451.3 291.3,412 C284,372.7 276.7,298.3 273.8,275.6"}},
   {name:"100 - Roger 47", dest:"run-left", form:"wingTR", carrier:"FB", sec:"Wing-T", cat:"Inside Run Left",
    tip:"Roger = reverse! The WB goes in real motion right-to-left before the snap. FB takes the reverse handoff into the 7-hole.",
    pre:"100 Wing-T, strength right. Watch for the WB going in motion across the formation before the snap — that's your tell.",
@@ -1890,8 +1835,7 @@ function renderStudy(){
         <div><div class="diagram">${playSVG(p, studyFlip)}</div><p class="tapnote"></p></div>
         <div class="hint pre"><b>Before the snap</b>${p.pre}</div>
         <div class="hint post"><b>After the snap</b>${p.post}</div>
-        <div class="hint pos"><b>${posLabel} tip</b>${posTip(p)}</div>
-        ${coachHTML(p)}`;
+        <div class="hint pos"><b>${posLabel} tip</b>${posTip(p)}</div>`;
       body.dataset.built="1";
       armStaged(body);
     }
