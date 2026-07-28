@@ -906,11 +906,49 @@ function isGameSubmitted(game){
   });
 }
 
-// Team names can drift between the schedule CSV and the roster CSV
-// (stray whitespace, capitalization, double spaces). Normalize before
-// comparing so a scheduled game always resolves to its rosters.
+// SportsEngine exports team names as "Majors > Ohio State Majors" while the
+// roster export uses the bare "Ohio State". Strip the "Division > " prefix and
+// any trailing division word so the two files reconcile.
+function cleanTeamName(raw){
+  let s = String(raw || "");
+  if(s.includes(">")) s = s.split(">").pop();
+  s = s.trim().replace(/\s+/g, " ");
+  s = s.replace(/\s+(Majors?|Minors?|Rookies?|Junior Trojans|JRT)$/i, "").trim();
+  return s;
+}
+
+// Team names can drift between the schedule and roster exports (prefixes,
+// suffixes, stray whitespace, capitalization). Normalize before comparing.
 function normTeamName(s){
-  return String(s||"").trim().toLowerCase().replace(/\s+/g," ");
+  return cleanTeamName(s).toLowerCase();
+}
+
+// SportsEngine division labels don't always match the app's division buttons.
+const DIVISION_ALIASES = {
+  "junior trojans": "JRT",
+  "jr trojans": "JRT",
+  "jrt": "JRT",
+  "rookie": "Rookie",
+  "rookies": "Rookie",
+  "minor": "Minor",
+  "minors": "Minor",
+  "major": "Major",
+  "majors": "Major",
+  "2-4 gfl": "2-4 GFL",
+  "2-4": "2-4 GFL",
+  "5-6 gfl": "5-6 GFL",
+  "5-6": "5-6 GFL",
+  "7-8 gfl": "7-8 GFL",
+  "7-8": "7-8 GFL"
+};
+
+function canonicalDivision(raw){
+  const key = String(raw || "").trim().toLowerCase().replace(/\s+/g," ");
+  if(DIVISION_ALIASES[key]) return DIVISION_ALIASES[key];
+  // Fall back to an exact match against the known division list, else
+  // return the original so nothing is silently dropped.
+  const exact = DIVISIONS.find(d=>d.toLowerCase() === key);
+  return exact || String(raw || "").trim();
 }
 
 // Given a name from the schedule, return the matching roster team object
@@ -1377,27 +1415,43 @@ document.getElementById("applyScheduleBtn").addEventListener("click", async ()=>
 });
 
 function parseCsvToSchedule(text){
-  const lines = text.split(/\r?\n/).filter(l=>l.trim().length>0);
+  const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/)
+    .filter(l=>l.trim().replace(/,/g,"").length>0);
   if(lines.length < 2) throw new Error("CSV has no data rows.");
-  const headers = splitCsvLine(lines[0]).map(h=>h.trim().toLowerCase());
+  const headers = splitCsvLine(lines[0]).map(h=>h.replace(/^\uFEFF/, "").trim().toLowerCase());
   const idx = (names)=> headers.findIndex(h=> names.includes(h));
   const divIdx = idx(["division","div"]);
   const dateIdx = idx(["date","game date"]);
   const t1Idx = idx(["team 1","team1","home team","home"]);
   const t2Idx = idx(["team 2","team2","away team","away","opponent"]);
-  const labelIdx = idx(["label","week","game","notes"]);
+  const labelIdx = idx(["label","week","notes","event name"]);
+  const typeIdx = idx(["event type","type"]);
+  const statusIdx = idx(["status"]);
 
   if(divIdx === -1 || dateIdx === -1 || t1Idx === -1 || t2Idx === -1){
-    throw new Error("CSV needs Division, Date, Team 1, and Team 2 columns.");
+    throw new Error("CSV needs Division, Date, and Home/Away (or Team 1/Team 2) columns.");
   }
 
   const games = [];
+  let skippedNonGames = 0, skippedCancelled = 0;
   for(let i=1;i<lines.length;i++){
     const cols = splitCsvLine(lines[i]);
-    const division = (cols[divIdx]||"").trim();
+
+    // SportsEngine exports mix games with practices/events — games only.
+    if(typeIdx !== -1){
+      const type = (cols[typeIdx]||"").trim().toLowerCase();
+      if(type && type !== "game"){ skippedNonGames++; continue; }
+    }
+    if(statusIdx !== -1){
+      const status = (cols[statusIdx]||"").trim().toLowerCase();
+      if(status === "cancelled" || status === "canceled"){ skippedCancelled++; continue; }
+    }
+
+    const division = canonicalDivision(cols[divIdx]||"");
     const date = normalizeDate((cols[dateIdx]||"").trim());
-    const team1 = (cols[t1Idx]||"").trim();
-    const team2 = (cols[t2Idx]||"").trim();
+    // Strip the "Majors > " prefix / trailing division word so these match rosters.
+    const team1 = cleanTeamName(cols[t1Idx]||"");
+    const team2 = cleanTeamName(cols[t2Idx]||"");
     const label = labelIdx !== -1 ? (cols[labelIdx]||"").trim() : "";
     if(!division || !date || !team1 || !team2) continue;
     games.push({
@@ -1405,7 +1459,7 @@ function parseCsvToSchedule(text){
       division, date, team1, team2, label
     });
   }
-  if(games.length === 0) throw new Error("No valid rows found.");
+  if(games.length === 0) throw new Error("No valid game rows found.");
   return games;
 }
 
@@ -1609,17 +1663,19 @@ document.getElementById("applyCsvBtn").addEventListener("click", async ()=>{
 });
 
 function parseCsvToTeams(text){
-  const lines = text.split(/\r?\n/).filter(l=>l.trim().length>0);
+  const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/)
+    .filter(l=>l.trim().replace(/,/g,"").length>0);   // drop blank + comma-only rows
   if(lines.length < 2) throw new Error("CSV has no data rows.");
-  const headers = splitCsvLine(lines[0]).map(h=>h.trim().toLowerCase());
+  const headers = splitCsvLine(lines[0]).map(h=>h.replace(/^\uFEFF/, "").trim().toLowerCase());
 
   const idx = (names)=> headers.findIndex(h=> names.includes(h));
   const divIdx = idx(["division","div"]);
-  const teamIdx = idx(["team","team name","teamname"]);
+  const teamIdx = idx(["team","team name","teamname","roster team name"]);
   const fullNameIdx = idx(["player name","player","name","full name"]);
   const firstIdx = idx(["first name","firstname","first"]);
   const lastIdx = idx(["last name","lastname","last"]);
   const positionIdx = idx(["position","pos"]);
+  const roleIdx = idx(["role"]);
 
   if(divIdx === -1 || teamIdx === -1) throw new Error("CSV needs Division and Team columns.");
   if(fullNameIdx === -1 && (firstIdx === -1 || lastIdx === -1)){
@@ -1627,16 +1683,25 @@ function parseCsvToTeams(text){
   }
 
   const result = { divisions: {} };
+  let skippedNonPlayers = 0;
   for(let i=1;i<lines.length;i++){
     const cols = splitCsvLine(lines[i]);
-    const division = (cols[divIdx]||"").trim();
-    const team = (cols[teamIdx]||"").trim();
+
+    // SportsEngine roster exports can include coach/staff rows; players only.
+    if(roleIdx !== -1){
+      const role = (cols[roleIdx]||"").trim().toLowerCase();
+      if(role && role !== "player"){ skippedNonPlayers++; continue; }
+    }
+
+    const division = canonicalDivision(cols[divIdx]||"");
+    const team = cleanTeamName(cols[teamIdx]||"");
     let playerName;
     if(fullNameIdx !== -1){
       playerName = (cols[fullNameIdx]||"").trim();
     }else{
       playerName = `${(cols[firstIdx]||"").trim()} ${(cols[lastIdx]||"").trim()}`.trim();
     }
+    playerName = playerName.replace(/\s+/g," ");   // collapse stray double spaces
     const position = positionIdx !== -1 ? (cols[positionIdx]||"").trim().toUpperCase() : "";
     if(!division || !team || !playerName) continue;
 
@@ -1650,6 +1715,7 @@ function parseCsvToTeams(text){
       teamObj.players.push({ name: playerName, position });
     }
   }
+  result.skippedNonPlayers = skippedNonPlayers;
   return result;
 }
 
