@@ -2268,6 +2268,7 @@ td.duty .dot{display:inline-block;width:8px;height:8px;background:var(--red);mar
    downloading the JSON for you to commit by hand.
    ===================================================================== */
 var WORKER_URL = 'https://trojnas-gh-proxy.brianbevis.workers.dev/';
+var GITHUB_BRANCH = 'main';
 
 var CONFIG = {
   dataUrl: 'tower-duty-2026.json',
@@ -2764,7 +2765,7 @@ function workerConfigured(){
   return WORKER_URL && WORKER_URL.indexOf('YOUR-WORKER') === -1;
 }
 function ghUrl(file){
-  return WORKER_URL.replace(/\/+$/,'') + '/gh/' + file;
+  return WORKER_URL.replace(/\/+$/,'') + '/gh/' + file + '?ref=' + encodeURIComponent(GITHUB_BRANCH);
 }
 
 function cloneData(d){ return JSON.parse(JSON.stringify(d)); }
@@ -3097,7 +3098,8 @@ function publishChanges(){
       }
       var body = {
         message: 'Tower duty schedule updated via admin (' + ADMIN.draft.games.length + ' games)',
-        content: b64encode(serialize(ADMIN.draft))
+        content: b64encode(serialize(ADMIN.draft)),
+        branch: GITHUB_BRANCH
       };
       if(remote && remote.sha) body.sha = remote.sha;
       return fetch(ghUrl(CONFIG.dataFile), {
