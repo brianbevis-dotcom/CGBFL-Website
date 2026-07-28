@@ -675,10 +675,13 @@
    and set LOGO_MIME to match ("image/png" or "image/svg+xml"). Until
    then a plain "CG" mark is shown in the top-left corner.
 ===================================================================== */
+// NOTE: the Worker hardcodes OWNER/REPO (currently brianbevis-dotcom/Bantamdraft),
+// so these two constants are informational only — changing them here has no effect.
 const GITHUB_OWNER = "brianbevis-dotcom";
-const GITHUB_REPO  = "CGBFL-Website";
+const GITHUB_REPO  = "Bantamdraft";
 const GITHUB_BRANCH = "main";
-const WORKER_URL = "https://trojnas-gh-proxy.brianbevis.workers.dev/"; // e.g. https://gh-proxy.yoursubdomain.workers.dev
+// Trailing slashes are stripped automatically, so either form works.
+const WORKER_URL = "https://trojnas-gh-proxy.brianbevis.workers.dev";
 const TEAMS_FILE = "teams-data.json";
 const SCHEDULE_FILE = "schedule-data.json";
 const POTG_FILE  = "potg-data.json";
@@ -709,10 +712,21 @@ if(LOGO_BASE64){
 function b64EncodeUnicode(str){ return btoa(unescape(encodeURIComponent(str))); }
 function b64DecodeUnicode(str){ return decodeURIComponent(escape(atob(str))); }
 
+// Strip any trailing slash(es) from WORKER_URL so we never build a
+// double-slash path like ".../workers.dev//gh/file.json", which gets
+// rejected at the edge with a generic HTML 405 before the Worker runs.
+function ghUrl(filename, query){
+  const base = WORKER_URL.replace(/\/+$/, "");
+  return `${base}/gh/${encodeURIComponent(filename)}${query || ""}`;
+}
+
 async function ghGet(filename){
-  const res = await fetch(`${WORKER_URL}/gh/${filename}?ref=${GITHUB_BRANCH}`);
+  const res = await fetch(ghUrl(filename, `?ref=${GITHUB_BRANCH}`));
   if(res.status === 404){ return { content: null, sha: null }; }
-  if(!res.ok){ throw new Error(`GitHub GET failed (${res.status})`); }
+  if(!res.ok){
+    const errText = await res.text().catch(()=> "");
+    throw new Error(`GitHub GET failed (${res.status}): ${errText.slice(0,200)}`);
+  }
   const data = await res.json();
   const content = data.content ? JSON.parse(b64DecodeUnicode(data.content)) : null;
   return { content, sha: data.sha };
@@ -725,14 +739,14 @@ async function ghPut(filename, jsonObj, sha, message){
     branch: GITHUB_BRANCH
   };
   if(sha) body.sha = sha;
-  const res = await fetch(`${WORKER_URL}/gh/${filename}`, {
+  const res = await fetch(ghUrl(filename), {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
   if(!res.ok){
     const errText = await res.text().catch(()=> "");
-    throw new Error(`GitHub PUT failed (${res.status}): ${errText}`);
+    throw new Error(`GitHub PUT failed (${res.status}): ${errText.slice(0,200)}`);
   }
   const data = await res.json();
   return data.content ? data.content.sha : null;
