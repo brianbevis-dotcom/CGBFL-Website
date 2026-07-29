@@ -14,15 +14,18 @@
     --charcoal:#1c1c1c;
     --white:#ffffff;
     --off-white:#f4f4f4;
-    --gray:#8a8a8a;
-    --line:#2a2a2a;
-    --green:#3ecf6a;
+    /* Brightened for stronger contrast on the dark background */
+    --gray:#c9c9c9;        /* secondary/muted text */
+    --gray-dim:#9a9a9a;    /* only for genuinely de-emphasized UI */
+    --line:#333333;
+    --green:#4ee07a;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     background:var(--black);
     color:var(--white);
+    -webkit-font-smoothing:antialiased;
     font-family:'Barlow Condensed',sans-serif;
     font-size:17px;
   }
@@ -83,7 +86,7 @@
   }
   header.app-header .subtitle{
     font-size:14px;
-    color:rgba(255,255,255,0.85);
+    color:rgba(255,255,255,0.95);
     letter-spacing:1px;
     text-transform:uppercase;
     display:block;
@@ -103,7 +106,7 @@
     text-transform:uppercase;
     background:transparent;
     border:2px solid transparent;
-    color:var(--gray);
+    color:#e0e0e0;
     padding:9px 16px;
     border-radius:4px;
     cursor:pointer;
@@ -145,7 +148,7 @@
     font-size:14px;
     text-transform:uppercase;
     letter-spacing:0.5px;
-    color:var(--gray);
+    color:#e0e0e0;
     margin-bottom:6px;
     margin-top:14px;
   }
@@ -232,6 +235,18 @@
     flex-shrink:0;
   }
   .player-row.disabled{opacity:0.35;}
+  .jersey-num{
+    display:inline-block;
+    min-width:26px;
+    margin-right:8px;
+    padding:1px 5px;
+    background:var(--red);
+    color:#fff;
+    font-family:'Anton',sans-serif;
+    font-size:12px;
+    text-align:center;
+    border-radius:3px;
+  }
   .pos-tag{
     color:var(--gray);
     font-size:12px;
@@ -270,7 +285,7 @@
   th{
     text-transform:uppercase;
     letter-spacing:0.5px;
-    color:var(--gray);
+    color:#dcdcdc;
     font-size:12px;
   }
   tr.rank-1 td{color:var(--white);font-weight:700;}
@@ -359,8 +374,8 @@
 </header>
 
 <nav class="tabs">
-  <button class="tab-btn" data-tab="schedule">Schedule</button>
   <button class="tab-btn active" data-tab="nominate">Nominate</button>
+  <button class="tab-btn" data-tab="schedule">Schedule</button>
   <button class="tab-btn" data-tab="totals">Season Totals</button>
   <button class="tab-btn" data-tab="teams">Team Setup</button>
 </nav>
@@ -509,6 +524,25 @@
 
   <!-- ============ SEASON TOTALS TAB ============ -->
   <section id="tab-totals" class="tab-panel" style="display:none;">
+
+    <!-- Password gate: results stay hidden until unlocked -->
+    <div class="card" id="totalsLockCard">
+      <h2>Results Locked</h2>
+      <p style="color:var(--gray);margin-top:-6px;">
+        Season totals and results are restricted. Enter the admin password to view.
+      </p>
+      <label for="totalsPassword">Admin Password</label>
+      <input type="password" id="totalsPassword" placeholder="Enter password" autocomplete="off">
+      <div class="row-flex" style="margin-top:12px;">
+        <button class="btn" id="unlockTotalsBtn">Unlock Results</button>
+      </div>
+      <div id="totalsUnlockStatus"></div>
+    </div>
+
+    <div id="totalsProtectedContent" style="display:none;">
+    <div class="row-flex" style="justify-content:flex-end;margin-bottom:10px;">
+      <button class="btn secondary small" id="lockTotalsBtn">Lock Results</button>
+    </div>
     <div class="card">
       <h2>Season Player of the Game Totals</h2>
       <div class="filter-bar">
@@ -543,7 +577,7 @@
       </div>
       <div id="totalsStatus" class="status-msg info"><span class="sync-dot"></span>Not yet loaded.</div>
       <table>
-        <thead><tr><th>#</th><th>Player</th><th>Team</th><th>Division</th><th>Position</th><th>POTG Count</th></tr></thead>
+        <thead><tr><th>#</th><th>Jersey</th><th>Player</th><th>Grade</th><th>Team</th><th>Division</th><th>Position</th><th>POTG Count</th></tr></thead>
         <tbody id="totalsBody"></tbody>
       </table>
       <div class="row-flex" style="margin-top:10px;">
@@ -573,6 +607,7 @@
       </div>
       <div id="resetStatus"></div>
     </div>
+    </div><!-- /totalsProtectedContent -->
   </section>
 
   <!-- ============ TEAM SETUP TAB ============ -->
@@ -611,7 +646,9 @@
 
       <label style="margin-top:20px;">Add Player to Roster</label>
       <div class="row-flex">
-        <input type="text" id="manualPlayerName" placeholder="Player name" style="flex:2;min-width:160px;">
+        <input type="text" id="manualPlayerJersey" placeholder="#" style="flex:0 0 70px;min-width:60px;">
+        <input type="text" id="manualPlayerName" placeholder="Player name" style="flex:2;min-width:150px;">
+        <input type="text" id="manualPlayerGrade" placeholder="Grade" style="flex:0 0 90px;min-width:80px;">
         <select id="manualPlayerPosition" style="flex:1;min-width:120px;">
           <option value="">Position (optional)</option>
           <option value="QB">QB</option>
@@ -760,7 +797,9 @@ document.querySelectorAll(".tab-btn").forEach(btn=>{
     btn.classList.add("active");
     document.querySelectorAll(".tab-panel").forEach(p=>p.style.display = "none");
     document.getElementById(`tab-${btn.dataset.tab}`).style.display = "block";
-    if(btn.dataset.tab === "totals") renderTotals();
+    if(btn.dataset.tab === "totals"){
+      setTotalsLocked(true);   // require the password each visit
+    }
     if(btn.dataset.tab === "teams") renderTeamsList();
     if(btn.dataset.tab === "schedule") renderScheduleList();
   });
@@ -840,8 +879,34 @@ function splitCsvLine(line){
 }
 
 function normalizePlayer(p){
-  if(typeof p === "string") return { name: p, position: "" };
-  return { name: p.name || "", position: (p.position || "").toUpperCase() };
+  if(typeof p === "string") return { name: p, position: "", jersey: "", grade: "" };
+  return {
+    name: p.name || "",
+    position: (p.position || "").toUpperCase(),
+    jersey: p.jersey == null ? "" : String(p.jersey).trim(),
+    grade: p.grade == null ? "" : String(p.grade).trim()
+  };
+}
+
+// Jersey numbers sort numerically first, then any non-numeric values.
+function jerseySortKey(v){
+  const n = parseFloat(v);
+  return isNaN(n) ? [1, 0] : [0, n];
+}
+function comparePlayers(a, b){
+  const ka = jerseySortKey(a.jersey), kb = jerseySortKey(b.jersey);
+  if(ka[0] !== kb[0]) return ka[0] - kb[0];
+  if(ka[1] !== kb[1]) return ka[1] - kb[1];
+  return a.name.localeCompare(b.name);
+}
+
+// Compact "#12 · QB · Gr 5" descriptor for display next to a player name.
+function playerMeta(p){
+  const bits = [];
+  if(p.jersey) bits.push("#" + p.jersey);
+  if(p.position) bits.push(p.position);
+  if(p.grade) bits.push("Gr " + p.grade);
+  return bits.join(" · ");
 }
 
 function normalizeTeamsData(data){
@@ -862,10 +927,13 @@ function findTeam(div, name){
       || null;
 }
 
-function lookupPosition(division, team, name){
+function lookupPlayer(division, team, name){
   const t = findTeam(division, team);
-  if(!t) return "";
-  const p = t.players.find(pl=>pl.name === name);
+  if(!t) return null;
+  return t.players.find(pl=>pl.name === name) || null;
+}
+function lookupPosition(division, team, name){
+  const p = lookupPlayer(division, team, name);
   return p ? (p.position || "") : "";
 }
 
@@ -1121,13 +1189,15 @@ function buildRoster(container, team, groupKey){
     container.innerHTML = `<div class="empty-note">No roster loaded for this team. Add it in Team Setup.</div>`;
     return;
   }
-  const players = team.players.slice().sort((a,b)=>a.name.localeCompare(b.name));
-  container.innerHTML = players.map((p)=>`
+  const players = team.players.slice().sort(comparePlayers);
+  container.innerHTML = players.map((p)=>{
+    const meta = playerMeta(p);
+    return `
     <label class="player-row" data-group="${groupKey}">
       <input type="checkbox" class="${groupKey}-check" value="${escAttr(p.name)}">
-      <span>${escHtml(p.name)}${p.position ? `<span class="pos-tag">${escHtml(p.position)}</span>` : ""}</span>
-    </label>
-  `).join("");
+      <span>${p.jersey ? `<b class="jersey-num">${escHtml(p.jersey)}</b>` : ""}${escHtml(p.name)}${meta ? `<span class="pos-tag">${escHtml(meta)}</span>` : ""}</span>
+    </label>`;
+  }).join("");
   container.querySelectorAll(`.${groupKey}-check`).forEach(cb=>{
     cb.addEventListener("change", updateSelectionCounts);
   });
@@ -1283,6 +1353,37 @@ document.getElementById("refreshTotalsBtn").addEventListener("click", async ()=>
   }
 });
 
+/* ---- Season Totals password gate ---- */
+let totalsUnlocked = false;
+
+function setTotalsLocked(locked){
+  totalsUnlocked = !locked;
+  document.getElementById("totalsLockCard").style.display = locked ? "block" : "none";
+  document.getElementById("totalsProtectedContent").style.display = locked ? "none" : "block";
+  if(locked){
+    document.getElementById("totalsPassword").value = "";
+    const st = document.getElementById("totalsUnlockStatus");
+    st.textContent = ""; st.className = "";
+  }
+}
+
+function attemptUnlockTotals(){
+  const pwd = document.getElementById("totalsPassword").value;
+  const statusEl = document.getElementById("totalsUnlockStatus");
+  if(pwd !== RESET_PASSWORD){
+    showStatus(statusEl, "err", "Incorrect password.");
+    return;
+  }
+  setTotalsLocked(false);
+  renderTotals();
+}
+
+document.getElementById("unlockTotalsBtn").addEventListener("click", attemptUnlockTotals);
+document.getElementById("totalsPassword").addEventListener("keydown", (e)=>{
+  if(e.key === "Enter") attemptUnlockTotals();
+});
+document.getElementById("lockTotalsBtn").addEventListener("click", ()=> setTotalsLocked(true));
+
 document.getElementById("totalsDivisionFilter").addEventListener("change", renderTotals);
 document.getElementById("totalsTeamFilter").addEventListener("change", renderTotals);
 document.getElementById("totalsPositionFilter").addEventListener("change", renderTotals);
@@ -1290,15 +1391,21 @@ document.getElementById("totalsPositionFilter").addEventListener("change", rende
 let lastRenderedTotalsRows = [];
 
 function renderTotals(){
+  if(!totalsUnlocked) return;   // results stay hidden until unlocked
   const totals = computeTotals();
   const divFilter = document.getElementById("totalsDivisionFilter").value;
   const teamFilter = document.getElementById("totalsTeamFilter").value;
   const posFilter = document.getElementById("totalsPositionFilter").value;
 
-  let rows = Object.values(totals).map(r=>({
-    ...r,
-    position: lookupPosition(r.division, r.team, r.name)
-  }));
+  let rows = Object.values(totals).map(r=>{
+    const p = lookupPlayer(r.division, r.team, r.name);
+    return {
+      ...r,
+      position: p ? (p.position||"") : "",
+      jersey: p ? (p.jersey||"") : "",
+      grade: p ? (p.grade||"") : ""
+    };
+  });
   if(divFilter) rows = rows.filter(r=>r.division === divFilter);
   if(teamFilter) rows = rows.filter(r=>r.team === teamFilter);
   if(posFilter) rows = rows.filter(r=>r.position === posFilter);
@@ -1307,11 +1414,12 @@ function renderTotals(){
 
   const body = document.getElementById("totalsBody");
   if(rows.length === 0){
-    body.innerHTML = `<tr><td colspan="6" class="empty-note">No nominations recorded yet.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="8" class="empty-note">No nominations recorded yet.</td></tr>`;
   }else{
     body.innerHTML = rows.map((r,i)=>`
       <tr class="${i===0 ? 'rank-1':''}">
-        <td>${i+1}</td><td>${escHtml(r.name)}</td><td>${escHtml(r.team)}</td>
+        <td>${i+1}</td><td>${escHtml(r.jersey||"")}</td><td>${escHtml(r.name)}</td>
+        <td>${escHtml(r.grade||"")}</td><td>${escHtml(r.team)}</td>
         <td>${escHtml(r.division||"")}</td><td>${escHtml(r.position||"")}</td><td>${r.count}</td>
       </tr>
     `).join("");
@@ -1334,8 +1442,8 @@ function renderTotals(){
 }
 
 document.getElementById("exportTotalsCsvBtn").addEventListener("click", ()=>{
-  const rows = [["Rank","Player","Team","Division","Position","POTG Count"]];
-  lastRenderedTotalsRows.forEach((r,i)=> rows.push([i+1, r.name, r.team, r.division||"", r.position||"", r.count]));
+  const rows = [["Rank","Jersey","Player","Grade","Team","Division","Position","POTG Count"]];
+  lastRenderedTotalsRows.forEach((r,i)=> rows.push([i+1, r.jersey||"", r.name, r.grade||"", r.team, r.division||"", r.position||"", r.count]));
   downloadCsv("cgbfl-potg-totals.csv", rows);
 });
 
@@ -1676,6 +1784,8 @@ function parseCsvToTeams(text){
   const lastIdx = idx(["last name","lastname","last"]);
   const positionIdx = idx(["position","pos"]);
   const roleIdx = idx(["role"]);
+  const jerseyIdx = idx(["jersey #","jersey","jersey number","number","#","uniform #"]);
+  const gradeIdx = idx(["grade","grade level","gr"]);
 
   if(divIdx === -1 || teamIdx === -1) throw new Error("CSV needs Division and Team columns.");
   if(fullNameIdx === -1 && (firstIdx === -1 || lastIdx === -1)){
@@ -1703,6 +1813,8 @@ function parseCsvToTeams(text){
     }
     playerName = playerName.replace(/\s+/g," ");   // collapse stray double spaces
     const position = positionIdx !== -1 ? (cols[positionIdx]||"").trim().toUpperCase() : "";
+    const jersey = jerseyIdx !== -1 ? (cols[jerseyIdx]||"").trim() : "";
+    const grade = gradeIdx !== -1 ? (cols[gradeIdx]||"").trim() : "";
     if(!division || !team || !playerName) continue;
 
     if(!result.divisions[division]) result.divisions[division] = [];
@@ -1712,7 +1824,7 @@ function parseCsvToTeams(text){
       result.divisions[division].push(teamObj);
     }
     if(!teamObj.players.find(p=>p.name === playerName)){
-      teamObj.players.push({ name: playerName, position });
+      teamObj.players.push({ name: playerName, position, jersey, grade });
     }
   }
   result.skippedNonPlayers = skippedNonPlayers;
@@ -1722,11 +1834,20 @@ function parseCsvToTeams(text){
 document.getElementById("addPlayerToBufferBtn").addEventListener("click", ()=>{
   const nameInput = document.getElementById("manualPlayerName");
   const posInput = document.getElementById("manualPlayerPosition");
+  const jerseyInput = document.getElementById("manualPlayerJersey");
+  const gradeInput = document.getElementById("manualPlayerGrade");
   const name = nameInput.value.trim();
   if(!name) return;
-  manualRosterBuffer.push({ name, position: posInput.value });
+  manualRosterBuffer.push({
+    name,
+    position: posInput.value,
+    jersey: jerseyInput.value.trim(),
+    grade: gradeInput.value.trim()
+  });
   nameInput.value = "";
   posInput.value = "";
+  jerseyInput.value = "";
+  gradeInput.value = "";
   renderManualRosterBuffer();
   nameInput.focus();
 });
@@ -1737,12 +1858,14 @@ function renderManualRosterBuffer(){
     container.innerHTML = `<div class="empty-note">No players added yet.</div>`;
     return;
   }
-  container.innerHTML = manualRosterBuffer.map((p,i)=>`
+  container.innerHTML = manualRosterBuffer.map((p,i)=>{
+    const meta = playerMeta(p);
+    return `
     <div class="team-list-item">
-      <span>${escHtml(p.name)}${p.position ? `<span class="pos-tag">${escHtml(p.position)}</span>` : ""}</span>
+      <span>${escHtml(p.name)}${meta ? `<span class="pos-tag">${escHtml(meta)}</span>` : ""}</span>
       <button class="btn secondary small remove-buffer-btn" data-i="${i}">Remove</button>
-    </div>
-  `).join("");
+    </div>`;
+  }).join("");
   container.querySelectorAll(".remove-buffer-btn").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       manualRosterBuffer.splice(parseInt(btn.dataset.i,10), 1);
@@ -1835,7 +1958,7 @@ function renderTeamsList(){
           <div>
             <div>${escHtml(t.name)} <span class="badge">${t.players.length} player${t.players.length===1?'':'s'}</span></div>
             <div style="color:var(--gray);font-size:13px;margin-top:2px;">
-              ${t.players.length ? t.players.map(p=>escHtml(p.name)+(p.position?` (${escHtml(p.position)})`:"")).join(", ") : "No players yet"}
+              ${t.players.length ? t.players.slice().sort(comparePlayers).map(p=>(p.jersey?`#${escHtml(p.jersey)} `:"")+escHtml(p.name)+(p.position?` (${escHtml(p.position)})`:"")).join(", ") : "No players yet"}
             </div>
           </div>
           <div class="row-flex">
@@ -1854,7 +1977,9 @@ function renderTeamsList(){
       if(!teamObj) return;
       document.getElementById("manualDivision").value = div;
       document.getElementById("manualTeam").value = team;
-      manualRosterBuffer = teamObj.players.map(p=>({name:p.name, position:p.position||""}));
+      manualRosterBuffer = teamObj.players.map(p=>({
+        name:p.name, position:p.position||"", jersey:p.jersey||"", grade:p.grade||""
+      }));
       renderManualRosterBuffer();
       document.getElementById("manualDivision").scrollIntoView({behavior:"smooth", block:"center"});
     });
