@@ -237,13 +237,19 @@
   .player-row.disabled{opacity:0.35;}
   .jersey-num{
     display:inline-block;
-    min-width:26px;
-    margin-right:8px;
-    padding:1px 5px;
+    min-width:28px;
+    margin-right:9px;
+    padding:2px 6px;
     background:var(--red);
     color:#fff;
-    font-family:'Anton',sans-serif;
-    font-size:12px;
+    /* Barlow Condensed at a lighter weight reads far more clearly for
+       numerals than Anton, which is very heavy at small sizes. */
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:500;
+    font-size:14px;
+    line-height:1.15;
+    letter-spacing:0.4px;
+    font-variant-numeric:lining-nums tabular-nums;
     text-align:center;
     border-radius:3px;
   }
@@ -493,17 +499,17 @@
 
     <div class="card" id="rosterCard" style="display:none;">
       <h2>Select Players of the Game</h2>
-      <p style="color:var(--gray);margin-top:-6px;">Pick 1–5 players from each team.</p>
+      <p style="color:var(--gray);margin-top:-6px;">Pick 1–4 of your own players and 1–3 from the opposing team.</p>
 
       <div class="roster-columns">
         <div class="roster-box">
           <h3 id="ownRosterTitle">Your Players</h3>
-          <div class="count" id="ownCount">0 of 5 selected</div>
+          <div class="count" id="ownCount">0 of 4 selected</div>
           <div id="ownRosterList"></div>
         </div>
         <div class="roster-box">
           <h3 id="oppRosterTitle">Opponent Players</h3>
-          <div class="count" id="oppCount">0 of 5 selected</div>
+          <div class="count" id="oppCount">0 of 3 selected</div>
           <div id="oppRosterList"></div>
         </div>
       </div>
@@ -516,7 +522,7 @@
     <div class="card" id="afterSubmitCard" style="display:none;">
       <h2>Updated Totals — This Game's Players</h2>
       <table>
-        <thead><tr><th>Player</th><th>Team</th><th>POTG Count (Season)</th></tr></thead>
+        <thead><tr><th>Player</th><th>Team</th><th>Own Coach</th><th>Opp Coach</th><th>Total</th></tr></thead>
         <tbody id="afterSubmitBody"></tbody>
       </table>
     </div>
@@ -577,7 +583,7 @@
       </div>
       <div id="totalsStatus" class="status-msg info"><span class="sync-dot"></span>Not yet loaded.</div>
       <table>
-        <thead><tr><th>#</th><th>Jersey</th><th>Player</th><th>Grade</th><th>Team</th><th>Division</th><th>Position</th><th>POTG Count</th></tr></thead>
+        <thead><tr><th>#</th><th>Jersey</th><th>Player</th><th>Grade</th><th>Team</th><th>Division</th><th>Position</th><th>Own Coach</th><th>Opp Coach</th><th>Total</th></tr></thead>
         <tbody id="totalsBody"></tbody>
       </table>
       <div class="row-flex" style="margin-top:10px;">
@@ -718,7 +724,7 @@ const GITHUB_OWNER = "brianbevis-dotcom";
 const GITHUB_REPO  = "Bantamdraft";
 const GITHUB_BRANCH = "main";
 // Trailing slashes are stripped automatically, so either form works.
-const WORKER_URL = "https://trojnas-gh-proxy.brianbevis.workers.dev";
+const WORKER_URL = "https://trojans-gh-proxy.brianbevis.workers.dev";
 const TEAMS_FILE = "teams-data.json";
 const SCHEDULE_FILE = "schedule-data.json";
 const POTG_FILE  = "potg-data.json";
@@ -729,6 +735,11 @@ const LOGO_MIME = "image/png";
 
 const DIVISIONS = ["JRT","Rookie","Minor","Major","2-4 GFL","5-6 GFL","7-8 GFL"];
 const POSITIONS = ["QB","RB","WR","TE","OL","DL","LB","DB","ATH"];
+
+// Nomination limits: coaches pick up to 4 of their own players and
+// up to 3 from the opposing team.
+const MAX_OWN = 4;
+const MAX_OPP = 3;
 
 let teamsData    = { divisions: {} };  // { "Major": [ {name:"Trojans", players:[{name,position}]} ] }
 let scheduleData = { games: [] };
@@ -1206,16 +1217,16 @@ function buildRoster(container, team, groupKey){
 function updateSelectionCounts(){
   const ownChecked = document.querySelectorAll(".own-check:checked");
   const oppChecked = document.querySelectorAll(".opp-check:checked");
-  ownCount.textContent = `${ownChecked.length} of 5 selected`;
-  oppCount.textContent = `${oppChecked.length} of 5 selected`;
+  ownCount.textContent = `${ownChecked.length} of ${MAX_OWN} selected`;
+  oppCount.textContent = `${oppChecked.length} of ${MAX_OPP} selected`;
 
-  enforceMax(".own-check", 5);
-  enforceMax(".opp-check", 5);
+  enforceMax(".own-check", MAX_OWN);
+  enforceMax(".opp-check", MAX_OPP);
 
   const dateOk = !!gameDateInput.value;
   const oppSelected = !!opponentSelect.value;
-  const validCount = ownChecked.length >= 1 && ownChecked.length <= 5 &&
-                     oppChecked.length >= 1 && oppChecked.length <= 5;
+  const validCount = ownChecked.length >= 1 && ownChecked.length <= MAX_OWN &&
+                     oppChecked.length >= 1 && oppChecked.length <= MAX_OPP;
   submitBtn.disabled = !(dateOk && oppSelected && validCount);
 }
 
@@ -1243,8 +1254,9 @@ submitBtn.addEventListener("click", async ()=>{
   const ownPlayers = Array.from(document.querySelectorAll(".own-check:checked")).map(c=>c.value);
   const oppPlayers = Array.from(document.querySelectorAll(".opp-check:checked")).map(c=>c.value);
 
-  if(ownPlayers.length < 1 || ownPlayers.length > 5 || oppPlayers.length < 1 || oppPlayers.length > 5){
-    showStatus(submitStatus, "err", "Select 1–5 players from each team.");
+  if(ownPlayers.length < 1 || ownPlayers.length > MAX_OWN ||
+     oppPlayers.length < 1 || oppPlayers.length > MAX_OPP){
+    showStatus(submitStatus, "err", `Select 1–${MAX_OWN} of your own players and 1–${MAX_OPP} from the opposing team.`);
     return;
   }
 
@@ -1298,8 +1310,12 @@ function showAfterSubmitTotals(record){
   const body = document.getElementById("afterSubmitBody");
   body.innerHTML = involved.map(pl=>{
     const key = `${pl.team}|||${pl.name}`;
-    const count = totals[key] ? totals[key].count : 1;
-    return `<tr><td>${escHtml(pl.name)}</td><td>${escHtml(pl.team)}</td><td>${count}</td></tr>`;
+    const t = totals[key];
+    const own = t ? t.ownCount : 0;
+    const opp = t ? t.oppCount : 0;
+    const tot = t ? t.count : 1;
+    return `<tr><td>${escHtml(pl.name)}</td><td>${escHtml(pl.team)}</td>` +
+           `<td>${own}</td><td>${opp}</td><td><b>${tot}</b></td></tr>`;
   }).join("");
   document.getElementById("afterSubmitCard").style.display = "block";
 }
@@ -1308,15 +1324,27 @@ function showAfterSubmitTotals(record){
 
 function computeTotals(){
   const totals = {};
+  const blank = (name, team, division)=>({
+    name, team, division,
+    ownCount: 0,   // nominated by their OWN coach
+    oppCount: 0,   // nominated by the OPPOSING coach
+    count: 0       // total
+  });
+
   potgData.nominations.forEach(rec=>{
+    // Players the submitting coach picked from their own roster.
     (rec.ownPlayers||[]).forEach(p=>{
       const key = `${rec.team}|||${p}`;
-      if(!totals[key]) totals[key] = { name:p, team:rec.team, division:rec.division, count:0 };
+      if(!totals[key]) totals[key] = blank(p, rec.team, rec.division);
+      totals[key].ownCount++;
       totals[key].count++;
     });
+    // Players the submitting coach picked from the opposing roster —
+    // from that player's perspective this is an opposing-coach nomination.
     (rec.opponentPlayers||[]).forEach(p=>{
       const key = `${rec.opponent}|||${p}`;
-      if(!totals[key]) totals[key] = { name:p, team:rec.opponent, division:rec.division, count:0 };
+      if(!totals[key]) totals[key] = blank(p, rec.opponent, rec.division);
+      totals[key].oppCount++;
       totals[key].count++;
     });
   });
@@ -1414,13 +1442,14 @@ function renderTotals(){
 
   const body = document.getElementById("totalsBody");
   if(rows.length === 0){
-    body.innerHTML = `<tr><td colspan="8" class="empty-note">No nominations recorded yet.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="10" class="empty-note">No nominations recorded yet.</td></tr>`;
   }else{
     body.innerHTML = rows.map((r,i)=>`
       <tr class="${i===0 ? 'rank-1':''}">
         <td>${i+1}</td><td>${escHtml(r.jersey||"")}</td><td>${escHtml(r.name)}</td>
         <td>${escHtml(r.grade||"")}</td><td>${escHtml(r.team)}</td>
-        <td>${escHtml(r.division||"")}</td><td>${escHtml(r.position||"")}</td><td>${r.count}</td>
+        <td>${escHtml(r.division||"")}</td><td>${escHtml(r.position||"")}</td>
+        <td>${r.ownCount||0}</td><td>${r.oppCount||0}</td><td><b>${r.count}</b></td>
       </tr>
     `).join("");
   }
@@ -1442,8 +1471,11 @@ function renderTotals(){
 }
 
 document.getElementById("exportTotalsCsvBtn").addEventListener("click", ()=>{
-  const rows = [["Rank","Jersey","Player","Grade","Team","Division","Position","POTG Count"]];
-  lastRenderedTotalsRows.forEach((r,i)=> rows.push([i+1, r.jersey||"", r.name, r.grade||"", r.team, r.division||"", r.position||"", r.count]));
+  const rows = [["Rank","Jersey","Player","Grade","Team","Division","Position","Own Coach Noms","Opposing Coach Noms","Total Noms"]];
+  lastRenderedTotalsRows.forEach((r,i)=> rows.push([
+    i+1, r.jersey||"", r.name, r.grade||"", r.team, r.division||"", r.position||"",
+    r.ownCount||0, r.oppCount||0, r.count
+  ]));
   downloadCsv("cgbfl-potg-totals.csv", rows);
 });
 
@@ -1858,7 +1890,11 @@ function renderManualRosterBuffer(){
     container.innerHTML = `<div class="empty-note">No players added yet.</div>`;
     return;
   }
-  container.innerHTML = manualRosterBuffer.map((p,i)=>{
+  // Display in jersey order (indices map back to the unsorted buffer).
+  const ordered = manualRosterBuffer
+    .map((p,i)=>({p, i}))
+    .sort((a,b)=>comparePlayers(a.p, b.p));
+  container.innerHTML = ordered.map(({p, i})=>{
     const meta = playerMeta(p);
     return `
     <div class="team-list-item">
