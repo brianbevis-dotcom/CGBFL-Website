@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CGBFL Game Day Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --chalk:#FBFAF8;
+    --paper:#FFFFFF;
+    --ink:#14110F;
+    --ink-soft:#5C5651;
+    --ink-faint:#8E8781;
+    --rule:#E3DFD8;
+    --red:#C8102E;
+    --red-deep:#8B0000;
+    --turf:#2F5D3A;
+    --live:#0A7D3E;
+    --warn:#B45309;
+    --pad:16px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--chalk);
+    color:var(--ink);
+    font-family:"Barlow Condensed",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:17px;
+    line-height:1.3;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 var(--pad) 64px;}
+
+  /* ---------- Masthead ---------- */
+  .mast{
+    background:var(--ink);
+    color:var(--paper);
+    padding:14px var(--pad) 12px;
+    position:relative;
+    overflow:hidden;
+  }
+  .mast::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:5px;
+    background:linear-gradient(90deg,var(--red) 0 33.3%,var(--paper) 33.3% 66.6%,var(--red) 66.6%);
+  }
+  .mast-inner{max-width:1180px;margin:0 auto;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .mast h1{
+    font-family:Anton,Impact,sans-serif;font-weight:400;
+    font-size:clamp(26px,6vw,40px);letter-spacing:.02em;
+    text-transform:uppercase;margin:0;line-height:.95;
+  }
+  .mast h1 em{font-style:normal;color:var(--red);}
+  .mast .sub{
+    font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+    color:#B9B2AC;font-weight:600;
+  }
+  .clock{margin-left:auto;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#B9B2AC;font-weight:600;}
+
+  /* ---------- Controls ---------- */
+  .controls{
+    position:sticky;top:0;z-index:40;
+    background:var(--chalk);
+    border-bottom:1px solid var(--rule);
+    padding-top:10px;
+  }
+  .controls-inner{max-width:1180px;margin:0 auto;padding:0 var(--pad);}
+  .ctl-label{
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:700;margin:0 0 6px;
+  }
+  .quickrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+  .btn{
+    font-family:inherit;font-size:14px;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;
+    background:var(--paper);color:var(--ink);
+    border:1.5px solid var(--ink);border-radius:2px;
+    padding:6px 12px;cursor:pointer;
+    transition:background .12s,color .12s;
+  }
+  .btn:hover{background:var(--ink);color:var(--paper);}
+  .btn.ghost{border-color:var(--rule);color:var(--ink-soft);}
+  .btn.ghost:hover{background:var(--rule);color:var(--ink);}
+  .btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,input:focus-visible,select:focus-visible{
+    outline:3px solid var(--red);outline-offset:2px;
+  }
+
+  .daystrip{
+    display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;
+    scrollbar-width:thin;-webkit-overflow-scrolling:touch;
+  }
+  .chip{
+    flex:0 0 auto;min-width:62px;
+    background:var(--paper);border:1.5px solid var(--rule);border-radius:3px;
+    padding:6px 10px 7px;cursor:pointer;text-align:center;
+    font-family:inherit;color:var(--ink);
+    transition:border-color .12s,background .12s;
+  }
+  .chip .dow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;}
+  .chip .dnum{font-family:Anton,sans-serif;font-size:22px;line-height:1.05;display:block;}
+  .chip .mon{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;}
+  .chip .cnt{font-size:11px;color:var(--ink-faint);font-weight:600;margin-top:1px;}
+  .chip:hover{border-color:var(--ink-faint);}
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper);}
+  .chip[aria-pressed="true"] .dow,.chip[aria-pressed="true"] .mon,.chip[aria-pressed="true"] .cnt{color:#B9B2AC;}
+  .chip.is-today{border-color:var(--red);}
+  .chip.is-today .dow{color:var(--red);}
+  .chip[aria-pressed="true"].is-today{background:var(--red);border-color:var(--red);}
+  .chip[aria-pressed="true"].is-today .dow,.chip[aria-pressed="true"].is-today .mon,.chip[aria-pressed="true"].is-today .cnt{color:#FFD9DE;}
+
+  .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-bottom:10px;}
+  .seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:2px;overflow:hidden;}
+  .seg button{
+    font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--paper);color:var(--ink);border:0;border-right:1px solid var(--rule);
+    padding:6px 11px;cursor:pointer;
+  }
+  .seg button:last-child{border-right:0;}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);}
+  select,input[type="search"]{
+    font-family:inherit;font-size:15px;color:var(--ink);
+    background:var(--paper);border:1.5px solid var(--rule);border-radius:2px;
+    padding:6px 9px;min-height:34px;
+  }
+  input[type="search"]{flex:1 1 190px;min-width:150px;}
+
+  /* ---------- Summary ---------- */
+  .summary{
+    display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;
+    padding:14px 0 4px;border-bottom:2px solid var(--ink);margin-bottom:2px;
+  }
+  .summary .big{font-family:Anton,sans-serif;font-size:30px;line-height:1;}
+  .summary .lbl{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;}
+  .summary .unit{display:flex;align-items:baseline;gap:7px;}
+
+  /* ---------- Day heading ---------- */
+  .dayhead{
+    display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+    margin:26px 0 0;padding-bottom:6px;border-bottom:1px solid var(--rule);
+  }
+  .dayhead h2{
+    font-family:Anton,sans-serif;font-weight:400;font-size:clamp(20px,4.4vw,27px);
+    text-transform:uppercase;letter-spacing:.02em;margin:0;
+  }
+  .dayhead .meta{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:600;}
+
+  /* ---------- Time slot ---------- */
+  .slot{display:grid;grid-template-columns:92px 1fr;gap:0 16px;padding:14px 0 4px;border-bottom:1px solid var(--rule);}
+  .slot:last-child{border-bottom:0;}
+  .slot-time{position:relative;padding-top:2px;}
+  .slot-time .hh{
+    font-family:Anton,sans-serif;font-size:28px;line-height:.9;letter-spacing:.01em;display:block;
+  }
+  .slot-time .ampm{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;}
+  .slot-time .ct{font-size:12px;color:var(--ink-faint);font-weight:600;margin-top:5px;}
+  .slot.live .slot-time .hh{color:var(--live);}
+  .badge-live{
+    display:inline-block;margin-top:6px;
+    background:var(--live);color:#fff;font-size:10px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;padding:2px 6px;border-radius:2px;
+  }
+  .badge-next{
+    display:inline-block;margin-top:6px;
+    background:var(--red);color:#fff;font-size:10px;font-weight:700;
+    letter-spacing:.16em;text-transform:uppercase;padding:2px 6px;border-radius:2px;
+  }
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:8px;padding-bottom:12px;}
+
+  /* ---------- Game card ---------- */
+  .game{
+    position:relative;background:var(--paper);
+    border:1px solid var(--rule);border-radius:3px;
+    padding:9px 11px 9px 20px;overflow:hidden;
+  }
+  .spine{position:absolute;left:0;top:0;bottom:0;width:9px;display:flex;flex-direction:column;}
+  .spine i{flex:1;display:block;}
+  .game.past{opacity:.5;}
+  .game-top{display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap;}
+  .tag{
+    font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    padding:2px 5px;border-radius:2px;
+  }
+  .tag.sport-T{background:var(--ink);color:var(--paper);}
+  .tag.sport-F{background:var(--rule);color:var(--ink);}
+  .tag.div{background:transparent;color:var(--ink-soft);border:1px solid var(--rule);}
+  .field{
+    margin-left:auto;font-size:12px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--red-deep);white-space:nowrap;
+  }
+  .matchup{font-size:19px;font-weight:600;line-height:1.15;margin:0 0 2px;}
+  .matchup .vs{color:var(--ink-faint);font-weight:500;font-size:14px;padding:0 3px;}
+  .kick{font-size:12px;color:var(--ink-faint);font-weight:600;letter-spacing:.06em;}
+  .crew{
+    margin-top:7px;padding-top:6px;border-top:1px dotted var(--rule);
+    font-size:13px;color:var(--ink-soft);display:grid;gap:2px;
+  }
+  .crew div{display:flex;gap:5px;}
+  .crew b{
+    flex:0 0 58px;font-size:10px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-faint);padding-top:2px;
+  }
+  .crew .val{flex:1;}
+  .crew .gap{color:var(--warn);font-weight:600;}
+  .tower .val{color:var(--turf);font-weight:600;}
+
+  /* ---------- Empty ---------- */
+  .chip .pd{
+    display:inline-block;width:6px;height:6px;border-radius:50%;
+    background:var(--red);margin-left:4px;vertical-align:middle;
+  }
+  .chip[aria-pressed="true"] .pd{background:#FF8FA0;}
+  .btn.pic{border-color:var(--red);color:var(--red);}
+  .btn.pic:hover{background:var(--red);color:#fff;}
+  .btn.pic[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff;}
+  .tag.sport-C{background:#6B21A8;color:var(--paper);}
+  .tag.kind-P{background:var(--red);color:var(--paper);}
+  .game.pic{border-style:dashed;}
+  .game.pic .matchup{font-size:18px;}
+  .slot.picslot .slot-time .hh{color:var(--red);}
+  .feedbar{
+    display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+    margin:12px 0 0;padding:7px 11px;
+    border:1px solid var(--rule);border-left:3px solid var(--ink-faint);
+    border-radius:2px;background:var(--paper);
+    font-size:13px;color:var(--ink-soft);letter-spacing:.03em;
+  }
+  .feedbar.live{border-left-color:var(--live);}
+  .feedbar.stale{border-left-color:var(--warn);}
+  .feedbar.offline{border-left-color:var(--red);}
+  .feedbar .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-faint);flex:0 0 auto;}
+  .feedbar.live .dot{background:var(--live);}
+  .feedbar.stale .dot{background:var(--warn);}
+  .feedbar.offline .dot{background:var(--red);}
+  .btn.sm{font-size:12px;padding:3px 9px;margin-left:auto;}
+  .empty{
+    text-align:center;padding:56px 20px;border:2px dashed var(--rule);
+    border-radius:4px;margin-top:26px;
+  }
+  .empty h3{font-family:Anton,sans-serif;font-weight:400;font-size:22px;text-transform:uppercase;margin:0 0 6px;}
+  .empty p{margin:0 0 14px;color:var(--ink-soft);}
+
+  .foot{
+    margin-top:30px;padding-top:12px;border-top:1px solid var(--rule);
+    font-size:12px;color:var(--ink-faint);letter-spacing:.06em;
+  }
+
+  @media (max-width:560px){
+    .slot{grid-template-columns:70px 1fr;gap:0 11px;}
+    .slot-time .hh{font-size:23px;}
+    .cards{grid-template-columns:1fr;}
+    .matchup{font-size:18px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+  @media print{
+    .controls,.mast .clock,.foot,.quickrow{display:none;}
+    body{background:#fff;font-size:12px;}
+    .game{break-inside:avoid;border-color:#bbb;}
+    .slot{break-inside:avoid;}
+    .cards{grid-template-columns:repeat(3,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <h1>Trojans <em>Game Day</em></h1>
+    <span class="sub">Center Grove Bantam Football</span>
+    <span class="clock" id="clock"></span>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="controls-inner">
+    <p class="ctl-label">Pick a day — or tap several to combine them</p>
+    <div class="quickrow">
+      <button class="btn" id="btnToday">Today</button>
+      <button class="btn ghost" id="btnWeekend">This weekend</button>
+      <button class="btn ghost" id="btnWeek">Next 7 days</button>
+      <button class="btn ghost" id="btnAll">Whole season</button>
+      <button class="btn ghost" id="btnClear">Clear</button>
+      <button class="btn pic" id="btnPics" aria-pressed="false">Picture day only</button>
+    </div>
+    <div class="daystrip" id="daystrip" role="group" aria-label="Choose dates"></div>
+    <div class="filters">
+      <div class="seg" role="group" aria-label="Sport">
+        <button data-sport="" aria-pressed="true">All</button>
+        <button data-sport="T" aria-pressed="false">Tackle</button>
+        <button data-sport="F" aria-pressed="false">Flag</button>
+        <button data-sport="C" aria-pressed="false">Cheer</button>
+      </div>
+      <select id="fDiv" aria-label="Division"><option value="">All divisions</option></select>
+      <select id="fField" aria-label="Field"><option value="">All fields</option></select>
+      <input type="search" id="fSearch" placeholder="Search team, coach, or official">
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="summary" id="summary" hidden>
+    <div class="unit"><span class="big" id="sGames">0</span><span class="lbl">Games</span></div>
+    <div class="unit"><span class="big" id="sTackle">0</span><span class="lbl">Tackle</span></div>
+    <div class="unit"><span class="big" id="sFlag">0</span><span class="lbl">Flag</span></div>
+    <div class="unit"><span class="big" id="sFields">0</span><span class="lbl">Fields in use</span></div>
+    <div class="unit" id="uPics" hidden><span class="big" id="sPics">0</span><span class="lbl">Photo slots</span></div>
+    <div class="unit"><span class="big" id="sFirst">—</span><span class="lbl">First kickoff</span></div>
+  </div>
+  <div class="feedbar" id="feedbar" hidden>
+    <span class="dot" id="feedDot"></span>
+    <span id="feedMsg">Loading live schedule…</span>
+    <button class="btn ghost sm" id="btnRefresh" type="button">Refresh</button>
+  </div>
+  <div id="board"></div>
+  <p class="foot" id="foot"></p>
+</main>
+
+<script>
+const DATA = {"teams":{"Northwestern":["4E2A84","B6ACD1"],"Wisconsin":["C5050C","FFFFFF"],"Dolphins":["008E97","FC4C02"],"Chargers":["0080C6","FFC20E"],"Texans":["03202F","A71930"],"Cowboys":["041E42","869397"],"Oregon":["154733","FEE123"],"Minnesota":["7A0019","FFCC33"],"Michigan":["00274C","FFCB05"],"Penn State":["041E42","FFFFFF"],"Michigan State":["18453B","97A2A2"],"Broncos":["002244","FB4F14"],"Colts":["002C5F","A5ACAF"],"UCLA":["2D68C4","F2A900"],"Illinois":["13294B","FF5F05"],"Washington":["4B2E83","B7A57A"],"Ohio State":["BB0000","666666"],"Iowa":["000000","FFCD00"],"Bengals JV":["000000","FB4F14"],"Cowboys JV":["041E42","869397"],"Steelers JV":["101820","FFB612"],"Ravens JV":["241773","9E7C0C"],"Colts JV":["002C5F","A5ACAF"],"Bears JV":["0B162A","C83803"],"Titans JV":["0C2340","4B92DB"],"Seahawks JV":["002244","69BE28"],"Purdue":["000000","CFB991"],"Indiana":["990000","EEEDEB"],"Seahawks Varsity":["002244","69BE28"],"Cowboys Varsity":["041E42","869397"],"Broncos Varsity":["002244","FB4F14"],"Titans Varsity":["0C2340","4B92DB"],"Bengals Varsity":["000000","FB4F14"],"Chiefs Varsity":["E31837","FFB81C"],"Bears Varsity":["0B162A","C83803"],"Broncos JV":["002244","FB4F14"],"Chiefs JV":["E31837","FFB81C"],"Nebraska":["D00000","F5F1E7"],"Bengals":["000000","FB4F14"],"Bears":["0B162A","C83803"],"Steelers":["101820","FFB612"],"Seahawks":["002244","69BE28"],"Chiefs":["E31837","FFB81C"],"Titans":["0C2340","4B92DB"],"Ravens":["241773","9E7C0C"],"Junior Trojans":["C8102E","000000"],"Junior Trojans Cheer":["C8102E","000000"],"Minnesota Cheer":["7A0019","FFCC33"],"Michigan State Cheer":["18453B","97A2A2"],"UCLA Cheer":["2D68C4","F2A900"],"Michigan Cheer":["00274C","FFCB05"],"Indiana Cheer":["990000","EEEDEB"],"Ohio State Cheer":["BB0000","666666"],"Oregon Cheer":["154733","FEE123"],"Penn State Cheer":["041E42","FFFFFF"],"Iowa Cheer":["000000","FFCD00"],"Northwestern Cheer":["4E2A84","B6ACD1"],"Illinois Cheer":["13294B","FF5F05"],"Purdue Cheer":["000000","CFB991"],"Nebraska Cheer":["D00000","F5F1E7"],"Wisconsin Cheer":["C5050C","FFFFFF"],"Washington Cheer":["4B2E83","B7A57A"]},"games":[{"k":"G","d":"2026-08-01","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Bengals JV","a":"Cowboys JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Scheidler"},{"k":"G","d":"2026-08-01","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Steelers JV","a":"Ravens JV","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Sean Egenolf"},{"k":"G","d":"2026-08-01","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Colts JV","a":"Bears JV","cx":"Collins","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Blake Hornsby"},{"k":"G","d":"2026-08-01","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Titans JV","a":"Seahawks JV","cx":"Collins","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Davontray Thomas"},{"k":"G","d":"2026-08-01","w":"Sat","t":"09:00","te":"10:30","sp":"T","dv":"Minors","h":"Purdue","a":"Michigan State","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Illinois","tc":"Wood","hc":"Justin Green"},{"k":"G","d":"2026-08-01","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Rookie","h":"Indiana","a":"Ohio State","cx":"Skillman","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Purdue","tc":"Dirksen","hc":"Jeff Williams"},{"k":"G","d":"2026-08-01","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Minors","h":"Wisconsin","a":"Indiana","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Minors Iowa","tc":"Adams","hc":"Chase Flory"},{"k":"G","d":"2026-08-01","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Seahawks Varsity","a":"Cowboys Varsity","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Anthony Neu"},{"k":"G","d":"2026-08-01","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Colts","a":"Broncos Varsity","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Tyler Keller"},{"k":"G","d":"2026-08-01","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Titans Varsity","a":"Bengals Varsity","cx":"Collins","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Andrew Halterman"},{"k":"G","d":"2026-08-01","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Chiefs Varsity","a":"Bears Varsity","cx":"Collins","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Daren Johnson"},{"k":"G","d":"2026-08-01","w":"Sat","t":"10:30","te":"11:30","sp":"F","dv":"2-4th Girls","h":"Dolphins","a":"Chargers","cx":"Adams","sd":"North","r1":"Mia Lidy","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"G","d":"2026-08-01","w":"Sat","t":"10:30","te":"11:30","sp":"F","dv":"2-4th Girls","h":"Texans","a":"Cowboys","cx":"Adams","sd":"South","r1":"Macie Painter","r2":"","rn":"","tt":"","tc":"","hc":"Bradley Huffman"},{"k":"G","d":"2026-08-01","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Majors","h":"Northwestern","a":"Wisconsin","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Michigan State","tc":"Hamilton","hc":"Ryan Cronin"},{"k":"G","d":"2026-08-01","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"Northwestern","a":"Oregon","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Indiana","tc":"Clancy","hc":"Michael Harvey"},{"k":"G","d":"2026-08-01","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"Minnesota","a":"Michigan","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan State","tc":"","hc":"Jordan Bunch"},{"k":"G","d":"2026-08-01","w":"Sat","t":"12:00","te":"13:00","sp":"F","dv":"2-4th Girls","h":"Broncos","a":"Colts","cx":"Adams","sd":"North","r1":"Mia Lidy","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Joshua Gibson"},{"k":"G","d":"2026-08-01","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Majors","h":"Penn State","a":"Michigan State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Ohio State","tc":"Hornsby","hc":"Brad Howell"},{"k":"G","d":"2026-08-01","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"UCLA","a":"Penn State","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan","tc":"Pulse","hc":"Marshall Reed"},{"k":"G","d":"2026-08-01","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"Illinois","a":"Washington","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Minors Minnesota","tc":"Bunch","hc":"Justin Wood"},{"k":"G","d":"2026-08-01","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Majors","h":"Oregon","a":"Ohio State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Northwestern","tc":"Lidy","hc":"Andrew Sitter"},{"k":"G","d":"2026-08-01","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"5-6th Girls","h":"Texans","a":"Colts","cx":"Moore","sd":"North","r1":"Macie Painter","r2":"","rn":"","tt":"","tc":"","hc":"Jaime Hoch"},{"k":"G","d":"2026-08-01","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"5-6th Girls","h":"Dolphins","a":"Broncos","cx":"Moore","sd":"South","r1":"Mia Lidy","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Paul Bennett"},{"k":"G","d":"2026-08-01","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"7-8th Girls","h":"Chargers","a":"Dolphins","cx":"Skillman","sd":"East","r1":"","r2":"","rn":"1 official must be 18+","tt":"","tc":"","hc":"JB PAXSON"},{"k":"G","d":"2026-08-01","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"7-8th Girls","h":"Texans","a":"Colts","cx":"Skillman","sd":"West","r1":"Ben Balsley","r2":"Ryan Mueller","rn":"1 official must be 18+","tt":"","tc":"","hc":"Andrew Griffin"},{"k":"G","d":"2026-08-01","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Minors","h":"Iowa","a":"Ohio State","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Minors Northwestern","tc":"","hc":"Kyle Adams"},{"k":"G","d":"2026-08-03","w":"Mon","t":"18:00","te":"19:00","sp":"F","dv":"7-8th Girls","h":"Colts","a":"Chargers","cx":"Collins","sd":"North","r1":"Alli Canada","r2":"Mia Lidy","rn":"1 official must be 18+","tt":"","tc":"","hc":"Zack Pasley"},{"k":"G","d":"2026-08-03","w":"Mon","t":"19:00","te":"20:00","sp":"F","dv":"7-8th Girls","h":"Dolphins","a":"Texans","cx":"Collins","sd":"South","r1":"Alli Canada","r2":"Mia Lidy","rn":"1 official must be 18+","tt":"","tc":"","hc":"Parish Crowell Sr"},{"k":"P","d":"2026-08-04","w":"Tue","t":"17:30","te":"17:45","sp":"T","dv":"Junior Trojans","h":"Junior Trojans","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-04","w":"Tue","t":"17:40","te":"17:55","sp":"C","dv":"Junior Trojans","h":"Junior Trojans Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-04","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Rookie","h":"Michigan","a":"Penn State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Indiana","tc":"Williams","hc":"Nicholas Bellinger"},{"k":"G","d":"2026-08-04","w":"Tue","t":"18:00","te":"19:30","sp":"T","dv":"Minors","h":"Washington","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors UCLA","tc":"Reed","hc":"Christopher Feltman"},{"k":"P","d":"2026-08-04","w":"Tue","t":"18:15","te":"18:30","sp":"T","dv":"Minors","h":"Michigan State","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-04","w":"Tue","t":"18:15","te":"18:30","sp":"T","dv":"Minors","h":"Minnesota","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-04","w":"Tue","t":"18:30","te":"18:45","sp":"T","dv":"Minors","h":"Michigan","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-04","w":"Tue","t":"18:30","te":"18:45","sp":"T","dv":"Minors","h":"UCLA","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-04","w":"Tue","t":"18:45","te":"19:00","sp":"C","dv":"Minors","h":"Michigan State Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-04","w":"Tue","t":"18:45","te":"19:00","sp":"C","dv":"Minors","h":"Minnesota Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-04","w":"Tue","t":"18:55","te":"19:10","sp":"C","dv":"Minors","h":"Michigan Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-04","w":"Tue","t":"18:55","te":"19:10","sp":"C","dv":"Minors","h":"UCLA Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-04","w":"Tue","t":"19:00","te":"20:00","sp":"F","dv":"2-4th Girls","h":"Colts","a":"Texans","cx":"Moore","sd":"North","r1":"Mia Lidy","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Ryan Cronin"},{"k":"G","d":"2026-08-04","w":"Tue","t":"19:00","te":"20:00","sp":"F","dv":"2-4th Girls","h":"Dolphins","a":"Broncos","cx":"Moore","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"G","d":"2026-08-04","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Michigan","a":"UCLA","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Purdue","tc":"Green","hc":"Derrick Pulse"},{"k":"G","d":"2026-08-04","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Michigan State","a":"Minnesota","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Washington","tc":"Feltman","hc":"Shawn Sanders"},{"k":"P","d":"2026-08-05","w":"Wed","t":"17:00","te":"17:15","sp":"T","dv":"Minors","h":"Indiana","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-05","w":"Wed","t":"17:30","te":"17:45","sp":"C","dv":"Minors","h":"Indiana Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-05","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Indiana","a":"Iowa","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Ohio State","tc":"Rose","hc":"Joshua Clancy"},{"k":"G","d":"2026-08-05","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Majors","h":"Indiana","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Oregon","tc":"Sitter","hc":"Aaron Halterman"},{"k":"G","d":"2026-08-05","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Colts","a":"Dolphins","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"","rn":"","tt":"","tc":"","hc":"Rich Cary"},{"k":"G","d":"2026-08-05","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Texans","a":"Cowboys","cx":"Moore","sd":"South","r1":"Piper Hale","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Jaime Hoch"},{"k":"P","d":"2026-08-05","w":"Wed","t":"18:15","te":"18:30","sp":"T","dv":"Majors","h":"Michigan State","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-05","w":"Wed","t":"18:15","te":"18:30","sp":"T","dv":"Majors","h":"Ohio State","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-05","w":"Wed","t":"18:30","te":"18:45","sp":"T","dv":"Majors","h":"Oregon","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-05","w":"Wed","t":"18:30","te":"18:45","sp":"T","dv":"Majors","h":"Penn State","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-05","w":"Wed","t":"18:45","te":"19:00","sp":"C","dv":"Majors","h":"Ohio State Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-05","w":"Wed","t":"18:45","te":"19:00","sp":"C","dv":"Majors","h":"Oregon Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-05","w":"Wed","t":"18:45","te":"19:00","sp":"C","dv":"Majors","h":"Penn State Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-05","w":"Wed","t":"19:00","te":"20:00","sp":"F","dv":"5-6th Girls","h":"Broncos","a":"Chargers","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"Piper Hale","rn":"","tt":"","tc":"","hc":"Jon-Erik Bennett"},{"k":"G","d":"2026-08-05","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Ohio State","a":"Penn State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Indiana","tc":"Halterman","hc":"Blake Hornsby"},{"k":"G","d":"2026-08-05","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Michigan State","a":"Oregon","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Northwestern","tc":"Lidy","hc":"Greg Hamilton"},{"k":"G","d":"2026-08-06","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Broncos JV","a":"Titans JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Marshall Reed"},{"k":"G","d":"2026-08-06","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Bears JV","a":"Steelers JV","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jacob Duke"},{"k":"G","d":"2026-08-06","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Seahawks JV","a":"Bengals JV","cx":"Collins","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"John Massingale"},{"k":"G","d":"2026-08-06","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Cowboys JV","a":"Colts JV","cx":"Collins","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alejandro Higareda"},{"k":"G","d":"2026-08-06","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Ravens JV","a":"Chiefs JV","cx":"Moore","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Cory Freeman"},{"k":"G","d":"2026-08-06","w":"Thu","t":"19:00","te":"20:00","sp":"F","dv":"1st Grade","h":"Seahawks Varsity","a":"Broncos Varsity","cx":"Moore","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Anthony Neu"},{"k":"G","d":"2026-08-06","w":"Thu","t":"19:00","te":"20:00","sp":"F","dv":"1st Grade","h":"Bears Varsity","a":"Titans Varsity","cx":"Moore","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Drew Calvert"},{"k":"G","d":"2026-08-06","w":"Thu","t":"19:00","te":"20:00","sp":"F","dv":"1st Grade","h":"Bengals Varsity","a":"Cowboys Varsity","cx":"Watson","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"G","d":"2026-08-06","w":"Thu","t":"19:00","te":"20:00","sp":"F","dv":"1st Grade","h":"Colts","a":"Chiefs Varsity","cx":"Watson","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Tyler Keller"},{"k":"P","d":"2026-08-08","w":"Sat","t":"07:50","te":"08:05","sp":"T","dv":"Minors","h":"Iowa","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"07:50","te":"08:05","sp":"T","dv":"Minors","h":"Northwestern","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"07:50","te":"08:05","sp":"T","dv":"Minors","h":"Purdue","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"08:00","te":"08:15","sp":"T","dv":"Rookie","h":"Indiana","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"08:00","te":"08:15","sp":"T","dv":"Rookie","h":"Penn State","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-08","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Bengals JV","a":"Titans JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Scheidler"},{"k":"G","d":"2026-08-08","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Bears JV","a":"Ravens JV","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jacob Duke"},{"k":"G","d":"2026-08-08","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Colts JV","a":"Steelers JV","cx":"Skillman","sd":"East","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Blake Hornsby"},{"k":"G","d":"2026-08-08","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Chiefs JV","a":"Broncos JV","cx":"Skillman","sd":"West","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jason Cahill"},{"k":"P","d":"2026-08-08","w":"Sat","t":"08:15","te":"08:30","sp":"C","dv":"Minors","h":"Iowa Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"08:15","te":"08:30","sp":"C","dv":"Minors","h":"Northwestern Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-08","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Rookie","h":"Indiana","a":"Penn State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Nebraska","tc":"Reagan","hc":"Jeff Williams"},{"k":"G","d":"2026-08-08","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Minors","h":"Iowa","a":"Purdue","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Oregon","tc":"Lewis","hc":"Kyle Adams"},{"k":"G","d":"2026-08-08","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Minors","h":"Northwestern","a":"Michigan State","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Minors Illinois","tc":"Wood","hc":"Michael Harvey"},{"k":"G","d":"2026-08-08","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"2-4th Girls","h":"Texans","a":"Dolphins","cx":"Adams","sd":"North","r1":"Alli Canada","r2":"","rn":"","tt":"","tc":"","hc":"Bradley Huffman"},{"k":"G","d":"2026-08-08","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"2-4th Girls","h":"Chargers","a":"Colts","cx":"Adams","sd":"South","r1":"Joey Matis","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Kyle Fisher"},{"k":"G","d":"2026-08-08","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"Kindergarten","h":"Seahawks JV","a":"Cowboys JV","cx":"Skillman","sd":"East","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"John Massingale"},{"k":"G","d":"2026-08-08","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Broncos Varsity","a":"Bears Varsity","cx":"Skillman","sd":"West","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Gavin Curd"},{"k":"P","d":"2026-08-08","w":"Sat","t":"09:15","te":"09:30","sp":"T","dv":"Minors","h":"Illinois","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"09:15","te":"09:30","sp":"T","dv":"Majors","h":"Northwestern","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"09:15","te":"09:30","sp":"T","dv":"Minors","h":"Ohio State","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"09:30","te":"09:45","sp":"T","dv":"Rookie","h":"Michigan","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"09:30","te":"09:45","sp":"T","dv":"Rookie","h":"Purdue","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"09:40","te":"09:55","sp":"C","dv":"Minors","h":"Illinois Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"09:40","te":"09:55","sp":"C","dv":"Minors","h":"Ohio State Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"09:45","te":"10:00","sp":"C","dv":"Rookie","h":"Purdue Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-08","w":"Sat","t":"10:30","te":"11:30","sp":"F","dv":"7-8th Girls","h":"Dolphins","a":"Colts","cx":"Adams","sd":"North","r1":"Joey Matis","r2":"Alli Canada","rn":"1 official must be 18+","tt":"","tc":"","hc":"Parish Crowell Sr"},{"k":"G","d":"2026-08-08","w":"Sat","t":"10:30","te":"11:30","sp":"F","dv":"7-8th Girls","h":"Texans","a":"Chargers","cx":"Adams","sd":"South","r1":"Ben Balsley","r2":"Ryan Mueller","rn":"1 official must be 18+","tt":"","tc":"","hc":"Andrew Griffin"},{"k":"G","d":"2026-08-08","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Rookie","h":"Michigan","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Ohio State","tc":"Ward","hc":"Nicholas Bellinger"},{"k":"G","d":"2026-08-08","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"Ohio State","a":"Illinois","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Iowa","tc":"Adams","hc":"Bradley Rose"},{"k":"G","d":"2026-08-08","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Majors","h":"Michigan State","a":"Northwestern","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Majors Penn State","tc":"Howell","hc":"Greg Hamilton"},{"k":"P","d":"2026-08-08","w":"Sat","t":"10:45","te":"11:00","sp":"T","dv":"Rookie","h":"Nebraska","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"10:45","te":"11:00","sp":"T","dv":"Minors","h":"Oregon","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"10:45","te":"11:00","sp":"T","dv":"Majors","h":"Purdue","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"11:05","te":"11:20","sp":"T","dv":"Rookie","h":"Ohio State","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"11:05","te":"11:20","sp":"C","dv":"Minors","h":"Oregon Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"11:05","te":"11:20","sp":"C","dv":"Majors","h":"Purdue Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-08","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Rookie","h":"Ohio State","a":"Nebraska","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Penn State","tc":"Egenolf","hc":"Benjamin Ward"},{"k":"G","d":"2026-08-08","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"Michigan","a":"Oregon","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan State","tc":"","hc":"Derrick Pulse"},{"k":"G","d":"2026-08-08","w":"Sat","t":"12:00","te":"13:00","sp":"F","dv":"2-4th Girls","h":"Cowboys","a":"Broncos","cx":"Skillman","sd":"East","r1":"Joey Matis","r2":"Macie Painter","rn":"","tt":"","tc":"","hc":"Logan Deffner"},{"k":"G","d":"2026-08-08","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Majors","h":"Purdue","a":"Penn State","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Majors Wisconsin","tc":"Ferguson","hc":"Randel Dirksen"},{"k":"P","d":"2026-08-08","w":"Sat","t":"12:15","te":"12:30","sp":"T","dv":"Majors","h":"Indiana","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"12:15","te":"12:30","sp":"C","dv":"Rookie","h":"Nebraska Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"12:15","te":"12:30","sp":"T","dv":"Majors","h":"Wisconsin","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"12:30","te":"12:45","sp":"C","dv":"Majors","h":"Indiana Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-08","w":"Sat","t":"12:30","te":"12:45","sp":"C","dv":"Majors","h":"Wisconsin Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-08","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Minors","h":"Minnesota","a":"UCLA","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan","tc":"Pulse","hc":"Jordan Bunch"},{"k":"G","d":"2026-08-08","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Majors","h":"Wisconsin","a":"Indiana","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Majors Northwestern","tc":"Lidy","hc":"Andre Ferguson"},{"k":"P","d":"2026-08-10","w":"Mon","t":"17:20","te":"17:35","sp":"F","dv":"7-8th Girls","h":"Chargers","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-10","w":"Mon","t":"17:20","te":"17:35","sp":"F","dv":"7-8th Girls","h":"Dolphins","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-10","w":"Mon","t":"18:00","te":"19:00","sp":"T","dv":"Rookie","h":"Purdue","a":"Ohio State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Nebraska","tc":"Reagan","hc":"Stacey Dirksen"},{"k":"G","d":"2026-08-10","w":"Mon","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Ohio State","a":"Minnesota","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Wisconsin","tc":"Flory","hc":"Bradley Rose"},{"k":"G","d":"2026-08-10","w":"Mon","t":"18:00","te":"19:00","sp":"F","dv":"7-8th Girls","h":"Chargers","a":"Dolphins","cx":"Moore","sd":"South","r1":"Chad Roehling","r2":"Alli Canada","rn":"1 official must be 18+","tt":"","tc":"","hc":"JB PAXSON"},{"k":"P","d":"2026-08-10","w":"Mon","t":"18:00","te":"18:15","sp":"F","dv":"7-8th Girls","h":"Colts","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-10","w":"Mon","t":"18:00","te":"18:15","sp":"F","dv":"7-8th Girls","h":"Texans","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-10","w":"Mon","t":"18:15","te":"18:30","sp":"T","dv":"Minors","h":"Wisconsin","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-10","w":"Mon","t":"18:35","te":"18:50","sp":"C","dv":"Minors","h":"Wisconsin Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-10","w":"Mon","t":"19:00","te":"20:00","sp":"F","dv":"7-8th Girls","h":"Colts","a":"Texans","cx":"Moore","sd":"North","r1":"Chad Roehling","r2":"Alli Canada","rn":"1 official must be 18+","tt":"","tc":"","hc":"Zack Pasley"},{"k":"G","d":"2026-08-10","w":"Mon","t":"19:30","te":"20:30","sp":"T","dv":"Rookie","h":"Penn State","a":"Nebraska","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Purdue","tc":"Dirksen","hc":"Sean Egenolf"},{"k":"G","d":"2026-08-10","w":"Mon","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Illinois","a":"Wisconsin","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Minnesota","tc":"Bunch","hc":"Justin Wood"},{"k":"P","d":"2026-08-11","w":"Tue","t":"17:15","te":"17:30","sp":"F","dv":"2-4th Girls","h":"Broncos","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-11","w":"Tue","t":"17:15","te":"17:30","sp":"F","dv":"2-4th Girls","h":"Texans","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-11","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Purdue","a":"Indiana","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Penn State","tc":"","hc":"Justin Green"},{"k":"G","d":"2026-08-11","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"UCLA","a":"Iowa","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Northwestern","tc":"","hc":"Marshall Reed"},{"k":"G","d":"2026-08-11","w":"Tue","t":"18:00","te":"19:00","sp":"F","dv":"2-4th Girls","h":"Broncos","a":"Texans","cx":"Moore","sd":"North","r1":"Joey Matis","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Joshua Gibson"},{"k":"P","d":"2026-08-11","w":"Tue","t":"18:00","te":"18:15","sp":"F","dv":"2-4th Girls","h":"Chargers","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-11","w":"Tue","t":"18:00","te":"18:15","sp":"F","dv":"2-4th Girls","h":"Colts","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-11","w":"Tue","t":"18:15","te":"18:30","sp":"F","dv":"2-4th Girls","h":"Cowboys","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-11","w":"Tue","t":"18:15","te":"18:30","sp":"F","dv":"2-4th Girls","h":"Dolphins","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-11","w":"Tue","t":"18:15","te":"18:30","sp":"T","dv":"Minors","h":"Washington","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-11","w":"Tue","t":"18:30","te":"18:45","sp":"T","dv":"Minors","h":"Penn State","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-11","w":"Tue","t":"18:45","te":"19:00","sp":"C","dv":"Minors","h":"Penn State Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-11","w":"Tue","t":"18:45","te":"19:00","sp":"C","dv":"Minors","h":"Washington Cheer","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-11","w":"Tue","t":"19:00","te":"20:00","sp":"F","dv":"2-4th Girls","h":"Chargers","a":"Cowboys","cx":"Moore","sd":"North","r1":"Joey Matis","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Kyle Fisher"},{"k":"G","d":"2026-08-11","w":"Tue","t":"19:00","te":"20:00","sp":"F","dv":"2-4th Girls","h":"Colts","a":"Dolphins","cx":"Moore","sd":"South","r1":"Mia Lidy","r2":"","rn":"","tt":"","tc":"","hc":"Ryan Cronin"},{"k":"G","d":"2026-08-11","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Michigan State","a":"Penn State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Minnesota","tc":"Bunch","hc":"Shawn Sanders"},{"k":"G","d":"2026-08-11","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Washington","a":"Northwestern","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Purdue","tc":"Green","hc":"Christopher Feltman"},{"k":"P","d":"2026-08-12","w":"Wed","t":"17:10","te":"17:25","sp":"F","dv":"5-6th Girls","h":"Cowboys","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-12","w":"Wed","t":"17:10","te":"17:25","sp":"F","dv":"5-6th Girls","h":"Texans","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-12","w":"Wed","t":"17:20","te":"17:35","sp":"F","dv":"5-6th Girls","h":"Colts","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-12","w":"Wed","t":"17:20","te":"17:35","sp":"F","dv":"5-6th Girls","h":"Dolphins","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-12","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Majors","h":"Northwestern","a":"Indiana","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Purdue","tc":"Dirksen","hc":"Ryan Cronin"},{"k":"G","d":"2026-08-12","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Minnesota","a":"Illinois","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Ohio State","tc":"Rose","hc":"Jordan Bunch"},{"k":"G","d":"2026-08-12","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Chargers","a":"Dolphins","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"","rn":"","tt":"","tc":"","hc":"Derek Dallas"},{"k":"G","d":"2026-08-12","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Cowboys","a":"Colts","cx":"Moore","sd":"South","r1":"Piper Hale","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Ellie Hughes"},{"k":"P","d":"2026-08-12","w":"Wed","t":"18:00","te":"18:15","sp":"F","dv":"5-6th Girls","h":"Broncos","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-12","w":"Wed","t":"18:00","te":"18:15","sp":"F","dv":"5-6th Girls","h":"Chargers","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-12","w":"Wed","t":"19:00","te":"20:00","sp":"F","dv":"5-6th Girls","h":"Broncos","a":"Texans","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"Piper Hale","rn":"","tt":"","tc":"","hc":"Jon-Erik Bennett"},{"k":"G","d":"2026-08-12","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Purdue","a":"Michigan State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Indiana","tc":"Halterman","hc":"Randel Dirksen"},{"k":"G","d":"2026-08-12","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Penn State","a":"Wisconsin","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Ohio State","tc":"Hornsby","hc":"Brad Howell"},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:00","te":"17:15","sp":"F","dv":"Kindergarten","h":"Bears","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:00","te":"17:15","sp":"F","dv":"Kindergarten","h":"Bengals","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:00","te":"17:15","sp":"F","dv":"Kindergarten","h":"Broncos","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:00","te":"17:15","sp":"F","dv":"Kindergarten","h":"Cowboys","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:00","te":"17:15","sp":"F","dv":"Kindergarten","h":"Seahawks","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:00","te":"17:15","sp":"F","dv":"Kindergarten","h":"Steelers","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:45","te":"18:00","sp":"F","dv":"1st Grade","h":"Broncos","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:45","te":"18:00","sp":"F","dv":"1st Grade","h":"Chiefs","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:55","te":"18:10","sp":"F","dv":"1st Grade","h":"Colts","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"17:55","te":"18:10","sp":"F","dv":"1st Grade","h":"Cowboys","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-13","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Chiefs JV","a":"Bears JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jason Cahill"},{"k":"G","d":"2026-08-13","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Titans JV","a":"Colts JV","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Davontray Thomas"},{"k":"G","d":"2026-08-13","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Steelers JV","a":"Bengals JV","cx":"Collins","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Sean Egenolf"},{"k":"G","d":"2026-08-13","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Cowboys JV","a":"Broncos JV","cx":"Collins","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alejandro Higareda"},{"k":"G","d":"2026-08-13","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Ravens JV","a":"Seahawks JV","cx":"Moore","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Cory Freeman"},{"k":"P","d":"2026-08-13","w":"Thu","t":"18:05","te":"18:20","sp":"F","dv":"1st Grade","h":"Seahawks","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"18:05","te":"18:20","sp":"F","dv":"1st Grade","h":"Titans","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"18:15","te":"18:30","sp":"F","dv":"1st Grade","h":"Bears","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-13","w":"Thu","t":"18:15","te":"18:30","sp":"F","dv":"1st Grade","h":"Bengals","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-13","w":"Thu","t":"19:00","te":"20:00","sp":"F","dv":"1st Grade","h":"Bears Varsity","a":"Colts","cx":"Moore","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Drew Calvert"},{"k":"G","d":"2026-08-13","w":"Thu","t":"19:00","te":"20:00","sp":"F","dv":"1st Grade","h":"Broncos Varsity","a":"Bengals Varsity","cx":"Moore","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Gavin Curd"},{"k":"G","d":"2026-08-13","w":"Thu","t":"19:00","te":"20:00","sp":"F","dv":"1st Grade","h":"Chiefs Varsity","a":"Titans Varsity","cx":"Watson","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Daren Johnson"},{"k":"G","d":"2026-08-13","w":"Thu","t":"19:00","te":"20:00","sp":"F","dv":"1st Grade","h":"Cowboys Varsity","a":"Seahawks Varsity","cx":"Watson","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Donald Ivey"},{"k":"G","d":"2026-08-15","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Broncos JV","a":"Steelers JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Marshall Reed"},{"k":"G","d":"2026-08-15","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Bears JV","a":"Seahawks JV","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jacob Duke"},{"k":"G","d":"2026-08-15","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"1st Grade","h":"Bengals Varsity","a":"Chiefs Varsity","cx":"Skillman","sd":"East","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"P","d":"2026-08-15","w":"Sat","t":"08:15","te":"08:30","sp":"F","dv":"Kindergarten","h":"Ravens","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-15","w":"Sat","t":"08:15","te":"08:30","sp":"F","dv":"Kindergarten","h":"Titans","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"P","d":"2026-08-15","w":"Sat","t":"08:30","te":"08:45","sp":"F","dv":"Kindergarten","h":"Chiefs","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-15","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Majors","h":"Oregon","a":"Michigan State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Purdue","tc":"Dirksen","hc":"Andrew Sitter"},{"k":"G","d":"2026-08-15","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Minors","h":"Michigan State","a":"Illinois","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Oregon","tc":"Lewis","hc":"Shawn Sanders"},{"k":"G","d":"2026-08-15","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Rookie","h":"Purdue","a":"Nebraska","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Indiana","tc":"Williams","hc":"Stacey Dirksen"},{"k":"G","d":"2026-08-15","w":"Sat","t":"09:15","te":"10:15","sp":"T","dv":"Minors","h":"Northwestern","a":"Purdue","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Penn State","tc":"","hc":"Michael Harvey"},{"k":"G","d":"2026-08-15","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"Kindergarten","h":"Ravens JV","a":"Titans JV","cx":"Skillman","sd":"East","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Cory Freeman"},{"k":"G","d":"2026-08-15","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"Kindergarten","h":"Colts JV","a":"Chiefs JV","cx":"Skillman","sd":"West","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Blake Hornsby"},{"k":"G","d":"2026-08-15","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"Wisconsin","a":"Michigan","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Washington","tc":"Feltman","hc":"Chase Flory"},{"k":"G","d":"2026-08-15","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Majors","h":"Indiana","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Wisconsin","tc":"Ferguson","hc":"Aaron Halterman"},{"k":"G","d":"2026-08-15","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"UCLA","a":"Ohio State","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Illinois","tc":"Wood","hc":"Marshall Reed"},{"k":"G","d":"2026-08-15","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Rookie","h":"Indiana","a":"Michigan","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Ohio State","tc":"Ward","hc":"Jeff Williams"},{"k":"G","d":"2026-08-15","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"Penn State","a":"Minnesota","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors UCLA","tc":"Reed","hc":"Branden Tuggle"},{"k":"G","d":"2026-08-15","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Majors","h":"Northwestern","a":"Ohio State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Oregon","tc":"Sitter","hc":"Ryan Cronin"},{"k":"G","d":"2026-08-15","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"Iowa","a":"Washington","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Wisconsin","tc":"Flory","hc":"Kyle Adams"},{"k":"G","d":"2026-08-15","w":"Sat","t":"12:00","te":"13:00","sp":"F","dv":"2-4th Girls","h":"Broncos","a":"Chargers","cx":"Skillman","sd":"East","r1":"Alli Canada","r2":"Macie Painter","rn":"","tt":"","tc":"","hc":"Joshua Gibson"},{"k":"G","d":"2026-08-15","w":"Sat","t":"12:00","te":"13:00","sp":"F","dv":"2-4th Girls","h":"Cowboys","a":"Dolphins","cx":"Skillman","sd":"West","r1":"Joey Matis","r2":"Mollie Painter","rn":"","tt":"","tc":"","hc":"Logan Deffner"},{"k":"G","d":"2026-08-15","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Rookie","h":"Ohio State","a":"Penn State","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Michigan","tc":"Bellinger","hc":"Benjamin Ward"},{"k":"G","d":"2026-08-15","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"5-6th Girls","h":"Colts","a":"Broncos","cx":"Adams","sd":"North","r1":"Joey Matis","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Rich Cary"},{"k":"G","d":"2026-08-15","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"5-6th Girls","h":"Dolphins","a":"Texans","cx":"Adams","sd":"South","r1":"Alli Canada","r2":"","rn":"","tt":"","tc":"","hc":"Paul Bennett"},{"k":"G","d":"2026-08-15","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"5-6th Girls","h":"Cowboys","a":"Chargers","cx":"Collins","sd":"North","r1":"Mia Lidy","r2":"","rn":"","tt":"","tc":"","hc":"Ellie Hughes"},{"k":"G","d":"2026-08-15","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Minors","h":"Oregon","a":"Indiana","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Iowa","tc":"Adams","hc":"James Lewis"},{"k":"G","d":"2026-08-15","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"7-8th Girls","h":"Colts","a":"Dolphins","cx":"Skillman","sd":"East","r1":"Ben Balsley","r2":"Ryan Mueller","rn":"1 official must be 18+","tt":"","tc":"","hc":"Zack Pasley"},{"k":"G","d":"2026-08-15","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"7-8th Girls","h":"Texans","a":"Chargers","cx":"Skillman","sd":"West","r1":"Mollie Painter","r2":"","rn":"1 official must be 18+","tt":"","tc":"","hc":"Andrew Griffin"},{"k":"P","d":"2026-08-15","w":"Sat","t":"17:00","te":"17:15","sp":"F","dv":"Kindergarten","h":"Colts","a":"","cx":"","sd":"","r1":"","r2":"","rn":"","tt":"","tc":"","hc":""},{"k":"G","d":"2026-08-17","w":"Mon","t":"18:00","te":"19:00","sp":"T","dv":"Rookie","h":"Michigan","a":"Ohio State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Purdue","tc":"Dirksen","hc":"Nicholas Bellinger"},{"k":"G","d":"2026-08-17","w":"Mon","t":"19:30","te":"20:30","sp":"T","dv":"Rookie","h":"Indiana","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Michigan","tc":"Bellinger","hc":"Jeff Williams"},{"k":"G","d":"2026-08-18","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Wisconsin","a":"Ohio State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Oregon","tc":"Lewis","hc":"Chase Flory"},{"k":"G","d":"2026-08-18","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Purdue","a":"UCLA","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Penn State","tc":"","hc":"Justin Green"},{"k":"G","d":"2026-08-18","w":"Tue","t":"18:00","te":"19:00","sp":"F","dv":"2-4th Girls","h":"Dolphins","a":"Broncos","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"Piper Hale","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"G","d":"2026-08-18","w":"Tue","t":"19:00","te":"20:00","sp":"F","dv":"2-4th Girls","h":"Colts","a":"Cowboys","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"Piper Hale","rn":"","tt":"","tc":"","hc":"Ryan Cronin"},{"k":"G","d":"2026-08-18","w":"Tue","t":"19:00","te":"20:00","sp":"F","dv":"2-4th Girls","h":"Texans","a":"Chargers","cx":"Moore","sd":"South","r1":"Mia Lidy","r2":"","rn":"","tt":"","tc":"","hc":"Bradley Huffman"},{"k":"G","d":"2026-08-18","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Iowa","a":"Penn State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Ohio State","tc":"Rose","hc":"Kyle Adams"},{"k":"G","d":"2026-08-18","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Washington","a":"Oregon","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Purdue","tc":"Green","hc":"Christopher Feltman"},{"k":"G","d":"2026-08-19","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Indiana","a":"Michigan State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan","tc":"Pulse","hc":"Joshua Clancy"},{"k":"G","d":"2026-08-19","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Northwestern","a":"Minnesota","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors UCLA","tc":"Reed","hc":"Michael Harvey"},{"k":"G","d":"2026-08-19","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Colts","a":"Dolphins","cx":"Moore","sd":"North","r1":"Joey Matis","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Rich Cary"},{"k":"G","d":"2026-08-19","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Texans","a":"Cowboys","cx":"Moore","sd":"South","r1":"Mia Lidy","r2":"","rn":"","tt":"","tc":"","hc":"Jaime Hoch"},{"k":"G","d":"2026-08-19","w":"Wed","t":"19:00","te":"20:00","sp":"F","dv":"5-6th Girls","h":"Chargers","a":"Broncos","cx":"Moore","sd":"North","r1":"Joey Matis","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Derek Dallas"},{"k":"G","d":"2026-08-19","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Wisconsin","a":"Ohio State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Penn State","tc":"Howell","hc":"Andre Ferguson"},{"k":"G","d":"2026-08-19","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Purdue","a":"Oregon","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Indiana","tc":"Halterman","hc":"Randel Dirksen"},{"k":"G","d":"2026-08-20","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Steelers JV","a":"Cowboys JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Sean Egenolf"},{"k":"G","d":"2026-08-20","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Bengals JV","a":"Bears JV","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Scheidler"},{"k":"G","d":"2026-08-20","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Colts JV","a":"Ravens JV","cx":"Collins","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Blake Hornsby"},{"k":"G","d":"2026-08-20","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Seahawks JV","a":"Chiefs JV","cx":"Collins","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"John Massingale"},{"k":"G","d":"2026-08-20","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Colts","a":"Seahawks Varsity","cx":"Moore","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Tyler Keller"},{"k":"G","d":"2026-08-20","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Cowboys Varsity","a":"Chiefs Varsity","cx":"Moore","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Donald Ivey"},{"k":"G","d":"2026-08-20","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Titans Varsity","a":"Broncos Varsity","cx":"Watson","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Andrew Halterman"},{"k":"G","d":"2026-08-20","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Bengals Varsity","a":"Bears Varsity","cx":"Watson","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"G","d":"2026-08-22","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Bengals JV","a":"Colts JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Scheidler"},{"k":"G","d":"2026-08-22","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"1st Grade","h":"Seahawks Varsity","a":"Bengals Varsity","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Anthony Neu"},{"k":"G","d":"2026-08-22","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Chiefs JV","a":"Broncos JV","cx":"Collins","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jason Cahill"},{"k":"G","d":"2026-08-22","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Cowboys JV","a":"Ravens JV","cx":"Collins","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alejandro Higareda"},{"k":"G","d":"2026-08-22","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Minors","h":"Michigan","a":"Iowa","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan State","tc":"","hc":"Derrick Pulse"},{"k":"G","d":"2026-08-22","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Rookie","h":"Purdue","a":"Michigan","cx":"Skillman","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Penn State","tc":"Egenolf","hc":"Stacey Dirksen"},{"k":"G","d":"2026-08-22","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Minors","h":"Penn State","a":"Indiana","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Minors Minnesota","tc":"Bunch","hc":"Branden Tuggle"},{"k":"G","d":"2026-08-22","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"Kindergarten","h":"Seahawks JV","a":"Steelers JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"John Massingale"},{"k":"G","d":"2026-08-22","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"Kindergarten","h":"Titans JV","a":"Bears JV","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Davontray Thomas"},{"k":"G","d":"2026-08-22","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Broncos Varsity","a":"Colts","cx":"Collins","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Gavin Curd"},{"k":"G","d":"2026-08-22","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Titans Varsity","a":"Cowboys Varsity","cx":"Collins","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Andrew Halterman"},{"k":"G","d":"2026-08-22","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Majors","h":"Wisconsin","a":"Indiana","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Michigan State","tc":"Hamilton","hc":"Andre Ferguson"},{"k":"G","d":"2026-08-22","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"Ohio State","a":"Michigan State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Indiana","tc":"Clancy","hc":"Bradley Rose"},{"k":"G","d":"2026-08-22","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Majors","h":"Oregon","a":"Northwestern","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Majors Ohio State","tc":"Hornsby","hc":"Andrew Sitter"},{"k":"G","d":"2026-08-22","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Rookie","h":"Nebraska","a":"Ohio State","cx":"Skillman","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Indiana","tc":"Williams","hc":"Jordan Reagan"},{"k":"G","d":"2026-08-22","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"UCLA","a":"Washington","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Minors Northwestern","tc":"","hc":"Marshall Reed"},{"k":"G","d":"2026-08-22","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Majors","h":"Michigan State","a":"Purdue","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Oregon","tc":"Sitter","hc":"Greg Hamilton"},{"k":"G","d":"2026-08-22","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"Oregon","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Washington","tc":"Feltman","hc":"James Lewis"},{"k":"G","d":"2026-08-22","w":"Sat","t":"12:00","te":"13:00","sp":"F","dv":"5-6th Girls","h":"Chargers","a":"Texans","cx":"Moore","sd":"North","r1":"Joey Matis","r2":"Macie Painter","rn":"","tt":"","tc":"","hc":"Derek Dallas"},{"k":"G","d":"2026-08-22","w":"Sat","t":"12:00","te":"13:00","sp":"F","dv":"5-6th Girls","h":"Broncos","a":"Cowboys","cx":"Moore","sd":"South","r1":"Alli Canada","r2":"Mollie Painter","rn":"","tt":"","tc":"","hc":"Jon-Erik Bennett"},{"k":"G","d":"2026-08-22","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Rookie","h":"Penn State","a":"Indiana","cx":"Skillman","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Nebraska","tc":"Reagan","hc":"Sean Egenolf"},{"k":"G","d":"2026-08-22","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"Minnesota","a":"Wisconsin","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Minors Illinois","tc":"Wood","hc":"Jordan Bunch"},{"k":"G","d":"2026-08-22","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Majors","h":"Ohio State","a":"Penn State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Wisconsin","tc":"Ferguson","hc":"Blake Hornsby"},{"k":"G","d":"2026-08-22","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"2-4th Girls","h":"Dolphins","a":"Texans","cx":"Collins","sd":"South","r1":"Joey Matis","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"G","d":"2026-08-22","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"2-4th Girls","h":"Chargers","a":"Colts","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"","rn":"","tt":"","tc":"","hc":"Kyle Fisher"},{"k":"G","d":"2026-08-22","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"2-4th Girls","h":"Cowboys","a":"Broncos","cx":"Moore","sd":"South","r1":"Macie Painter","r2":"Mollie Painter","rn":"","tt":"","tc":"","hc":"Logan Deffner"},{"k":"G","d":"2026-08-22","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"7-8th Girls","h":"Dolphins","a":"Colts","cx":"Skillman","sd":"East","r1":"Ben Balsley","r2":"Ryan Mueller","rn":"1 official must be 18+","tt":"","tc":"","hc":"Parish Crowell Sr"},{"k":"G","d":"2026-08-22","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"7-8th Girls","h":"Texans","a":"Chargers","cx":"Skillman","sd":"West","r1":"","r2":"","rn":"1 official must be 18+","tt":"","tc":"","hc":"Andrew Griffin"},{"k":"G","d":"2026-08-22","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Minors","h":"Illinois","a":"Northwestern","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Minors Wisconsin","tc":"Flory","hc":"Justin Wood"},{"k":"G","d":"2026-08-24","w":"Mon","t":"18:00","te":"19:00","sp":"T","dv":"Rookie","h":"Indiana","a":"Nebraska","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Penn State","tc":"Egenolf","hc":"Jeff Williams"},{"k":"G","d":"2026-08-24","w":"Mon","t":"18:00","te":"19:00","sp":"T","dv":"Rookie","h":"Ohio State","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Michigan","tc":"Bellinger","hc":"Benjamin Ward"},{"k":"G","d":"2026-08-24","w":"Mon","t":"18:00","te":"19:00","sp":"F","dv":"7-8th Girls","h":"Colts","a":"Texans","cx":"Moore","sd":"South","r1":"Mia Lidy","r2":"Alli Canada","rn":"1 official must be 18+","tt":"","tc":"","hc":"Zack Pasley"},{"k":"G","d":"2026-08-24","w":"Mon","t":"19:00","te":"20:00","sp":"F","dv":"7-8th Girls","h":"Chargers","a":"Dolphins","cx":"Moore","sd":"North","r1":"Mia Lidy","r2":"Alli Canada","rn":"1 official must be 18+","tt":"","tc":"","hc":"JB PAXSON"},{"k":"G","d":"2026-08-24","w":"Mon","t":"19:30","te":"20:30","sp":"T","dv":"Rookie","h":"Michigan","a":"Penn State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Ohio State","tc":"Ward","hc":"Nicholas Bellinger"},{"k":"G","d":"2026-08-24","w":"Mon","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Ohio State","a":"Michigan","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Indiana","tc":"Clancy","hc":"Bradley Rose"},{"k":"G","d":"2026-08-25","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Oregon","a":"Illinois","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Penn State","tc":"","hc":"James Lewis"},{"k":"G","d":"2026-08-25","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Michigan State","a":"Washington","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors UCLA","tc":"Reed","hc":"Shawn Sanders"},{"k":"G","d":"2026-08-25","w":"Tue","t":"18:00","te":"19:00","sp":"F","dv":"2-4th Girls","h":"Texans","a":"Colts","cx":"Moore","sd":"North","r1":"Joey Matis","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Bradley Huffman"},{"k":"G","d":"2026-08-25","w":"Tue","t":"18:00","te":"19:00","sp":"F","dv":"2-4th Girls","h":"Chargers","a":"Dolphins","cx":"Moore","sd":"South","r1":"Joey Matis","r2":"","rn":"","tt":"","tc":"","hc":"Kyle Fisher"},{"k":"G","d":"2026-08-25","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Indiana","a":"UCLA","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan State","tc":"","hc":"Joshua Clancy"},{"k":"G","d":"2026-08-25","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Penn State","a":"Wisconsin","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Oregon","tc":"Lewis","hc":"Branden Tuggle"},{"k":"G","d":"2026-08-26","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Michigan","a":"Northwestern","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Iowa","tc":"Adams","hc":"Derrick Pulse"},{"k":"G","d":"2026-08-26","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Majors","h":"Penn State","a":"Wisconsin","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Indiana","tc":"Halterman","hc":"Brad Howell"},{"k":"G","d":"2026-08-26","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Texans","a":"Broncos","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"Piper Hale","rn":"","tt":"","tc":"","hc":"Jaime Hoch"},{"k":"G","d":"2026-08-26","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Dolphins","a":"Chargers","cx":"Moore","sd":"South","r1":"Alli Canada","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Paul Bennett"},{"k":"G","d":"2026-08-26","w":"Wed","t":"19:00","te":"20:00","sp":"F","dv":"5-6th Girls","h":"Cowboys","a":"Colts","cx":"Moore","sd":"North","r1":"Piper Hale","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Ellie Hughes"},{"k":"G","d":"2026-08-26","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Ohio State","a":"Oregon","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Penn State","tc":"Howell","hc":"Blake Hornsby"},{"k":"G","d":"2026-08-26","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Indiana","a":"Northwestern","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Wisconsin","tc":"Ferguson","hc":"Aaron Halterman"},{"k":"G","d":"2026-08-27","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Chiefs Varsity","a":"Seahawks Varsity","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Daren Johnson"},{"k":"G","d":"2026-08-27","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Bengals Varsity","a":"Colts","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"G","d":"2026-08-27","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Steelers JV","a":"Titans JV","cx":"Collins","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Sean Egenolf"},{"k":"G","d":"2026-08-27","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Ravens JV","a":"Seahawks JV","cx":"Collins","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Cory Freeman"},{"k":"G","d":"2026-08-27","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Cowboys Varsity","a":"Broncos Varsity","cx":"Moore","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Donald Ivey"},{"k":"G","d":"2026-08-27","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Bears Varsity","a":"Titans Varsity","cx":"Moore","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Drew Calvert"},{"k":"G","d":"2026-08-27","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Broncos JV","a":"Bengals JV","cx":"Watson","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Marshall Reed"},{"k":"G","d":"2026-08-27","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Cowboys JV","a":"Chiefs JV","cx":"Watson","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alejandro Higareda"},{"k":"G","d":"2026-08-29","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Bears JV","a":"Colts JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jacob Duke"},{"k":"G","d":"2026-08-29","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Broncos JV","a":"Ravens JV","cx":"Skillman","sd":"East","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Marshall Reed"},{"k":"G","d":"2026-08-29","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Titans JV","a":"Cowboys JV","cx":"Skillman","sd":"West","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Davontray Thomas"},{"k":"G","d":"2026-08-29","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Bengals JV","a":"Seahawks JV","cx":"Watson","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Scheidler"},{"k":"G","d":"2026-08-29","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Chiefs JV","a":"Steelers JV","cx":"Watson","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jason Cahill"},{"k":"G","d":"2026-08-29","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Minors","h":"Iowa","a":"Northwestern","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan","tc":"Pulse","hc":"Kyle Adams"},{"k":"G","d":"2026-08-29","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Minors","h":"Wisconsin","a":"UCLA","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Minnesota","tc":"Bunch","hc":"Chase Flory"},{"k":"G","d":"2026-08-29","w":"Sat","t":"09:15","te":"10:15","sp":"T","dv":"Rookie","h":"Nebraska","a":"Purdue","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Indiana","tc":"Williams","hc":"Jordan Reagan"},{"k":"G","d":"2026-08-29","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Seahawks Varsity","a":"Bears Varsity","cx":"Skillman","sd":"East","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Anthony Neu"},{"k":"G","d":"2026-08-29","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Broncos Varsity","a":"Bengals Varsity","cx":"Skillman","sd":"West","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Gavin Curd"},{"k":"G","d":"2026-08-29","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Colts","a":"Cowboys Varsity","cx":"Watson","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Tyler Keller"},{"k":"G","d":"2026-08-29","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Chiefs Varsity","a":"Titans Varsity","cx":"Watson","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Daren Johnson"},{"k":"G","d":"2026-08-29","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Rookie","h":"Penn State","a":"Ohio State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Purdue","tc":"Dirksen","hc":"Sean Egenolf"},{"k":"G","d":"2026-08-29","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"Washington","a":"Penn State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Northwestern","tc":"","hc":"Christopher Feltman"},{"k":"G","d":"2026-08-29","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"Michigan","a":"Michigan State","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Ohio State","tc":"Rose","hc":"Derrick Pulse"},{"k":"G","d":"2026-08-29","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Majors","h":"Oregon","a":"Penn State","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Majors Northwestern","tc":"Lidy","hc":"Andrew Sitter"},{"k":"G","d":"2026-08-29","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Rookie","h":"Michigan","a":"Indiana","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Nebraska","tc":"Reagan","hc":"Nicholas Bellinger"},{"k":"G","d":"2026-08-29","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"Ohio State","a":"Indiana","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Purdue","tc":"Green","hc":"Bradley Rose"},{"k":"G","d":"2026-08-29","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Majors","h":"Northwestern","a":"Ohio State","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Majors Purdue","tc":"Dirksen","hc":"Ryan Cronin"},{"k":"G","d":"2026-08-29","w":"Sat","t":"12:00","te":"13:00","sp":"F","dv":"5-6th Girls","h":"Dolphins","a":"Cowboys","cx":"Skillman","sd":"East","r1":"Alli Canada","r2":"Mollie Painter","rn":"","tt":"","tc":"","hc":"Paul Bennett"},{"k":"G","d":"2026-08-29","w":"Sat","t":"12:00","te":"13:00","sp":"F","dv":"2-4th Girls","h":"Dolphins","a":"Cowboys","cx":"Skillman","sd":"West","r1":"Joey Matis","r2":"Macie Painter","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"G","d":"2026-08-29","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Majors","h":"Indiana","a":"Michigan State","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Majors Oregon","tc":"Sitter","hc":"Aaron Halterman"},{"k":"G","d":"2026-08-29","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"5-6th Girls","h":"Chargers","a":"Colts","cx":"Adams","sd":"North","r1":"","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Derek Dallas"},{"k":"G","d":"2026-08-29","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"7-8th Girls","h":"Texans","a":"Dolphins","cx":"Adams","sd":"South","r1":"Alli Canada","r2":"Joey Matis","rn":"1 official must be 18+","tt":"","tc":"","hc":"Andrew Griffin"},{"k":"G","d":"2026-08-29","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Minors","h":"Illinois","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Washington","tc":"Feltman","hc":"Justin Wood"},{"k":"G","d":"2026-08-29","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Minors","h":"Oregon","a":"Minnesota","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Minors Wisconsin","tc":"Flory","hc":"James Lewis"},{"k":"G","d":"2026-08-29","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"2-4th Girls","h":"Broncos","a":"Chargers","cx":"Skillman","sd":"East","r1":"Macie Painter","r2":"Mollie Painter","rn":"","tt":"","tc":"","hc":"Joshua Gibson"},{"k":"G","d":"2026-08-29","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"7-8th Girls","h":"Chargers","a":"Colts","cx":"Skillman","sd":"West","r1":"Ben Balsley","r2":"Ryan Mueller","rn":"1 official must be 18+","tt":"","tc":"","hc":"JB PAXSON"},{"k":"G","d":"2026-08-29","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Majors","h":"Wisconsin","a":"Purdue","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Majors Michigan State","tc":"Hamilton","hc":"Andre Ferguson"},{"k":"G","d":"2026-08-31","w":"Mon","t":"18:00","te":"19:00","sp":"T","dv":"Rookie","h":"Ohio State","a":"Indiana","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Michigan","tc":"Bellinger","hc":"Benjamin Ward"},{"k":"G","d":"2026-08-31","w":"Mon","t":"18:00","te":"19:00","sp":"T","dv":"Rookie","h":"Purdue","a":"Penn State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Nebraska","tc":"Reagan","hc":"Stacey Dirksen"},{"k":"G","d":"2026-08-31","w":"Mon","t":"18:00","te":"19:00","sp":"F","dv":"7-8th Girls","h":"Dolphins","a":"Chargers","cx":"Moore","sd":"North","r1":"Joey Matis","r2":"Alli Canada","rn":"1 official must be 18+","tt":"","tc":"","hc":"Parish Crowell Sr"},{"k":"G","d":"2026-08-31","w":"Mon","t":"19:00","te":"20:00","sp":"F","dv":"7-8th Girls","h":"Colts","a":"Texans","cx":"Moore","sd":"South","r1":"Joey Matis","r2":"Alli Canada","rn":"1 official must be 18+","tt":"","tc":"","hc":"Zack Pasley"},{"k":"G","d":"2026-08-31","w":"Mon","t":"19:30","te":"20:30","sp":"T","dv":"Rookie","h":"Nebraska","a":"Michigan","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Ohio State","tc":"Ward","hc":"Jordan Reagan"},{"k":"G","d":"2026-08-31","w":"Mon","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Northwestern","a":"Ohio State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Illinois","tc":"Wood","hc":"Michael Harvey"},{"k":"G","d":"2026-09-01","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Purdue","a":"Wisconsin","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan","tc":"Pulse","hc":"Justin Green"},{"k":"G","d":"2026-09-01","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"UCLA","a":"Illinois","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Michigan State","tc":"","hc":"Marshall Reed"},{"k":"G","d":"2026-09-01","w":"Tue","t":"18:00","te":"19:00","sp":"F","dv":"2-4th Girls","h":"Cowboys","a":"Chargers","cx":"Moore","sd":"South","r1":"Mia Lidy","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Logan Deffner"},{"k":"G","d":"2026-09-01","w":"Tue","t":"19:00","te":"20:00","sp":"F","dv":"2-4th Girls","h":"Texans","a":"Broncos","cx":"Moore","sd":"North","r1":"Mia Lidy","r2":"","rn":"","tt":"","tc":"","hc":"Bradley Huffman"},{"k":"G","d":"2026-09-01","w":"Tue","t":"19:00","te":"20:00","sp":"F","dv":"2-4th Girls","h":"Colts","a":"Dolphins","cx":"Moore","sd":"South","r1":"Aiden Jewell","r2":"","rn":"","tt":"","tc":"","hc":"Ryan Cronin"},{"k":"G","d":"2026-09-01","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Penn State","a":"Michigan","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Purdue","tc":"Green","hc":"Branden Tuggle"},{"k":"G","d":"2026-09-01","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Michigan State","a":"Oregon","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors UCLA","tc":"Reed","hc":"Shawn Sanders"},{"k":"G","d":"2026-09-02","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Majors","h":"Purdue","a":"Oregon","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Ohio State","tc":"Hornsby","hc":"Randel Dirksen"},{"k":"G","d":"2026-09-02","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Majors","h":"Penn State","a":"Northwestern","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Wisconsin","tc":"Ferguson","hc":"Brad Howell"},{"k":"G","d":"2026-09-02","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Broncos","a":"Dolphins","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"","rn":"","tt":"","tc":"","hc":"Jon-Erik Bennett"},{"k":"G","d":"2026-09-02","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Colts","a":"Texans","cx":"Moore","sd":"South","r1":"Piper Hale","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Rich Cary"},{"k":"G","d":"2026-09-02","w":"Wed","t":"19:00","te":"20:00","sp":"F","dv":"5-6th Girls","h":"Cowboys","a":"Chargers","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"Piper Hale","rn":"","tt":"","tc":"","hc":"Ellie Hughes"},{"k":"G","d":"2026-09-02","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Michigan State","a":"Wisconsin","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Penn State","tc":"Howell","hc":"Greg Hamilton"},{"k":"G","d":"2026-09-02","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Ohio State","a":"Indiana","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Purdue","tc":"Dirksen","hc":"Blake Hornsby"},{"k":"G","d":"2026-09-03","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Bengals Varsity","a":"Seahawks Varsity","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alex Bailey"},{"k":"G","d":"2026-09-03","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Broncos Varsity","a":"Chiefs Varsity","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Gavin Curd"},{"k":"G","d":"2026-09-03","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Bears Varsity","a":"Cowboys Varsity","cx":"Moore","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Drew Calvert"},{"k":"G","d":"2026-09-03","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Bears JV","a":"Broncos JV","cx":"Watson","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jacob Duke"},{"k":"G","d":"2026-09-03","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Titans Varsity","a":"Colts","cx":"Watson","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Andrew Halterman"},{"k":"G","d":"2026-09-08","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Minnesota","a":"Iowa","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Oregon","tc":"Lewis","hc":"Jordan Bunch"},{"k":"G","d":"2026-09-08","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Minors","h":"Indiana","a":"Washington","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Penn State","tc":"","hc":"Joshua Clancy"},{"k":"G","d":"2026-09-08","w":"Tue","t":"18:00","te":"19:00","sp":"F","dv":"2-4th Girls","h":"Chargers","a":"Texans","cx":"Moore","sd":"North","r1":"Mia Lidy","r2":"","rn":"","tt":"","tc":"","hc":"Kyle Fisher"},{"k":"G","d":"2026-09-08","w":"Tue","t":"18:00","te":"19:00","sp":"F","dv":"2-4th Girls","h":"Colts","a":"Cowboys","cx":"Moore","sd":"South","r1":"Aiden Jewell","r2":"","rn":"","tt":"","tc":"","hc":"Ryan Cronin"},{"k":"G","d":"2026-09-08","w":"Tue","t":"18:00","te":"19:00","sp":"T","dv":"Rookie","h":"Nebraska","a":"Indiana","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Penn State","tc":"Egenolf","hc":"Jordan Reagan"},{"k":"G","d":"2026-09-08","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Wisconsin","a":"Oregon","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Indiana","tc":"Clancy","hc":"Chase Flory"},{"k":"G","d":"2026-09-08","w":"Tue","t":"19:30","te":"20:30","sp":"T","dv":"Minors","h":"Illinois","a":"Penn State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Iowa","tc":"Adams","hc":"Justin Wood"},{"k":"G","d":"2026-09-09","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Majors","h":"Northwestern","a":"Wisconsin","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Indiana","tc":"Halterman","hc":"Ryan Cronin"},{"k":"G","d":"2026-09-09","w":"Wed","t":"18:00","te":"19:00","sp":"T","dv":"Majors","h":"Penn State","a":"Michigan State","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Ohio State","tc":"Hornsby","hc":"Brad Howell"},{"k":"G","d":"2026-09-09","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Colts","a":"Broncos","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"","rn":"","tt":"","tc":"","hc":"Rich Cary"},{"k":"G","d":"2026-09-09","w":"Wed","t":"18:00","te":"19:00","sp":"F","dv":"5-6th Girls","h":"Texans","a":"Chargers","cx":"Moore","sd":"South","r1":"Piper Hale","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Jaime Hoch"},{"k":"G","d":"2026-09-09","w":"Wed","t":"19:00","te":"20:00","sp":"F","dv":"5-6th Girls","h":"Cowboys","a":"Dolphins","cx":"Moore","sd":"North","r1":"Alli Canada","r2":"Piper Hale","rn":"","tt":"","tc":"","hc":"Ellie Hughes"},{"k":"G","d":"2026-09-09","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Oregon","a":"Indiana","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Michigan State","tc":"Hamilton","hc":"Andrew Sitter"},{"k":"G","d":"2026-09-09","w":"Wed","t":"19:30","te":"20:30","sp":"T","dv":"Majors","h":"Ohio State","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Majors Northwestern","tc":"Lidy","hc":"Blake Hornsby"},{"k":"G","d":"2026-09-10","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Cowboys JV","a":"Bears JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Alejandro Higareda"},{"k":"G","d":"2026-09-10","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Seahawks JV","a":"Broncos JV","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"John Massingale"},{"k":"G","d":"2026-09-10","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Chiefs JV","a":"Bengals JV","cx":"Collins","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Jason Cahill"},{"k":"G","d":"2026-09-10","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"Kindergarten","h":"Colts JV","a":"Titans JV","cx":"Collins","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Blake Hornsby"},{"k":"G","d":"2026-09-10","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Bears Varsity","a":"Chiefs Varsity","cx":"Moore","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Drew Calvert"},{"k":"G","d":"2026-09-10","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Titans Varsity","a":"Seahawks Varsity","cx":"Moore","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Andrew Halterman"},{"k":"G","d":"2026-09-10","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Colts","a":"Bengals Varsity","cx":"Watson","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Tyler Keller"},{"k":"G","d":"2026-09-10","w":"Thu","t":"18:00","te":"19:00","sp":"F","dv":"1st Grade","h":"Cowboys Varsity","a":"Broncos Varsity","cx":"Watson","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Donald Ivey"},{"k":"G","d":"2026-09-12","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Ravens JV","a":"Bengals JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Cory Freeman"},{"k":"G","d":"2026-09-12","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"Kindergarten","h":"Broncos JV","a":"Colts JV","cx":"Adams","sd":"South","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Marshall Reed"},{"k":"G","d":"2026-09-12","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"1st Grade","h":"Cowboys Varsity","a":"Titans Varsity","cx":"Skillman","sd":"East","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Donald Ivey"},{"k":"G","d":"2026-09-12","w":"Sat","t":"08:15","te":"09:15","sp":"F","dv":"1st Grade","h":"Seahawks Varsity","a":"Bears Varsity","cx":"Skillman","sd":"West","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Anthony Neu"},{"k":"G","d":"2026-09-12","w":"Sat","t":"09:00","te":"10:00","sp":"T","dv":"Rookie","h":"Ohio State","a":"Michigan","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Purdue","tc":"Dirksen","hc":"Benjamin Ward"},{"k":"G","d":"2026-09-12","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"Kindergarten","h":"Titans JV","a":"Chiefs JV","cx":"Adams","sd":"North","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Davontray Thomas"},{"k":"G","d":"2026-09-12","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"1st Grade","h":"Chiefs Varsity","a":"Colts","cx":"Skillman","sd":"East","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Daren Johnson"},{"k":"G","d":"2026-09-12","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"Kindergarten","h":"Steelers JV","a":"Cowboys JV","cx":"Skillman","sd":"West","r1":"","r2":"","rn":"","tt":"","tc":"","hc":"Sean Egenolf"},{"k":"G","d":"2026-09-12","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"7-8th Girls","h":"Dolphins","a":"Texans","cx":"Watson","sd":"North","r1":"Cronin","r2":"Alli Canada","rn":"1 official must be 18+","tt":"","tc":"","hc":"Parish Crowell Sr"},{"k":"G","d":"2026-09-12","w":"Sat","t":"09:15","te":"10:15","sp":"F","dv":"7-8th Girls","h":"Chargers","a":"Colts","cx":"Watson","sd":"South","r1":"Cronin","r2":"Aiden Jewell","rn":"1 official must be 18+","tt":"","tc":"","hc":"JB PAXSON"},{"k":"G","d":"2026-09-12","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"Penn State","a":"Ohio State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Northwestern","tc":"","hc":"Branden Tuggle"},{"k":"G","d":"2026-09-12","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Minors","h":"Purdue","a":"Michigan","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Washington","tc":"Feltman","hc":"Justin Green"},{"k":"G","d":"2026-09-12","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Rookie","h":"Purdue","a":"Indiana","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Ohio State","tc":"Ward","hc":"Stacey Dirksen"},{"k":"G","d":"2026-09-12","w":"Sat","t":"10:30","te":"11:30","sp":"F","dv":"2-4th Girls","h":"Broncos","a":"Colts","cx":"Skillman","sd":"East","r1":"Alli Canada","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Joshua Gibson"},{"k":"G","d":"2026-09-12","w":"Sat","t":"10:30","te":"11:30","sp":"F","dv":"2-4th Girls","h":"Cowboys","a":"Texans","cx":"Skillman","sd":"West","r1":"Mollie Painter","r2":"Macie Painter","rn":"","tt":"","tc":"","hc":"Logan Deffner"},{"k":"G","d":"2026-09-12","w":"Sat","t":"10:30","te":"11:30","sp":"T","dv":"Majors","h":"Michigan State","a":"Ohio State","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Majors Penn State","tc":"Howell","hc":"Greg Hamilton"},{"k":"G","d":"2026-09-12","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"Oregon","a":"Iowa","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Minors Ohio State","tc":"Rose","hc":"James Lewis"},{"k":"G","d":"2026-09-12","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Minors","h":"Washington","a":"Wisconsin","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Indiana","tc":"Clancy","hc":"Christopher Feltman"},{"k":"G","d":"2026-09-12","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Rookie","h":"Penn State","a":"Nebraska","cx":"Moore","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Indiana","tc":"Williams","hc":"Sean Egenolf"},{"k":"G","d":"2026-09-12","w":"Sat","t":"12:00","te":"13:00","sp":"F","dv":"5-6th Girls","h":"Broncos","a":"Cowboys","cx":"Skillman","sd":"East","r1":"Alli Canada","r2":"Mollie Painter","rn":"","tt":"","tc":"","hc":"Jon-Erik Bennett"},{"k":"G","d":"2026-09-12","w":"Sat","t":"12:00","te":"13:00","sp":"T","dv":"Majors","h":"Purdue","a":"Northwestern","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Majors Oregon","tc":"Sitter","hc":"Randel Dirksen"},{"k":"G","d":"2026-09-12","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Majors","h":"Indiana","a":"Penn State","cx":"Adams","sd":"","r1":"","r2":"","rn":"","tt":"Majors Purdue","tc":"Dirksen","hc":"Aaron Halterman"},{"k":"G","d":"2026-09-12","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Minors","h":"Indiana","a":"Northwestern","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Minors Wisconsin","tc":"Flory","hc":"Joshua Clancy"},{"k":"G","d":"2026-09-12","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"5-6th Girls","h":"Dolphins","a":"Texans","cx":"Skillman","sd":"East","r1":"Macie Painter","r2":"","rn":"","tt":"","tc":"","hc":"Paul Bennett"},{"k":"G","d":"2026-09-12","w":"Sat","t":"13:30","te":"14:30","sp":"F","dv":"5-6th Girls","h":"Chargers","a":"Colts","cx":"Skillman","sd":"West","r1":"Mollie Painter","r2":"Aiden Jewell","rn":"","tt":"","tc":"","hc":"Derek Dallas"},{"k":"G","d":"2026-09-12","w":"Sat","t":"13:30","te":"14:30","sp":"T","dv":"Majors","h":"Wisconsin","a":"Oregon","cx":"Watson","sd":"","r1":"","r2":"","rn":"","tt":"Majors Michigan State","tc":"Hamilton","hc":"Andre Ferguson"},{"k":"G","d":"2026-09-14","w":"Mon","t":"18:00","te":"19:00","sp":"T","dv":"Rookie","h":"Nebraska","a":"Michigan","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Penn State","tc":"Egenolf","hc":"Jordan Reagan"},{"k":"G","d":"2026-09-14","w":"Mon","t":"19:30","te":"20:30","sp":"T","dv":"Rookie","h":"Penn State","a":"Purdue","cx":"Collins","sd":"","r1":"","r2":"","rn":"","tt":"Rookie Michigan","tc":"Bellinger","hc":"Sean Egenolf"}]};
+const GAMES = DATA.games, TEAMS = DATA.teams;
+
+/* ---------- helpers ---------- */
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DOWFULL = {Sun:"Sunday",Mon:"Monday",Tue:"Tuesday",Wed:"Wednesday",Thu:"Thursday",Fri:"Friday",Sat:"Saturday"};
+
+function ymd(dt){
+  return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+}
+function parseYMD(s){const p=s.split("-").map(Number);return new Date(p[0],p[1]-1,p[2]);}
+function fmt12(t){
+  const [H,M]=t.split(":").map(Number);
+  const ap=H>=12?"PM":"AM", h=H%12===0?12:H%12;
+  return {hh:h+":"+String(M).padStart(2,"0"), ampm:ap};
+}
+function minutes(t){const [H,M]=t.split(":").map(Number);return H*60+M;}
+function fieldLabel(g){return g.sd ? g.cx+" "+g.sd : g.cx;}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+const ALL_DATES = [...new Set(GAMES.map(g=>g.d))].sort();
+const TODAY = ymd(new Date());
+
+/* ---------- state ---------- */
+const state = {dates:new Set(), sport:"", div:"", field:"", q:"", picsOnly:false};
+
+/* ---------- build filter options ---------- */
+(function(){
+  const divs=[...new Set(GAMES.map(g=>g.dv))];
+  const order=["Junior Trojans","Rookie","Minors","Majors","Kindergarten","1st Grade","2-4th Girls","5-6th Girls","7-8th Girls"];
+  divs.sort((a,b)=>{
+    const ia=order.indexOf(a), ib=order.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b);
+  });
+  const dSel=document.getElementById("fDiv");
+  divs.forEach(d=>{const o=document.createElement("option");o.value=d;o.textContent=d;dSel.appendChild(o);});
+  const fSel=document.getElementById("fField");
+  [...new Set(GAMES.map(g=>g.cx))].sort().forEach(f=>{
+    const o=document.createElement("option");o.value=f;o.textContent=f+" Field";fSel.appendChild(o);
+  });
+})();
+
+/* ---------- day strip ---------- */
+function buildStrip(){
+  const strip=document.getElementById("daystrip");
+  strip.innerHTML="";
+  const counts={}, pics={};
+  GAMES.forEach(g=>{
+    if(g.k==="P") pics[g.d]=(pics[g.d]||0)+1;
+    else counts[g.d]=(counts[g.d]||0)+1;
+  });
+  ALL_DATES.forEach(d=>{
+    const dt=parseYMD(d);
+    const b=document.createElement("button");
+    b.className="chip"+(d===TODAY?" is-today":"");
+    b.type="button";
+    b.setAttribute("aria-pressed", state.dates.has(d)?"true":"false");
+    b.dataset.date=d;
+    b.innerHTML='<span class="dow">'+(d===TODAY?"Today":GAMES.find(g=>g.d===d).w)+'</span>'+
+                '<span class="dnum">'+dt.getDate()+'</span>'+
+                '<span class="mon">'+MON[dt.getMonth()]+'</span>'+
+                '<span class="cnt">'+(counts[d]?counts[d]+' gm':'&nbsp;')+
+                  (pics[d]?'<i class="pd" title="Picture day"></i>':'')+'</span>';
+    b.addEventListener("click",()=>{
+      state.dates.has(d)?state.dates.delete(d):state.dates.add(d);
+      b.setAttribute("aria-pressed", state.dates.has(d)?"true":"false");
+      render();
+    });
+    strip.appendChild(b);
+  });
+}
+function syncStrip(){
+  document.querySelectorAll(".chip").forEach(c=>{
+    c.setAttribute("aria-pressed", state.dates.has(c.dataset.date)?"true":"false");
+  });
+  const first=document.querySelector('.chip[aria-pressed="true"]');
+  if(first) first.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"});
+}
+
+/* ---------- quick picks ---------- */
+function setDates(list){state.dates=new Set(list);syncStrip();render();}
+document.getElementById("btnToday").addEventListener("click",()=>{
+  setDates(ALL_DATES.includes(TODAY)?[TODAY]:[nextDateOnOrAfter(TODAY)].filter(Boolean));
+});
+function nextDateOnOrAfter(d){return ALL_DATES.find(x=>x>=d)||ALL_DATES[ALL_DATES.length-1];}
+document.getElementById("btnWeekend").addEventListener("click",()=>{
+  const start=nextDateOnOrAfter(TODAY);
+  if(!start) return setDates([]);
+  const s=parseYMD(start);
+  const toSat=(6-s.getDay()+7)%7;
+  const sat=new Date(s);sat.setDate(s.getDate()+toSat);
+  const fri=new Date(sat);fri.setDate(sat.getDate()-1);
+  const sun=new Date(sat);sun.setDate(sat.getDate()+1);
+  setDates([fri,sat,sun].map(ymd).filter(d=>ALL_DATES.includes(d)));
+});
+document.getElementById("btnWeek").addEventListener("click",()=>{
+  const start=nextDateOnOrAfter(TODAY)||ALL_DATES[0];
+  const s=parseYMD(start), end=new Date(s);end.setDate(s.getDate()+6);
+  setDates(ALL_DATES.filter(d=>d>=ymd(s)&&d<=ymd(end)));
+});
+document.getElementById("btnAll").addEventListener("click",()=>setDates(ALL_DATES));
+document.getElementById("btnClear").addEventListener("click",()=>setDates([]));
+
+/* ---------- filters ---------- */
+document.querySelectorAll(".seg button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    state.sport=b.dataset.sport;
+    document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+    render();
+  });
+});
+document.getElementById("btnPics").addEventListener("click",()=>{
+  state.picsOnly=!state.picsOnly;
+  const b=document.getElementById("btnPics");
+  b.setAttribute("aria-pressed", state.picsOnly?"true":"false");
+  b.textContent = state.picsOnly ? "Showing picture day" : "Picture day only";
+  if(state.picsOnly){
+    /* jump to the days that actually have photo slots, so the button never
+       lands the user on an empty screen */
+    const picDates=[...new Set(GAMES.filter(g=>g.k==="P").map(g=>g.d))].sort();
+    const overlap=[...state.dates].filter(d=>picDates.includes(d));
+    if(!overlap.length){ state.dates=new Set(picDates); syncStrip(); }
+  }
+  render();
+});
+document.getElementById("fDiv").addEventListener("change",e=>{state.div=e.target.value;render();});
+document.getElementById("fField").addEventListener("change",e=>{state.field=e.target.value;render();});
+let qT;
+document.getElementById("fSearch").addEventListener("input",e=>{
+  clearTimeout(qT);
+  qT=setTimeout(()=>{state.q=e.target.value.trim().toLowerCase();render();},180);
+});
+
+/* ---------- filtering ---------- */
+function match(g){
+  if(state.dates.size && !state.dates.has(g.d)) return false;
+  if(state.picsOnly && g.k!=="P") return false;
+  if(state.sport && g.sp!==state.sport) return false;
+  if(state.div && g.dv!==state.div) return false;
+  if(state.field && g.cx!==state.field) return false;
+  if(state.q){
+    const hay=[g.h,g.a,g.dv,g.cx,g.sd,g.r1,g.r2,g.tt,g.tc,g.hc,(g.k==="P"?"picture day photo pictures":"")].join(" ").toLowerCase();
+    if(!hay.includes(state.q)) return false;
+  }
+  return true;
+}
+
+/* ---------- render ---------- */
+function render(){
+  const board=document.getElementById("board");
+  const sum=document.getElementById("summary");
+
+  if(state.dates.size===0){
+    sum.hidden=true;
+    board.innerHTML='<div class="empty"><h3>Pick a day to see the schedule</h3>'+
+      '<p>Tap a date above, or start with one of the shortcuts.</p>'+
+      '<button class="btn" onclick="document.getElementById(\'btnToday\').click()">Show today</button></div>';
+    document.getElementById("foot").textContent="";
+    return;
+  }
+
+  const list=GAMES.filter(match);
+  if(!list.length){
+    sum.hidden=true;
+    board.innerHTML='<div class="empty"><h3>No games match</h3>'+
+      '<p>Try clearing a filter or adding another date.</p>'+
+      '<button class="btn ghost" id="resetF">Reset filters</button></div>';
+    document.getElementById("resetF").addEventListener("click",()=>{
+      state.sport="";state.div="";state.field="";state.q="";state.picsOnly=false;
+      const pb=document.getElementById("btnPics");
+      pb.setAttribute("aria-pressed","false");pb.textContent="Picture day only";
+      document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.sport===""?"true":"false"));
+      document.getElementById("fDiv").value="";
+      document.getElementById("fField").value="";
+      document.getElementById("fSearch").value="";
+      render();
+    });
+    document.getElementById("foot").textContent="";
+    return;
+  }
+
+  /* summary */
+  sum.hidden=false;
+  const gamesOnly=list.filter(g=>g.k!=="P"), picsOnly=list.filter(g=>g.k==="P");
+  document.getElementById("sGames").textContent=gamesOnly.length;
+  document.getElementById("sTackle").textContent=list.filter(g=>g.sp==="T"&&g.k!=="P").length;
+  document.getElementById("sFlag").textContent=list.filter(g=>g.sp==="F"&&g.k!=="P").length;
+  document.getElementById("sFields").textContent=new Set(gamesOnly.map(g=>fieldLabel(g))).size;
+  document.getElementById("uPics").hidden = picsOnly.length===0;
+  document.getElementById("sPics").textContent=picsOnly.length;
+  const firstT=list.map(g=>g.t).sort()[0];
+  const f12=fmt12(firstT);
+  document.getElementById("sFirst").textContent=f12.hh+" "+f12.ampm;
+
+  /* group by date then time */
+  const byDate={};
+  list.forEach(g=>{(byDate[g.d]=byDate[g.d]||[]).push(g);});
+  const now=new Date(), nowYMD=ymd(now), nowMin=now.getHours()*60+now.getMinutes();
+
+  let html="";
+  Object.keys(byDate).sort().forEach(d=>{
+    const games=byDate[d];
+    const dt=parseYMD(d);
+    const dow=DOWFULL[games[0].w]||games[0].w;
+    const isToday=d===nowYMD;
+    const dg=games.filter(g=>g.k!=="P"), dp=games.filter(g=>g.k==="P");
+    const bits=[];
+    if(dg.length) bits.push(dg.length+' game'+(dg.length===1?"":"s")+' · '+new Set(dg.map(fieldLabel)).size+' fields');
+    if(dp.length) bits.push(dp.length+' photo slot'+(dp.length===1?"":"s"));
+    html+='<div class="dayhead"><h2>'+(isToday?"Today · ":"")+esc(dow)+", "+MON[dt.getMonth()]+" "+dt.getDate()+'</h2>'+
+          '<span class="meta">'+bits.join(' · ')+'</span></div>';
+
+    const byTime={};
+    games.forEach(g=>{(byTime[g.t]=byTime[g.t]||[]).push(g);});
+    const times=Object.keys(byTime).sort();
+
+    /* find the next upcoming slot today */
+    let nextSlot=null;
+    if(isToday) nextSlot=times.find(t=>minutes(t)>nowMin);
+
+    times.forEach(t=>{
+      const slotGames=byTime[t].sort((a,b)=>
+        (a.k===b.k?0:(a.k==="P"?1:-1)) ||
+        fieldLabel(a).localeCompare(fieldLabel(b)) ||
+        a.h.localeCompare(b.h));
+      const allPics=slotGames.every(g=>g.k==="P");
+      const endT=slotGames[0].te;
+      const live=isToday && nowMin>=minutes(t) && nowMin<minutes(endT);
+      const past=isToday ? nowMin>=minutes(endT) : d<nowYMD;
+      const {hh,ampm}=fmt12(t);
+      html+='<section class="slot'+(live?" live":"")+(allPics?" picslot":"")+'">'+
+        '<div class="slot-time"><span class="hh">'+hh+'</span><span class="ampm">'+ampm+'</span>'+
+        '<div class="ct">'+slotGames.length+' '+(allPics?'photo'+(slotGames.length===1?"":"s"):'game'+(slotGames.length===1?"":"s"))+'</div>'+
+        (live?'<span class="badge-live">Now playing</span>':"")+
+        (!live && t===nextSlot?'<span class="badge-next">Up next</span>':"")+
+        '</div><div class="cards">';
+      slotGames.forEach(g=>{html+=card(g,past);});
+      html+='</div></section>';
+    });
+  });
+
+  board.innerHTML=html;
+  const dayCount=Object.keys(byDate).length;
+  document.getElementById("foot").textContent=
+    "Showing "+list.length+" game"+(list.length===1?"":"s")+" across "+dayCount+" day"+(dayCount===1?"":"s")+
+    ". Tower duty is listed for tackle games; officials are listed for girls flag.";
+}
+
+function card(g,past){
+  const hc=TEAMS[g.h]||["8B0000","CCCCCC"], ac=TEAMS[g.a]||["8B0000","CCCCCC"];
+
+  if(g.k==="P"){
+    const e=fmt12(g.te), st=fmt12(g.t);
+    return '<article class="game pic'+(past?" past":"")+'">'+
+      '<div class="spine"><i style="background:#'+hc[0]+'"></i><i style="background:#'+hc[1]+'"></i></div>'+
+      '<div class="game-top">'+
+        '<span class="tag kind-P">Picture day</span>'+
+        (g.sp==="C"?'<span class="tag sport-C">Cheer</span>':'')+
+        '<span class="tag div">'+esc(g.dv)+'</span>'+
+      '</div>'+
+      '<p class="matchup">'+esc(g.h)+'</p>'+
+      '<div class="kick">'+st.hh+' '+st.ampm+' – '+e.hh+' '+e.ampm+'</div>'+
+    '</article>';
+  }
+
+  let crew="";
+  if(g.sp==="T"){
+    if(g.tt){
+      crew+='<div class="tower"><b>Tower</b><span class="val">'+esc(g.tt)+
+            (g.tc?" · Coach "+esc(g.tc):' · <span class="gap">coach TBD</span>')+'</span></div>';
+    }
+  }else{
+    const refs=[g.r1,g.r2].filter(Boolean);
+    if(refs.length) crew+='<div><b>Officials</b><span class="val">'+esc(refs.join(", "))+'</span></div>';
+    else if(g.dv.indexOf("Girls")>-1) crew+='<div><b>Officials</b><span class="val gap">Not yet assigned</span></div>';
+    if(g.rn) crew+='<div><b>Note</b><span class="val">'+esc(g.rn)+'</span></div>';
+  }
+  const e12=fmt12(g.te);
+  return '<article class="game'+(past?" past":"")+'">'+
+    '<div class="spine"><i style="background:#'+hc[0]+'"></i><i style="background:#'+ac[0]+'"></i></div>'+
+    '<div class="game-top">'+
+      '<span class="tag sport-'+g.sp+'">'+(g.sp==="T"?"Tackle":"Flag")+'</span>'+
+      '<span class="tag div">'+esc(g.dv)+'</span>'+
+      '<span class="field">'+esc(fieldLabel(g))+'</span>'+
+    '</div>'+
+    '<p class="matchup">'+esc(g.h)+'<span class="vs">vs</span>'+esc(g.a)+'</p>'+
+    '<div class="kick">Ends '+e12.hh+' '+e12.ampm+'</div>'+
+    (crew?'<div class="crew">'+crew+'</div>':"")+
+  '</article>';
+}
+
+/* ---------- clock ---------- */
+function tickClock(){
+  const d=new Date();
+  document.getElementById("clock").textContent=
+    d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})+" · "+
+    d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+}
+tickClock(); setInterval(()=>{tickClock();if(state.dates.has(TODAY))render();},60000);
+
+/* ---------- live feed ---------- */
+/* Point this at the Worker: https://<worker>.workers.dev/schedule
+   Leave empty to run purely on the schedule baked into this file. */
+const FEED_URL = "";
+const FEED_POLL_MS = 300000; /* 5 min. SportsEngine itself only moves every ~30. */
+
+let feedState = {loaded:false, at:null, count:0, mode:"embedded"};
+
+function setFeedBar(mode, msg){
+  const bar=document.getElementById("feedbar");
+  if(!FEED_URL){bar.hidden=true;return;}
+  bar.hidden=false;
+  bar.className="feedbar "+mode;
+  document.getElementById("feedMsg").textContent=msg;
+}
+
+function agoText(d){
+  const s=Math.round((Date.now()-d)/1000);
+  if(s<60) return "just now";
+  const m=Math.round(s/60);
+  if(m<60) return m+" min ago";
+  const h=Math.round(m/60);
+  return h+" hr ago";
+}
+
+function applyFeed(payload){
+  if(!payload || !Array.isArray(payload.games) || !payload.games.length) throw new Error("Feed returned no games");
+  GAMES.length=0;
+  payload.games.filter(g=>g.h&&g.a).forEach(g=>GAMES.push(g));
+  if(payload.teams) Object.assign(TEAMS, payload.teams);
+  ALL_DATES.length=0;
+  [...new Set(GAMES.map(g=>g.d))].sort().forEach(d=>ALL_DATES.push(d));
+  feedState={loaded:true, at:Date.now(), count:GAMES.length, mode:"live"};
+  const keep=new Set([...state.dates].filter(d=>ALL_DATES.includes(d)));
+  state.dates=keep;
+  buildStrip();
+  if(state.dates.size===0) document.getElementById("btnToday").click();
+  else render();
+}
+
+async function loadFeed(manual){
+  if(!FEED_URL) return;
+  if(manual) setFeedBar("", "Checking SportsEngine…");
+  try{
+    const url=FEED_URL+(FEED_URL.indexOf("?")>-1?"&":"?")+(manual?"fresh=1&":"")+"_="+Date.now();
+    const ctrl=new AbortController();
+    const to=setTimeout(()=>ctrl.abort(), 12000);
+    const res=await fetch(url,{signal:ctrl.signal,cache:"no-store"});
+    clearTimeout(to);
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const payload=await res.json();
+    applyFeed(payload);
+    const badFeeds=(payload.feeds||[]).filter(f=>!f.ok);
+    if(badFeeds.length){
+      setFeedBar("stale","Live from SportsEngine, updated "+agoText(feedState.at)+
+        ". "+badFeeds.length+" feed"+(badFeeds.length===1?"":"s")+" unavailable, showing last known games.");
+    }else{
+      setFeedBar("live","Live from SportsEngine · "+GAMES.length+" games · updated "+agoText(feedState.at));
+    }
+  }catch(e){
+    if(feedState.loaded){
+      setFeedBar("stale","Could not reach SportsEngine. Showing schedule from "+agoText(feedState.at)+".");
+    }else{
+      setFeedBar("offline","Could not reach SportsEngine. Showing the schedule saved in this page.");
+    }
+  }
+}
+
+document.getElementById("btnRefresh").addEventListener("click",()=>loadFeed(true));
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden && feedState.loaded && Date.now()-feedState.at>FEED_POLL_MS) loadFeed(false);
+});
+
+/* ---------- boot ---------- */
+buildStrip();
+document.getElementById("btnToday").click();
+if(FEED_URL){
+  loadFeed(false);
+  setInterval(()=>loadFeed(false), FEED_POLL_MS);
+  setInterval(()=>{
+    if(feedState.loaded){
+      const bar=document.getElementById("feedbar");
+      if(bar && !bar.classList.contains("offline")){
+        document.getElementById("feedMsg").textContent =
+          (bar.classList.contains("stale")
+            ? "Could not reach SportsEngine. Showing schedule from "
+            : "Live from SportsEngine · "+GAMES.length+" games · updated ")+agoText(feedState.at);
+      }
+    }
+  }, 60000);
+}
+</script>
+</body>
+</html>

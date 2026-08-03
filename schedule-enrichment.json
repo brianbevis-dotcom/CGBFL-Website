@@ -1,0 +1,2844 @@
+{
+ "_comment": "Tower duty, officials, coaches, and team colors. SportsEngine has no fields for these, so the Worker merges this file onto the live iCal schedule. Game records key on date + division + home + away. Picture day events carry no enrichment but use the team colors here.",
+ "updated": "2026-08-03",
+ "teams": {
+  "Northwestern": [
+   "4E2A84",
+   "B6ACD1"
+  ],
+  "Wisconsin": [
+   "C5050C",
+   "FFFFFF"
+  ],
+  "Dolphins": [
+   "008E97",
+   "FC4C02"
+  ],
+  "Chargers": [
+   "0080C6",
+   "FFC20E"
+  ],
+  "Texans": [
+   "03202F",
+   "A71930"
+  ],
+  "Cowboys": [
+   "041E42",
+   "869397"
+  ],
+  "Oregon": [
+   "154733",
+   "FEE123"
+  ],
+  "Minnesota": [
+   "7A0019",
+   "FFCC33"
+  ],
+  "Michigan": [
+   "00274C",
+   "FFCB05"
+  ],
+  "Penn State": [
+   "041E42",
+   "FFFFFF"
+  ],
+  "Michigan State": [
+   "18453B",
+   "97A2A2"
+  ],
+  "Broncos": [
+   "002244",
+   "FB4F14"
+  ],
+  "Colts": [
+   "002C5F",
+   "A5ACAF"
+  ],
+  "UCLA": [
+   "2D68C4",
+   "F2A900"
+  ],
+  "Illinois": [
+   "13294B",
+   "FF5F05"
+  ],
+  "Washington": [
+   "4B2E83",
+   "B7A57A"
+  ],
+  "Ohio State": [
+   "BB0000",
+   "666666"
+  ],
+  "Iowa": [
+   "000000",
+   "FFCD00"
+  ],
+  "Bengals JV": [
+   "000000",
+   "FB4F14"
+  ],
+  "Cowboys JV": [
+   "041E42",
+   "869397"
+  ],
+  "Steelers JV": [
+   "101820",
+   "FFB612"
+  ],
+  "Ravens JV": [
+   "241773",
+   "9E7C0C"
+  ],
+  "Colts JV": [
+   "002C5F",
+   "A5ACAF"
+  ],
+  "Bears JV": [
+   "0B162A",
+   "C83803"
+  ],
+  "Titans JV": [
+   "0C2340",
+   "4B92DB"
+  ],
+  "Seahawks JV": [
+   "002244",
+   "69BE28"
+  ],
+  "Purdue": [
+   "000000",
+   "CFB991"
+  ],
+  "Indiana": [
+   "990000",
+   "EEEDEB"
+  ],
+  "Seahawks Varsity": [
+   "002244",
+   "69BE28"
+  ],
+  "Cowboys Varsity": [
+   "041E42",
+   "869397"
+  ],
+  "Broncos Varsity": [
+   "002244",
+   "FB4F14"
+  ],
+  "Titans Varsity": [
+   "0C2340",
+   "4B92DB"
+  ],
+  "Bengals Varsity": [
+   "000000",
+   "FB4F14"
+  ],
+  "Chiefs Varsity": [
+   "E31837",
+   "FFB81C"
+  ],
+  "Bears Varsity": [
+   "0B162A",
+   "C83803"
+  ],
+  "Broncos JV": [
+   "002244",
+   "FB4F14"
+  ],
+  "Chiefs JV": [
+   "E31837",
+   "FFB81C"
+  ],
+  "Nebraska": [
+   "D00000",
+   "F5F1E7"
+  ],
+  "Bengals": [
+   "000000",
+   "FB4F14"
+  ],
+  "Bears": [
+   "0B162A",
+   "C83803"
+  ],
+  "Steelers": [
+   "101820",
+   "FFB612"
+  ],
+  "Seahawks": [
+   "002244",
+   "69BE28"
+  ],
+  "Chiefs": [
+   "E31837",
+   "FFB81C"
+  ],
+  "Titans": [
+   "0C2340",
+   "4B92DB"
+  ],
+  "Ravens": [
+   "241773",
+   "9E7C0C"
+  ],
+  "Junior Trojans": [
+   "C8102E",
+   "000000"
+  ],
+  "Junior Trojans Cheer": [
+   "C8102E",
+   "000000"
+  ],
+  "Minnesota Cheer": [
+   "7A0019",
+   "FFCC33"
+  ],
+  "Michigan State Cheer": [
+   "18453B",
+   "97A2A2"
+  ],
+  "UCLA Cheer": [
+   "2D68C4",
+   "F2A900"
+  ],
+  "Michigan Cheer": [
+   "00274C",
+   "FFCB05"
+  ],
+  "Indiana Cheer": [
+   "990000",
+   "EEEDEB"
+  ],
+  "Ohio State Cheer": [
+   "BB0000",
+   "666666"
+  ],
+  "Oregon Cheer": [
+   "154733",
+   "FEE123"
+  ],
+  "Penn State Cheer": [
+   "041E42",
+   "FFFFFF"
+  ],
+  "Iowa Cheer": [
+   "000000",
+   "FFCD00"
+  ],
+  "Northwestern Cheer": [
+   "4E2A84",
+   "B6ACD1"
+  ],
+  "Illinois Cheer": [
+   "13294B",
+   "FF5F05"
+  ],
+  "Purdue Cheer": [
+   "000000",
+   "CFB991"
+  ],
+  "Nebraska Cheer": [
+   "D00000",
+   "F5F1E7"
+  ],
+  "Wisconsin Cheer": [
+   "C5050C",
+   "FFFFFF"
+  ],
+  "Washington Cheer": [
+   "4B2E83",
+   "B7A57A"
+  ]
+ },
+ "games": [
+  {
+   "d": "2026-08-01",
+   "dv": "Majors",
+   "h": "Northwestern",
+   "a": "Wisconsin",
+   "tt": "Majors Michigan State",
+   "tc": "Hamilton",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "2-4th Girls",
+   "h": "Dolphins",
+   "a": "Chargers",
+   "r1": "Mia Lidy",
+   "r2": "Aiden Jewell",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "2-4th Girls",
+   "h": "Texans",
+   "a": "Cowboys",
+   "r1": "Macie Painter",
+   "hc": "Bradley Huffman"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Minors",
+   "h": "Northwestern",
+   "a": "Oregon",
+   "tt": "Minors Indiana",
+   "tc": "Clancy",
+   "hc": "Michael Harvey"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Minors",
+   "h": "Minnesota",
+   "a": "Michigan",
+   "tt": "Minors Michigan State",
+   "hc": "Jordan Bunch"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Majors",
+   "h": "Penn State",
+   "a": "Michigan State",
+   "tt": "Majors Ohio State",
+   "tc": "Hornsby",
+   "hc": "Brad Howell"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "2-4th Girls",
+   "h": "Broncos",
+   "a": "Colts",
+   "r1": "Mia Lidy",
+   "r2": "Aiden Jewell",
+   "hc": "Joshua Gibson"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Minors",
+   "h": "UCLA",
+   "a": "Penn State",
+   "tt": "Minors Michigan",
+   "tc": "Pulse",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Minors",
+   "h": "Illinois",
+   "a": "Washington",
+   "tt": "Minors Minnesota",
+   "tc": "Bunch",
+   "hc": "Justin Wood"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Majors",
+   "h": "Oregon",
+   "a": "Ohio State",
+   "tt": "Majors Northwestern",
+   "tc": "Lidy",
+   "hc": "Andrew Sitter"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "5-6th Girls",
+   "h": "Texans",
+   "a": "Colts",
+   "r1": "Macie Painter",
+   "hc": "Jaime Hoch"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "5-6th Girls",
+   "h": "Dolphins",
+   "a": "Broncos",
+   "r1": "Mia Lidy",
+   "r2": "Aiden Jewell",
+   "hc": "Paul Bennett"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "7-8th Girls",
+   "h": "Chargers",
+   "a": "Dolphins",
+   "rn": "1 official must be 18+",
+   "hc": "JB PAXSON"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "7-8th Girls",
+   "h": "Texans",
+   "a": "Colts",
+   "r1": "Ben Balsley",
+   "r2": "Ryan Mueller",
+   "rn": "1 official must be 18+",
+   "hc": "Andrew Griffin"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Minors",
+   "h": "Iowa",
+   "a": "Ohio State",
+   "tt": "Minors Northwestern",
+   "hc": "Kyle Adams"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Kindergarten",
+   "h": "Bengals JV",
+   "a": "Cowboys JV",
+   "hc": "Alex Scheidler"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Kindergarten",
+   "h": "Steelers JV",
+   "a": "Ravens JV",
+   "hc": "Sean Egenolf"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Kindergarten",
+   "h": "Colts JV",
+   "a": "Bears JV",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Kindergarten",
+   "h": "Titans JV",
+   "a": "Seahawks JV",
+   "hc": "Davontray Thomas"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Minors",
+   "h": "Purdue",
+   "a": "Michigan State",
+   "tt": "Minors Illinois",
+   "tc": "Wood",
+   "hc": "Justin Green"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Rookie",
+   "h": "Indiana",
+   "a": "Ohio State",
+   "tt": "Rookie Purdue",
+   "tc": "Dirksen",
+   "hc": "Jeff Williams"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "Minors",
+   "h": "Wisconsin",
+   "a": "Indiana",
+   "tt": "Minors Iowa",
+   "tc": "Adams",
+   "hc": "Chase Flory"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "1st Grade",
+   "h": "Seahawks Varsity",
+   "a": "Cowboys Varsity",
+   "hc": "Anthony Neu"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "1st Grade",
+   "h": "Colts",
+   "a": "Broncos Varsity",
+   "hc": "Tyler Keller"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "1st Grade",
+   "h": "Titans Varsity",
+   "a": "Bengals Varsity",
+   "hc": "Andrew Halterman"
+  },
+  {
+   "d": "2026-08-01",
+   "dv": "1st Grade",
+   "h": "Chiefs Varsity",
+   "a": "Bears Varsity",
+   "hc": "Daren Johnson"
+  },
+  {
+   "d": "2026-08-03",
+   "dv": "7-8th Girls",
+   "h": "Colts",
+   "a": "Chargers",
+   "r1": "Alli Canada",
+   "r2": "Mia Lidy",
+   "rn": "1 official must be 18+",
+   "hc": "Zack Pasley"
+  },
+  {
+   "d": "2026-08-03",
+   "dv": "7-8th Girls",
+   "h": "Dolphins",
+   "a": "Texans",
+   "r1": "Alli Canada",
+   "r2": "Mia Lidy",
+   "rn": "1 official must be 18+",
+   "hc": "Parish Crowell Sr"
+  },
+  {
+   "d": "2026-08-04",
+   "dv": "Rookie",
+   "h": "Michigan",
+   "a": "Penn State",
+   "tt": "Rookie Indiana",
+   "tc": "Williams",
+   "hc": "Nicholas Bellinger"
+  },
+  {
+   "d": "2026-08-04",
+   "dv": "Minors",
+   "h": "Washington",
+   "a": "Purdue",
+   "tt": "Minors UCLA",
+   "tc": "Reed",
+   "hc": "Christopher Feltman"
+  },
+  {
+   "d": "2026-08-04",
+   "dv": "2-4th Girls",
+   "h": "Colts",
+   "a": "Texans",
+   "r1": "Mia Lidy",
+   "r2": "Aiden Jewell",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-08-04",
+   "dv": "2-4th Girls",
+   "h": "Dolphins",
+   "a": "Broncos",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-08-04",
+   "dv": "Minors",
+   "h": "Michigan",
+   "a": "UCLA",
+   "tt": "Minors Purdue",
+   "tc": "Green",
+   "hc": "Derrick Pulse"
+  },
+  {
+   "d": "2026-08-04",
+   "dv": "Minors",
+   "h": "Michigan State",
+   "a": "Minnesota",
+   "tt": "Minors Washington",
+   "tc": "Feltman",
+   "hc": "Shawn Sanders"
+  },
+  {
+   "d": "2026-08-05",
+   "dv": "Minors",
+   "h": "Indiana",
+   "a": "Iowa",
+   "tt": "Minors Ohio State",
+   "tc": "Rose",
+   "hc": "Joshua Clancy"
+  },
+  {
+   "d": "2026-08-05",
+   "dv": "Majors",
+   "h": "Indiana",
+   "a": "Purdue",
+   "tt": "Majors Oregon",
+   "tc": "Sitter",
+   "hc": "Aaron Halterman"
+  },
+  {
+   "d": "2026-08-05",
+   "dv": "5-6th Girls",
+   "h": "Colts",
+   "a": "Dolphins",
+   "r1": "Alli Canada",
+   "hc": "Rich Cary"
+  },
+  {
+   "d": "2026-08-05",
+   "dv": "5-6th Girls",
+   "h": "Texans",
+   "a": "Cowboys",
+   "r1": "Piper Hale",
+   "r2": "Aiden Jewell",
+   "hc": "Jaime Hoch"
+  },
+  {
+   "d": "2026-08-05",
+   "dv": "5-6th Girls",
+   "h": "Broncos",
+   "a": "Chargers",
+   "r1": "Alli Canada",
+   "r2": "Piper Hale",
+   "hc": "Jon-Erik Bennett"
+  },
+  {
+   "d": "2026-08-05",
+   "dv": "Majors",
+   "h": "Ohio State",
+   "a": "Penn State",
+   "tt": "Majors Indiana",
+   "tc": "Halterman",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-08-05",
+   "dv": "Majors",
+   "h": "Michigan State",
+   "a": "Oregon",
+   "tt": "Majors Northwestern",
+   "tc": "Lidy",
+   "hc": "Greg Hamilton"
+  },
+  {
+   "d": "2026-08-06",
+   "dv": "Kindergarten",
+   "h": "Broncos JV",
+   "a": "Titans JV",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-08-06",
+   "dv": "Kindergarten",
+   "h": "Bears JV",
+   "a": "Steelers JV",
+   "hc": "Jacob Duke"
+  },
+  {
+   "d": "2026-08-06",
+   "dv": "Kindergarten",
+   "h": "Seahawks JV",
+   "a": "Bengals JV",
+   "hc": "John Massingale"
+  },
+  {
+   "d": "2026-08-06",
+   "dv": "Kindergarten",
+   "h": "Cowboys JV",
+   "a": "Colts JV",
+   "hc": "Alejandro Higareda"
+  },
+  {
+   "d": "2026-08-06",
+   "dv": "Kindergarten",
+   "h": "Ravens JV",
+   "a": "Chiefs JV",
+   "hc": "Cory Freeman"
+  },
+  {
+   "d": "2026-08-06",
+   "dv": "1st Grade",
+   "h": "Seahawks Varsity",
+   "a": "Broncos Varsity",
+   "hc": "Anthony Neu"
+  },
+  {
+   "d": "2026-08-06",
+   "dv": "1st Grade",
+   "h": "Bears Varsity",
+   "a": "Titans Varsity",
+   "hc": "Drew Calvert"
+  },
+  {
+   "d": "2026-08-06",
+   "dv": "1st Grade",
+   "h": "Bengals Varsity",
+   "a": "Cowboys Varsity",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-08-06",
+   "dv": "1st Grade",
+   "h": "Colts",
+   "a": "Chiefs Varsity",
+   "hc": "Tyler Keller"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Rookie",
+   "h": "Michigan",
+   "a": "Purdue",
+   "tt": "Rookie Ohio State",
+   "tc": "Ward",
+   "hc": "Nicholas Bellinger"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "7-8th Girls",
+   "h": "Dolphins",
+   "a": "Colts",
+   "r1": "Joey Matis",
+   "r2": "Alli Canada",
+   "rn": "1 official must be 18+",
+   "hc": "Parish Crowell Sr"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "7-8th Girls",
+   "h": "Texans",
+   "a": "Chargers",
+   "r1": "Ben Balsley",
+   "r2": "Ryan Mueller",
+   "rn": "1 official must be 18+",
+   "hc": "Andrew Griffin"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Minors",
+   "h": "Ohio State",
+   "a": "Illinois",
+   "tt": "Minors Iowa",
+   "tc": "Adams",
+   "hc": "Bradley Rose"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Majors",
+   "h": "Michigan State",
+   "a": "Northwestern",
+   "tt": "Majors Penn State",
+   "tc": "Howell",
+   "hc": "Greg Hamilton"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Rookie",
+   "h": "Ohio State",
+   "a": "Nebraska",
+   "tt": "Rookie Penn State",
+   "tc": "Egenolf",
+   "hc": "Benjamin Ward"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "2-4th Girls",
+   "h": "Cowboys",
+   "a": "Broncos",
+   "r1": "Joey Matis",
+   "r2": "Macie Painter",
+   "hc": "Logan Deffner"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Minors",
+   "h": "Michigan",
+   "a": "Oregon",
+   "tt": "Minors Michigan State",
+   "hc": "Derrick Pulse"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Majors",
+   "h": "Purdue",
+   "a": "Penn State",
+   "tt": "Majors Wisconsin",
+   "tc": "Ferguson",
+   "hc": "Randel Dirksen"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Minors",
+   "h": "Minnesota",
+   "a": "UCLA",
+   "tt": "Minors Michigan",
+   "tc": "Pulse",
+   "hc": "Jordan Bunch"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Majors",
+   "h": "Wisconsin",
+   "a": "Indiana",
+   "tt": "Majors Northwestern",
+   "tc": "Lidy",
+   "hc": "Andre Ferguson"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Kindergarten",
+   "h": "Bengals JV",
+   "a": "Titans JV",
+   "hc": "Alex Scheidler"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Kindergarten",
+   "h": "Bears JV",
+   "a": "Ravens JV",
+   "hc": "Jacob Duke"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Kindergarten",
+   "h": "Colts JV",
+   "a": "Steelers JV",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Kindergarten",
+   "h": "Chiefs JV",
+   "a": "Broncos JV",
+   "hc": "Jason Cahill"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Rookie",
+   "h": "Indiana",
+   "a": "Penn State",
+   "tt": "Rookie Nebraska",
+   "tc": "Reagan",
+   "hc": "Jeff Williams"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Minors",
+   "h": "Iowa",
+   "a": "Purdue",
+   "tt": "Minors Oregon",
+   "tc": "Lewis",
+   "hc": "Kyle Adams"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Minors",
+   "h": "Northwestern",
+   "a": "Michigan State",
+   "tt": "Minors Illinois",
+   "tc": "Wood",
+   "hc": "Michael Harvey"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "2-4th Girls",
+   "h": "Texans",
+   "a": "Dolphins",
+   "r1": "Alli Canada",
+   "hc": "Bradley Huffman"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "2-4th Girls",
+   "h": "Chargers",
+   "a": "Colts",
+   "r1": "Joey Matis",
+   "r2": "Aiden Jewell",
+   "hc": "Kyle Fisher"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "Kindergarten",
+   "h": "Seahawks JV",
+   "a": "Cowboys JV",
+   "hc": "John Massingale"
+  },
+  {
+   "d": "2026-08-08",
+   "dv": "1st Grade",
+   "h": "Broncos Varsity",
+   "a": "Bears Varsity",
+   "hc": "Gavin Curd"
+  },
+  {
+   "d": "2026-08-10",
+   "dv": "Rookie",
+   "h": "Purdue",
+   "a": "Ohio State",
+   "tt": "Rookie Nebraska",
+   "tc": "Reagan",
+   "hc": "Stacey Dirksen"
+  },
+  {
+   "d": "2026-08-10",
+   "dv": "Minors",
+   "h": "Ohio State",
+   "a": "Minnesota",
+   "tt": "Minors Wisconsin",
+   "tc": "Flory",
+   "hc": "Bradley Rose"
+  },
+  {
+   "d": "2026-08-10",
+   "dv": "7-8th Girls",
+   "h": "Chargers",
+   "a": "Dolphins",
+   "r1": "Chad Roehling",
+   "r2": "Alli Canada",
+   "rn": "1 official must be 18+",
+   "hc": "JB PAXSON"
+  },
+  {
+   "d": "2026-08-10",
+   "dv": "7-8th Girls",
+   "h": "Colts",
+   "a": "Texans",
+   "r1": "Chad Roehling",
+   "r2": "Alli Canada",
+   "rn": "1 official must be 18+",
+   "hc": "Zack Pasley"
+  },
+  {
+   "d": "2026-08-10",
+   "dv": "Rookie",
+   "h": "Penn State",
+   "a": "Nebraska",
+   "tt": "Rookie Purdue",
+   "tc": "Dirksen",
+   "hc": "Sean Egenolf"
+  },
+  {
+   "d": "2026-08-10",
+   "dv": "Minors",
+   "h": "Illinois",
+   "a": "Wisconsin",
+   "tt": "Minors Minnesota",
+   "tc": "Bunch",
+   "hc": "Justin Wood"
+  },
+  {
+   "d": "2026-08-11",
+   "dv": "Minors",
+   "h": "Purdue",
+   "a": "Indiana",
+   "tt": "Minors Penn State",
+   "hc": "Justin Green"
+  },
+  {
+   "d": "2026-08-11",
+   "dv": "Minors",
+   "h": "UCLA",
+   "a": "Iowa",
+   "tt": "Minors Northwestern",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-08-11",
+   "dv": "2-4th Girls",
+   "h": "Broncos",
+   "a": "Texans",
+   "r1": "Joey Matis",
+   "r2": "Aiden Jewell",
+   "hc": "Joshua Gibson"
+  },
+  {
+   "d": "2026-08-11",
+   "dv": "2-4th Girls",
+   "h": "Chargers",
+   "a": "Cowboys",
+   "r1": "Joey Matis",
+   "r2": "Aiden Jewell",
+   "hc": "Kyle Fisher"
+  },
+  {
+   "d": "2026-08-11",
+   "dv": "2-4th Girls",
+   "h": "Colts",
+   "a": "Dolphins",
+   "r1": "Mia Lidy",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-08-11",
+   "dv": "Minors",
+   "h": "Michigan State",
+   "a": "Penn State",
+   "tt": "Minors Minnesota",
+   "tc": "Bunch",
+   "hc": "Shawn Sanders"
+  },
+  {
+   "d": "2026-08-11",
+   "dv": "Minors",
+   "h": "Washington",
+   "a": "Northwestern",
+   "tt": "Minors Purdue",
+   "tc": "Green",
+   "hc": "Christopher Feltman"
+  },
+  {
+   "d": "2026-08-12",
+   "dv": "Majors",
+   "h": "Northwestern",
+   "a": "Indiana",
+   "tt": "Majors Purdue",
+   "tc": "Dirksen",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-08-12",
+   "dv": "Minors",
+   "h": "Minnesota",
+   "a": "Illinois",
+   "tt": "Minors Ohio State",
+   "tc": "Rose",
+   "hc": "Jordan Bunch"
+  },
+  {
+   "d": "2026-08-12",
+   "dv": "5-6th Girls",
+   "h": "Chargers",
+   "a": "Dolphins",
+   "r1": "Alli Canada",
+   "hc": "Derek Dallas"
+  },
+  {
+   "d": "2026-08-12",
+   "dv": "5-6th Girls",
+   "h": "Cowboys",
+   "a": "Colts",
+   "r1": "Piper Hale",
+   "r2": "Aiden Jewell",
+   "hc": "Ellie Hughes"
+  },
+  {
+   "d": "2026-08-12",
+   "dv": "5-6th Girls",
+   "h": "Broncos",
+   "a": "Texans",
+   "r1": "Alli Canada",
+   "r2": "Piper Hale",
+   "hc": "Jon-Erik Bennett"
+  },
+  {
+   "d": "2026-08-12",
+   "dv": "Majors",
+   "h": "Purdue",
+   "a": "Michigan State",
+   "tt": "Majors Indiana",
+   "tc": "Halterman",
+   "hc": "Randel Dirksen"
+  },
+  {
+   "d": "2026-08-12",
+   "dv": "Majors",
+   "h": "Penn State",
+   "a": "Wisconsin",
+   "tt": "Majors Ohio State",
+   "tc": "Hornsby",
+   "hc": "Brad Howell"
+  },
+  {
+   "d": "2026-08-13",
+   "dv": "Kindergarten",
+   "h": "Chiefs JV",
+   "a": "Bears JV",
+   "hc": "Jason Cahill"
+  },
+  {
+   "d": "2026-08-13",
+   "dv": "Kindergarten",
+   "h": "Titans JV",
+   "a": "Colts JV",
+   "hc": "Davontray Thomas"
+  },
+  {
+   "d": "2026-08-13",
+   "dv": "Kindergarten",
+   "h": "Steelers JV",
+   "a": "Bengals JV",
+   "hc": "Sean Egenolf"
+  },
+  {
+   "d": "2026-08-13",
+   "dv": "Kindergarten",
+   "h": "Cowboys JV",
+   "a": "Broncos JV",
+   "hc": "Alejandro Higareda"
+  },
+  {
+   "d": "2026-08-13",
+   "dv": "Kindergarten",
+   "h": "Ravens JV",
+   "a": "Seahawks JV",
+   "hc": "Cory Freeman"
+  },
+  {
+   "d": "2026-08-13",
+   "dv": "1st Grade",
+   "h": "Bears Varsity",
+   "a": "Colts",
+   "hc": "Drew Calvert"
+  },
+  {
+   "d": "2026-08-13",
+   "dv": "1st Grade",
+   "h": "Broncos Varsity",
+   "a": "Bengals Varsity",
+   "hc": "Gavin Curd"
+  },
+  {
+   "d": "2026-08-13",
+   "dv": "1st Grade",
+   "h": "Chiefs Varsity",
+   "a": "Titans Varsity",
+   "hc": "Daren Johnson"
+  },
+  {
+   "d": "2026-08-13",
+   "dv": "1st Grade",
+   "h": "Cowboys Varsity",
+   "a": "Seahawks Varsity",
+   "hc": "Donald Ivey"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Minors",
+   "h": "Wisconsin",
+   "a": "Michigan",
+   "tt": "Minors Washington",
+   "tc": "Feltman",
+   "hc": "Chase Flory"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Majors",
+   "h": "Indiana",
+   "a": "Purdue",
+   "tt": "Majors Wisconsin",
+   "tc": "Ferguson",
+   "hc": "Aaron Halterman"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Minors",
+   "h": "UCLA",
+   "a": "Ohio State",
+   "tt": "Minors Illinois",
+   "tc": "Wood",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Rookie",
+   "h": "Indiana",
+   "a": "Michigan",
+   "tt": "Rookie Ohio State",
+   "tc": "Ward",
+   "hc": "Jeff Williams"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Minors",
+   "h": "Penn State",
+   "a": "Minnesota",
+   "tt": "Minors UCLA",
+   "tc": "Reed",
+   "hc": "Branden Tuggle"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Majors",
+   "h": "Northwestern",
+   "a": "Ohio State",
+   "tt": "Majors Oregon",
+   "tc": "Sitter",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "2-4th Girls",
+   "h": "Broncos",
+   "a": "Chargers",
+   "r1": "Alli Canada",
+   "r2": "Macie Painter",
+   "hc": "Joshua Gibson"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "2-4th Girls",
+   "h": "Cowboys",
+   "a": "Dolphins",
+   "r1": "Joey Matis",
+   "r2": "Mollie Painter",
+   "hc": "Logan Deffner"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Minors",
+   "h": "Iowa",
+   "a": "Washington",
+   "tt": "Minors Wisconsin",
+   "tc": "Flory",
+   "hc": "Kyle Adams"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Rookie",
+   "h": "Ohio State",
+   "a": "Penn State",
+   "tt": "Rookie Michigan",
+   "tc": "Bellinger",
+   "hc": "Benjamin Ward"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "5-6th Girls",
+   "h": "Colts",
+   "a": "Broncos",
+   "r1": "Joey Matis",
+   "r2": "Aiden Jewell",
+   "hc": "Rich Cary"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "5-6th Girls",
+   "h": "Dolphins",
+   "a": "Texans",
+   "r1": "Alli Canada",
+   "hc": "Paul Bennett"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "5-6th Girls",
+   "h": "Cowboys",
+   "a": "Chargers",
+   "r1": "Mia Lidy",
+   "hc": "Ellie Hughes"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "7-8th Girls",
+   "h": "Colts",
+   "a": "Dolphins",
+   "r1": "Ben Balsley",
+   "r2": "Ryan Mueller",
+   "rn": "1 official must be 18+",
+   "hc": "Zack Pasley"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "7-8th Girls",
+   "h": "Texans",
+   "a": "Chargers",
+   "r1": "Mollie Painter",
+   "rn": "1 official must be 18+",
+   "hc": "Andrew Griffin"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Minors",
+   "h": "Oregon",
+   "a": "Indiana",
+   "tt": "Minors Iowa",
+   "tc": "Adams",
+   "hc": "James Lewis"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Kindergarten",
+   "h": "Broncos JV",
+   "a": "Steelers JV",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Kindergarten",
+   "h": "Bears JV",
+   "a": "Seahawks JV",
+   "hc": "Jacob Duke"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "1st Grade",
+   "h": "Bengals Varsity",
+   "a": "Chiefs Varsity",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Majors",
+   "h": "Oregon",
+   "a": "Michigan State",
+   "tt": "Majors Purdue",
+   "tc": "Dirksen",
+   "hc": "Andrew Sitter"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Minors",
+   "h": "Michigan State",
+   "a": "Illinois",
+   "tt": "Minors Oregon",
+   "tc": "Lewis",
+   "hc": "Shawn Sanders"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Rookie",
+   "h": "Purdue",
+   "a": "Nebraska",
+   "tt": "Rookie Indiana",
+   "tc": "Williams",
+   "hc": "Stacey Dirksen"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Minors",
+   "h": "Northwestern",
+   "a": "Purdue",
+   "tt": "Minors Penn State",
+   "hc": "Michael Harvey"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Kindergarten",
+   "h": "Ravens JV",
+   "a": "Titans JV",
+   "hc": "Cory Freeman"
+  },
+  {
+   "d": "2026-08-15",
+   "dv": "Kindergarten",
+   "h": "Colts JV",
+   "a": "Chiefs JV",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-08-17",
+   "dv": "Rookie",
+   "h": "Michigan",
+   "a": "Ohio State",
+   "tt": "Rookie Purdue",
+   "tc": "Dirksen",
+   "hc": "Nicholas Bellinger"
+  },
+  {
+   "d": "2026-08-17",
+   "dv": "Rookie",
+   "h": "Indiana",
+   "a": "Purdue",
+   "tt": "Rookie Michigan",
+   "tc": "Bellinger",
+   "hc": "Jeff Williams"
+  },
+  {
+   "d": "2026-08-18",
+   "dv": "Minors",
+   "h": "Wisconsin",
+   "a": "Ohio State",
+   "tt": "Minors Oregon",
+   "tc": "Lewis",
+   "hc": "Chase Flory"
+  },
+  {
+   "d": "2026-08-18",
+   "dv": "Minors",
+   "h": "Purdue",
+   "a": "UCLA",
+   "tt": "Minors Penn State",
+   "hc": "Justin Green"
+  },
+  {
+   "d": "2026-08-18",
+   "dv": "2-4th Girls",
+   "h": "Dolphins",
+   "a": "Broncos",
+   "r1": "Alli Canada",
+   "r2": "Piper Hale",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-08-18",
+   "dv": "2-4th Girls",
+   "h": "Colts",
+   "a": "Cowboys",
+   "r1": "Alli Canada",
+   "r2": "Piper Hale",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-08-18",
+   "dv": "2-4th Girls",
+   "h": "Texans",
+   "a": "Chargers",
+   "r1": "Mia Lidy",
+   "hc": "Bradley Huffman"
+  },
+  {
+   "d": "2026-08-18",
+   "dv": "Minors",
+   "h": "Iowa",
+   "a": "Penn State",
+   "tt": "Minors Ohio State",
+   "tc": "Rose",
+   "hc": "Kyle Adams"
+  },
+  {
+   "d": "2026-08-18",
+   "dv": "Minors",
+   "h": "Washington",
+   "a": "Oregon",
+   "tt": "Minors Purdue",
+   "tc": "Green",
+   "hc": "Christopher Feltman"
+  },
+  {
+   "d": "2026-08-19",
+   "dv": "Minors",
+   "h": "Indiana",
+   "a": "Michigan State",
+   "tt": "Minors Michigan",
+   "tc": "Pulse",
+   "hc": "Joshua Clancy"
+  },
+  {
+   "d": "2026-08-19",
+   "dv": "Minors",
+   "h": "Northwestern",
+   "a": "Minnesota",
+   "tt": "Minors UCLA",
+   "tc": "Reed",
+   "hc": "Michael Harvey"
+  },
+  {
+   "d": "2026-08-19",
+   "dv": "5-6th Girls",
+   "h": "Colts",
+   "a": "Dolphins",
+   "r1": "Joey Matis",
+   "r2": "Aiden Jewell",
+   "hc": "Rich Cary"
+  },
+  {
+   "d": "2026-08-19",
+   "dv": "5-6th Girls",
+   "h": "Texans",
+   "a": "Cowboys",
+   "r1": "Mia Lidy",
+   "hc": "Jaime Hoch"
+  },
+  {
+   "d": "2026-08-19",
+   "dv": "5-6th Girls",
+   "h": "Chargers",
+   "a": "Broncos",
+   "r1": "Joey Matis",
+   "r2": "Aiden Jewell",
+   "hc": "Derek Dallas"
+  },
+  {
+   "d": "2026-08-19",
+   "dv": "Majors",
+   "h": "Wisconsin",
+   "a": "Ohio State",
+   "tt": "Majors Penn State",
+   "tc": "Howell",
+   "hc": "Andre Ferguson"
+  },
+  {
+   "d": "2026-08-19",
+   "dv": "Majors",
+   "h": "Purdue",
+   "a": "Oregon",
+   "tt": "Majors Indiana",
+   "tc": "Halterman",
+   "hc": "Randel Dirksen"
+  },
+  {
+   "d": "2026-08-20",
+   "dv": "Kindergarten",
+   "h": "Steelers JV",
+   "a": "Cowboys JV",
+   "hc": "Sean Egenolf"
+  },
+  {
+   "d": "2026-08-20",
+   "dv": "Kindergarten",
+   "h": "Bengals JV",
+   "a": "Bears JV",
+   "hc": "Alex Scheidler"
+  },
+  {
+   "d": "2026-08-20",
+   "dv": "Kindergarten",
+   "h": "Colts JV",
+   "a": "Ravens JV",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-08-20",
+   "dv": "Kindergarten",
+   "h": "Seahawks JV",
+   "a": "Chiefs JV",
+   "hc": "John Massingale"
+  },
+  {
+   "d": "2026-08-20",
+   "dv": "1st Grade",
+   "h": "Colts",
+   "a": "Seahawks Varsity",
+   "hc": "Tyler Keller"
+  },
+  {
+   "d": "2026-08-20",
+   "dv": "1st Grade",
+   "h": "Cowboys Varsity",
+   "a": "Chiefs Varsity",
+   "hc": "Donald Ivey"
+  },
+  {
+   "d": "2026-08-20",
+   "dv": "1st Grade",
+   "h": "Titans Varsity",
+   "a": "Broncos Varsity",
+   "hc": "Andrew Halterman"
+  },
+  {
+   "d": "2026-08-20",
+   "dv": "1st Grade",
+   "h": "Bengals Varsity",
+   "a": "Bears Varsity",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Majors",
+   "h": "Wisconsin",
+   "a": "Indiana",
+   "tt": "Majors Michigan State",
+   "tc": "Hamilton",
+   "hc": "Andre Ferguson"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Minors",
+   "h": "Ohio State",
+   "a": "Michigan State",
+   "tt": "Minors Indiana",
+   "tc": "Clancy",
+   "hc": "Bradley Rose"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Majors",
+   "h": "Oregon",
+   "a": "Northwestern",
+   "tt": "Majors Ohio State",
+   "tc": "Hornsby",
+   "hc": "Andrew Sitter"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Rookie",
+   "h": "Nebraska",
+   "a": "Ohio State",
+   "tt": "Rookie Indiana",
+   "tc": "Williams",
+   "hc": "Jordan Reagan"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Minors",
+   "h": "UCLA",
+   "a": "Washington",
+   "tt": "Minors Northwestern",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Majors",
+   "h": "Michigan State",
+   "a": "Purdue",
+   "tt": "Majors Oregon",
+   "tc": "Sitter",
+   "hc": "Greg Hamilton"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Minors",
+   "h": "Oregon",
+   "a": "Purdue",
+   "tt": "Minors Washington",
+   "tc": "Feltman",
+   "hc": "James Lewis"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "5-6th Girls",
+   "h": "Chargers",
+   "a": "Texans",
+   "r1": "Joey Matis",
+   "r2": "Macie Painter",
+   "hc": "Derek Dallas"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "5-6th Girls",
+   "h": "Broncos",
+   "a": "Cowboys",
+   "r1": "Alli Canada",
+   "r2": "Mollie Painter",
+   "hc": "Jon-Erik Bennett"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Rookie",
+   "h": "Penn State",
+   "a": "Indiana",
+   "tt": "Rookie Nebraska",
+   "tc": "Reagan",
+   "hc": "Sean Egenolf"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Minors",
+   "h": "Minnesota",
+   "a": "Wisconsin",
+   "tt": "Minors Illinois",
+   "tc": "Wood",
+   "hc": "Jordan Bunch"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Majors",
+   "h": "Ohio State",
+   "a": "Penn State",
+   "tt": "Majors Wisconsin",
+   "tc": "Ferguson",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "2-4th Girls",
+   "h": "Dolphins",
+   "a": "Texans",
+   "r1": "Joey Matis",
+   "r2": "Aiden Jewell",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "2-4th Girls",
+   "h": "Chargers",
+   "a": "Colts",
+   "r1": "Alli Canada",
+   "hc": "Kyle Fisher"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "2-4th Girls",
+   "h": "Cowboys",
+   "a": "Broncos",
+   "r1": "Macie Painter",
+   "r2": "Mollie Painter",
+   "hc": "Logan Deffner"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "7-8th Girls",
+   "h": "Dolphins",
+   "a": "Colts",
+   "r1": "Ben Balsley",
+   "r2": "Ryan Mueller",
+   "rn": "1 official must be 18+",
+   "hc": "Parish Crowell Sr"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "7-8th Girls",
+   "h": "Texans",
+   "a": "Chargers",
+   "rn": "1 official must be 18+",
+   "hc": "Andrew Griffin"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Minors",
+   "h": "Illinois",
+   "a": "Northwestern",
+   "tt": "Minors Wisconsin",
+   "tc": "Flory",
+   "hc": "Justin Wood"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Kindergarten",
+   "h": "Bengals JV",
+   "a": "Colts JV",
+   "hc": "Alex Scheidler"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "1st Grade",
+   "h": "Seahawks Varsity",
+   "a": "Bengals Varsity",
+   "hc": "Anthony Neu"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Kindergarten",
+   "h": "Chiefs JV",
+   "a": "Broncos JV",
+   "hc": "Jason Cahill"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Kindergarten",
+   "h": "Cowboys JV",
+   "a": "Ravens JV",
+   "hc": "Alejandro Higareda"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Minors",
+   "h": "Michigan",
+   "a": "Iowa",
+   "tt": "Minors Michigan State",
+   "hc": "Derrick Pulse"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Rookie",
+   "h": "Purdue",
+   "a": "Michigan",
+   "tt": "Rookie Penn State",
+   "tc": "Egenolf",
+   "hc": "Stacey Dirksen"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Minors",
+   "h": "Penn State",
+   "a": "Indiana",
+   "tt": "Minors Minnesota",
+   "tc": "Bunch",
+   "hc": "Branden Tuggle"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Kindergarten",
+   "h": "Seahawks JV",
+   "a": "Steelers JV",
+   "hc": "John Massingale"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "Kindergarten",
+   "h": "Titans JV",
+   "a": "Bears JV",
+   "hc": "Davontray Thomas"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "1st Grade",
+   "h": "Broncos Varsity",
+   "a": "Colts",
+   "hc": "Gavin Curd"
+  },
+  {
+   "d": "2026-08-22",
+   "dv": "1st Grade",
+   "h": "Titans Varsity",
+   "a": "Cowboys Varsity",
+   "hc": "Andrew Halterman"
+  },
+  {
+   "d": "2026-08-24",
+   "dv": "Rookie",
+   "h": "Indiana",
+   "a": "Nebraska",
+   "tt": "Rookie Penn State",
+   "tc": "Egenolf",
+   "hc": "Jeff Williams"
+  },
+  {
+   "d": "2026-08-24",
+   "dv": "Rookie",
+   "h": "Ohio State",
+   "a": "Purdue",
+   "tt": "Rookie Michigan",
+   "tc": "Bellinger",
+   "hc": "Benjamin Ward"
+  },
+  {
+   "d": "2026-08-24",
+   "dv": "7-8th Girls",
+   "h": "Colts",
+   "a": "Texans",
+   "r1": "Mia Lidy",
+   "r2": "Alli Canada",
+   "rn": "1 official must be 18+",
+   "hc": "Zack Pasley"
+  },
+  {
+   "d": "2026-08-24",
+   "dv": "7-8th Girls",
+   "h": "Chargers",
+   "a": "Dolphins",
+   "r1": "Mia Lidy",
+   "r2": "Alli Canada",
+   "rn": "1 official must be 18+",
+   "hc": "JB PAXSON"
+  },
+  {
+   "d": "2026-08-24",
+   "dv": "Rookie",
+   "h": "Michigan",
+   "a": "Penn State",
+   "tt": "Rookie Ohio State",
+   "tc": "Ward",
+   "hc": "Nicholas Bellinger"
+  },
+  {
+   "d": "2026-08-24",
+   "dv": "Minors",
+   "h": "Ohio State",
+   "a": "Michigan",
+   "tt": "Minors Indiana",
+   "tc": "Clancy",
+   "hc": "Bradley Rose"
+  },
+  {
+   "d": "2026-08-25",
+   "dv": "Minors",
+   "h": "Oregon",
+   "a": "Illinois",
+   "tt": "Minors Penn State",
+   "hc": "James Lewis"
+  },
+  {
+   "d": "2026-08-25",
+   "dv": "Minors",
+   "h": "Michigan State",
+   "a": "Washington",
+   "tt": "Minors UCLA",
+   "tc": "Reed",
+   "hc": "Shawn Sanders"
+  },
+  {
+   "d": "2026-08-25",
+   "dv": "2-4th Girls",
+   "h": "Texans",
+   "a": "Colts",
+   "r1": "Joey Matis",
+   "r2": "Aiden Jewell",
+   "hc": "Bradley Huffman"
+  },
+  {
+   "d": "2026-08-25",
+   "dv": "2-4th Girls",
+   "h": "Chargers",
+   "a": "Dolphins",
+   "r1": "Joey Matis",
+   "hc": "Kyle Fisher"
+  },
+  {
+   "d": "2026-08-25",
+   "dv": "Minors",
+   "h": "Indiana",
+   "a": "UCLA",
+   "tt": "Minors Michigan State",
+   "hc": "Joshua Clancy"
+  },
+  {
+   "d": "2026-08-25",
+   "dv": "Minors",
+   "h": "Penn State",
+   "a": "Wisconsin",
+   "tt": "Minors Oregon",
+   "tc": "Lewis",
+   "hc": "Branden Tuggle"
+  },
+  {
+   "d": "2026-08-26",
+   "dv": "Minors",
+   "h": "Michigan",
+   "a": "Northwestern",
+   "tt": "Minors Iowa",
+   "tc": "Adams",
+   "hc": "Derrick Pulse"
+  },
+  {
+   "d": "2026-08-26",
+   "dv": "Majors",
+   "h": "Penn State",
+   "a": "Wisconsin",
+   "tt": "Majors Indiana",
+   "tc": "Halterman",
+   "hc": "Brad Howell"
+  },
+  {
+   "d": "2026-08-26",
+   "dv": "5-6th Girls",
+   "h": "Texans",
+   "a": "Broncos",
+   "r1": "Alli Canada",
+   "r2": "Piper Hale",
+   "hc": "Jaime Hoch"
+  },
+  {
+   "d": "2026-08-26",
+   "dv": "5-6th Girls",
+   "h": "Dolphins",
+   "a": "Chargers",
+   "r1": "Alli Canada",
+   "r2": "Aiden Jewell",
+   "hc": "Paul Bennett"
+  },
+  {
+   "d": "2026-08-26",
+   "dv": "5-6th Girls",
+   "h": "Cowboys",
+   "a": "Colts",
+   "r1": "Piper Hale",
+   "r2": "Aiden Jewell",
+   "hc": "Ellie Hughes"
+  },
+  {
+   "d": "2026-08-26",
+   "dv": "Majors",
+   "h": "Ohio State",
+   "a": "Oregon",
+   "tt": "Majors Penn State",
+   "tc": "Howell",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-08-26",
+   "dv": "Majors",
+   "h": "Indiana",
+   "a": "Northwestern",
+   "tt": "Majors Wisconsin",
+   "tc": "Ferguson",
+   "hc": "Aaron Halterman"
+  },
+  {
+   "d": "2026-08-27",
+   "dv": "1st Grade",
+   "h": "Chiefs Varsity",
+   "a": "Seahawks Varsity",
+   "hc": "Daren Johnson"
+  },
+  {
+   "d": "2026-08-27",
+   "dv": "1st Grade",
+   "h": "Bengals Varsity",
+   "a": "Colts",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-08-27",
+   "dv": "Kindergarten",
+   "h": "Steelers JV",
+   "a": "Titans JV",
+   "hc": "Sean Egenolf"
+  },
+  {
+   "d": "2026-08-27",
+   "dv": "Kindergarten",
+   "h": "Ravens JV",
+   "a": "Seahawks JV",
+   "hc": "Cory Freeman"
+  },
+  {
+   "d": "2026-08-27",
+   "dv": "1st Grade",
+   "h": "Cowboys Varsity",
+   "a": "Broncos Varsity",
+   "hc": "Donald Ivey"
+  },
+  {
+   "d": "2026-08-27",
+   "dv": "1st Grade",
+   "h": "Bears Varsity",
+   "a": "Titans Varsity",
+   "hc": "Drew Calvert"
+  },
+  {
+   "d": "2026-08-27",
+   "dv": "Kindergarten",
+   "h": "Broncos JV",
+   "a": "Bengals JV",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-08-27",
+   "dv": "Kindergarten",
+   "h": "Cowboys JV",
+   "a": "Chiefs JV",
+   "hc": "Alejandro Higareda"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Rookie",
+   "h": "Penn State",
+   "a": "Ohio State",
+   "tt": "Rookie Purdue",
+   "tc": "Dirksen",
+   "hc": "Sean Egenolf"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Minors",
+   "h": "Washington",
+   "a": "Penn State",
+   "tt": "Minors Northwestern",
+   "hc": "Christopher Feltman"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Minors",
+   "h": "Michigan",
+   "a": "Michigan State",
+   "tt": "Minors Ohio State",
+   "tc": "Rose",
+   "hc": "Derrick Pulse"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Majors",
+   "h": "Oregon",
+   "a": "Penn State",
+   "tt": "Majors Northwestern",
+   "tc": "Lidy",
+   "hc": "Andrew Sitter"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Rookie",
+   "h": "Michigan",
+   "a": "Indiana",
+   "tt": "Rookie Nebraska",
+   "tc": "Reagan",
+   "hc": "Nicholas Bellinger"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Minors",
+   "h": "Ohio State",
+   "a": "Indiana",
+   "tt": "Minors Purdue",
+   "tc": "Green",
+   "hc": "Bradley Rose"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "5-6th Girls",
+   "h": "Dolphins",
+   "a": "Cowboys",
+   "r1": "Alli Canada",
+   "r2": "Mollie Painter",
+   "hc": "Paul Bennett"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "2-4th Girls",
+   "h": "Dolphins",
+   "a": "Cowboys",
+   "r1": "Joey Matis",
+   "r2": "Macie Painter",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Majors",
+   "h": "Northwestern",
+   "a": "Ohio State",
+   "tt": "Majors Purdue",
+   "tc": "Dirksen",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Majors",
+   "h": "Indiana",
+   "a": "Michigan State",
+   "tt": "Majors Oregon",
+   "tc": "Sitter",
+   "hc": "Aaron Halterman"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Minors",
+   "h": "Illinois",
+   "a": "Purdue",
+   "tt": "Minors Washington",
+   "tc": "Feltman",
+   "hc": "Justin Wood"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "5-6th Girls",
+   "h": "Chargers",
+   "a": "Colts",
+   "r2": "Aiden Jewell",
+   "hc": "Derek Dallas"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "7-8th Girls",
+   "h": "Texans",
+   "a": "Dolphins",
+   "r1": "Alli Canada",
+   "r2": "Joey Matis",
+   "rn": "1 official must be 18+",
+   "hc": "Andrew Griffin"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "2-4th Girls",
+   "h": "Broncos",
+   "a": "Chargers",
+   "r1": "Macie Painter",
+   "r2": "Mollie Painter",
+   "hc": "Joshua Gibson"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "7-8th Girls",
+   "h": "Chargers",
+   "a": "Colts",
+   "r1": "Ben Balsley",
+   "r2": "Ryan Mueller",
+   "rn": "1 official must be 18+",
+   "hc": "JB PAXSON"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Minors",
+   "h": "Oregon",
+   "a": "Minnesota",
+   "tt": "Minors Wisconsin",
+   "tc": "Flory",
+   "hc": "James Lewis"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Majors",
+   "h": "Wisconsin",
+   "a": "Purdue",
+   "tt": "Majors Michigan State",
+   "tc": "Hamilton",
+   "hc": "Andre Ferguson"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Kindergarten",
+   "h": "Bears JV",
+   "a": "Colts JV",
+   "hc": "Jacob Duke"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Kindergarten",
+   "h": "Broncos JV",
+   "a": "Ravens JV",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Kindergarten",
+   "h": "Titans JV",
+   "a": "Cowboys JV",
+   "hc": "Davontray Thomas"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Kindergarten",
+   "h": "Bengals JV",
+   "a": "Seahawks JV",
+   "hc": "Alex Scheidler"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Kindergarten",
+   "h": "Chiefs JV",
+   "a": "Steelers JV",
+   "hc": "Jason Cahill"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Minors",
+   "h": "Iowa",
+   "a": "Northwestern",
+   "tt": "Minors Michigan",
+   "tc": "Pulse",
+   "hc": "Kyle Adams"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Minors",
+   "h": "Wisconsin",
+   "a": "UCLA",
+   "tt": "Minors Minnesota",
+   "tc": "Bunch",
+   "hc": "Chase Flory"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "Rookie",
+   "h": "Nebraska",
+   "a": "Purdue",
+   "tt": "Rookie Indiana",
+   "tc": "Williams",
+   "hc": "Jordan Reagan"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "1st Grade",
+   "h": "Seahawks Varsity",
+   "a": "Bears Varsity",
+   "hc": "Anthony Neu"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "1st Grade",
+   "h": "Broncos Varsity",
+   "a": "Bengals Varsity",
+   "hc": "Gavin Curd"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "1st Grade",
+   "h": "Colts",
+   "a": "Cowboys Varsity",
+   "hc": "Tyler Keller"
+  },
+  {
+   "d": "2026-08-29",
+   "dv": "1st Grade",
+   "h": "Chiefs Varsity",
+   "a": "Titans Varsity",
+   "hc": "Daren Johnson"
+  },
+  {
+   "d": "2026-08-31",
+   "dv": "Rookie",
+   "h": "Ohio State",
+   "a": "Indiana",
+   "tt": "Rookie Michigan",
+   "tc": "Bellinger",
+   "hc": "Benjamin Ward"
+  },
+  {
+   "d": "2026-08-31",
+   "dv": "Rookie",
+   "h": "Purdue",
+   "a": "Penn State",
+   "tt": "Rookie Nebraska",
+   "tc": "Reagan",
+   "hc": "Stacey Dirksen"
+  },
+  {
+   "d": "2026-08-31",
+   "dv": "7-8th Girls",
+   "h": "Dolphins",
+   "a": "Chargers",
+   "r1": "Joey Matis",
+   "r2": "Alli Canada",
+   "rn": "1 official must be 18+",
+   "hc": "Parish Crowell Sr"
+  },
+  {
+   "d": "2026-08-31",
+   "dv": "7-8th Girls",
+   "h": "Colts",
+   "a": "Texans",
+   "r1": "Joey Matis",
+   "r2": "Alli Canada",
+   "rn": "1 official must be 18+",
+   "hc": "Zack Pasley"
+  },
+  {
+   "d": "2026-08-31",
+   "dv": "Rookie",
+   "h": "Nebraska",
+   "a": "Michigan",
+   "tt": "Rookie Ohio State",
+   "tc": "Ward",
+   "hc": "Jordan Reagan"
+  },
+  {
+   "d": "2026-08-31",
+   "dv": "Minors",
+   "h": "Northwestern",
+   "a": "Ohio State",
+   "tt": "Minors Illinois",
+   "tc": "Wood",
+   "hc": "Michael Harvey"
+  },
+  {
+   "d": "2026-09-01",
+   "dv": "Minors",
+   "h": "Purdue",
+   "a": "Wisconsin",
+   "tt": "Minors Michigan",
+   "tc": "Pulse",
+   "hc": "Justin Green"
+  },
+  {
+   "d": "2026-09-01",
+   "dv": "Minors",
+   "h": "UCLA",
+   "a": "Illinois",
+   "tt": "Minors Michigan State",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-09-01",
+   "dv": "2-4th Girls",
+   "h": "Cowboys",
+   "a": "Chargers",
+   "r1": "Mia Lidy",
+   "r2": "Aiden Jewell",
+   "hc": "Logan Deffner"
+  },
+  {
+   "d": "2026-09-01",
+   "dv": "2-4th Girls",
+   "h": "Texans",
+   "a": "Broncos",
+   "r1": "Mia Lidy",
+   "hc": "Bradley Huffman"
+  },
+  {
+   "d": "2026-09-01",
+   "dv": "2-4th Girls",
+   "h": "Colts",
+   "a": "Dolphins",
+   "r1": "Aiden Jewell",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-09-01",
+   "dv": "Minors",
+   "h": "Penn State",
+   "a": "Michigan",
+   "tt": "Minors Purdue",
+   "tc": "Green",
+   "hc": "Branden Tuggle"
+  },
+  {
+   "d": "2026-09-01",
+   "dv": "Minors",
+   "h": "Michigan State",
+   "a": "Oregon",
+   "tt": "Minors UCLA",
+   "tc": "Reed",
+   "hc": "Shawn Sanders"
+  },
+  {
+   "d": "2026-09-02",
+   "dv": "Majors",
+   "h": "Purdue",
+   "a": "Oregon",
+   "tt": "Majors Ohio State",
+   "tc": "Hornsby",
+   "hc": "Randel Dirksen"
+  },
+  {
+   "d": "2026-09-02",
+   "dv": "Majors",
+   "h": "Penn State",
+   "a": "Northwestern",
+   "tt": "Majors Wisconsin",
+   "tc": "Ferguson",
+   "hc": "Brad Howell"
+  },
+  {
+   "d": "2026-09-02",
+   "dv": "5-6th Girls",
+   "h": "Broncos",
+   "a": "Dolphins",
+   "r1": "Alli Canada",
+   "hc": "Jon-Erik Bennett"
+  },
+  {
+   "d": "2026-09-02",
+   "dv": "5-6th Girls",
+   "h": "Colts",
+   "a": "Texans",
+   "r1": "Piper Hale",
+   "r2": "Aiden Jewell",
+   "hc": "Rich Cary"
+  },
+  {
+   "d": "2026-09-02",
+   "dv": "5-6th Girls",
+   "h": "Cowboys",
+   "a": "Chargers",
+   "r1": "Alli Canada",
+   "r2": "Piper Hale",
+   "hc": "Ellie Hughes"
+  },
+  {
+   "d": "2026-09-02",
+   "dv": "Majors",
+   "h": "Michigan State",
+   "a": "Wisconsin",
+   "tt": "Majors Penn State",
+   "tc": "Howell",
+   "hc": "Greg Hamilton"
+  },
+  {
+   "d": "2026-09-02",
+   "dv": "Majors",
+   "h": "Ohio State",
+   "a": "Indiana",
+   "tt": "Majors Purdue",
+   "tc": "Dirksen",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-09-03",
+   "dv": "1st Grade",
+   "h": "Bengals Varsity",
+   "a": "Seahawks Varsity",
+   "hc": "Alex Bailey"
+  },
+  {
+   "d": "2026-09-03",
+   "dv": "1st Grade",
+   "h": "Broncos Varsity",
+   "a": "Chiefs Varsity",
+   "hc": "Gavin Curd"
+  },
+  {
+   "d": "2026-09-03",
+   "dv": "1st Grade",
+   "h": "Bears Varsity",
+   "a": "Cowboys Varsity",
+   "hc": "Drew Calvert"
+  },
+  {
+   "d": "2026-09-03",
+   "dv": "Kindergarten",
+   "h": "Bears JV",
+   "a": "Broncos JV",
+   "hc": "Jacob Duke"
+  },
+  {
+   "d": "2026-09-03",
+   "dv": "1st Grade",
+   "h": "Titans Varsity",
+   "a": "Colts",
+   "hc": "Andrew Halterman"
+  },
+  {
+   "d": "2026-09-08",
+   "dv": "Minors",
+   "h": "Minnesota",
+   "a": "Iowa",
+   "tt": "Minors Oregon",
+   "tc": "Lewis",
+   "hc": "Jordan Bunch"
+  },
+  {
+   "d": "2026-09-08",
+   "dv": "Minors",
+   "h": "Indiana",
+   "a": "Washington",
+   "tt": "Minors Penn State",
+   "hc": "Joshua Clancy"
+  },
+  {
+   "d": "2026-09-08",
+   "dv": "2-4th Girls",
+   "h": "Chargers",
+   "a": "Texans",
+   "r1": "Mia Lidy",
+   "hc": "Kyle Fisher"
+  },
+  {
+   "d": "2026-09-08",
+   "dv": "2-4th Girls",
+   "h": "Colts",
+   "a": "Cowboys",
+   "r1": "Aiden Jewell",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-09-08",
+   "dv": "Rookie",
+   "h": "Nebraska",
+   "a": "Indiana",
+   "tt": "Rookie Penn State",
+   "tc": "Egenolf",
+   "hc": "Jordan Reagan"
+  },
+  {
+   "d": "2026-09-08",
+   "dv": "Minors",
+   "h": "Wisconsin",
+   "a": "Oregon",
+   "tt": "Minors Indiana",
+   "tc": "Clancy",
+   "hc": "Chase Flory"
+  },
+  {
+   "d": "2026-09-08",
+   "dv": "Minors",
+   "h": "Illinois",
+   "a": "Penn State",
+   "tt": "Minors Iowa",
+   "tc": "Adams",
+   "hc": "Justin Wood"
+  },
+  {
+   "d": "2026-09-09",
+   "dv": "Majors",
+   "h": "Northwestern",
+   "a": "Wisconsin",
+   "tt": "Majors Indiana",
+   "tc": "Halterman",
+   "hc": "Ryan Cronin"
+  },
+  {
+   "d": "2026-09-09",
+   "dv": "Majors",
+   "h": "Penn State",
+   "a": "Michigan State",
+   "tt": "Majors Ohio State",
+   "tc": "Hornsby",
+   "hc": "Brad Howell"
+  },
+  {
+   "d": "2026-09-09",
+   "dv": "5-6th Girls",
+   "h": "Colts",
+   "a": "Broncos",
+   "r1": "Alli Canada",
+   "hc": "Rich Cary"
+  },
+  {
+   "d": "2026-09-09",
+   "dv": "5-6th Girls",
+   "h": "Texans",
+   "a": "Chargers",
+   "r1": "Piper Hale",
+   "r2": "Aiden Jewell",
+   "hc": "Jaime Hoch"
+  },
+  {
+   "d": "2026-09-09",
+   "dv": "5-6th Girls",
+   "h": "Cowboys",
+   "a": "Dolphins",
+   "r1": "Alli Canada",
+   "r2": "Piper Hale",
+   "hc": "Ellie Hughes"
+  },
+  {
+   "d": "2026-09-09",
+   "dv": "Majors",
+   "h": "Oregon",
+   "a": "Indiana",
+   "tt": "Majors Michigan State",
+   "tc": "Hamilton",
+   "hc": "Andrew Sitter"
+  },
+  {
+   "d": "2026-09-09",
+   "dv": "Majors",
+   "h": "Ohio State",
+   "a": "Purdue",
+   "tt": "Majors Northwestern",
+   "tc": "Lidy",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-09-10",
+   "dv": "Kindergarten",
+   "h": "Cowboys JV",
+   "a": "Bears JV",
+   "hc": "Alejandro Higareda"
+  },
+  {
+   "d": "2026-09-10",
+   "dv": "Kindergarten",
+   "h": "Seahawks JV",
+   "a": "Broncos JV",
+   "hc": "John Massingale"
+  },
+  {
+   "d": "2026-09-10",
+   "dv": "Kindergarten",
+   "h": "Chiefs JV",
+   "a": "Bengals JV",
+   "hc": "Jason Cahill"
+  },
+  {
+   "d": "2026-09-10",
+   "dv": "Kindergarten",
+   "h": "Colts JV",
+   "a": "Titans JV",
+   "hc": "Blake Hornsby"
+  },
+  {
+   "d": "2026-09-10",
+   "dv": "1st Grade",
+   "h": "Bears Varsity",
+   "a": "Chiefs Varsity",
+   "hc": "Drew Calvert"
+  },
+  {
+   "d": "2026-09-10",
+   "dv": "1st Grade",
+   "h": "Titans Varsity",
+   "a": "Seahawks Varsity",
+   "hc": "Andrew Halterman"
+  },
+  {
+   "d": "2026-09-10",
+   "dv": "1st Grade",
+   "h": "Colts",
+   "a": "Bengals Varsity",
+   "hc": "Tyler Keller"
+  },
+  {
+   "d": "2026-09-10",
+   "dv": "1st Grade",
+   "h": "Cowboys Varsity",
+   "a": "Broncos Varsity",
+   "hc": "Donald Ivey"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Minors",
+   "h": "Penn State",
+   "a": "Ohio State",
+   "tt": "Minors Northwestern",
+   "hc": "Branden Tuggle"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Minors",
+   "h": "Purdue",
+   "a": "Michigan",
+   "tt": "Minors Washington",
+   "tc": "Feltman",
+   "hc": "Justin Green"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "2-4th Girls",
+   "h": "Broncos",
+   "a": "Colts",
+   "r1": "Alli Canada",
+   "r2": "Aiden Jewell",
+   "hc": "Joshua Gibson"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "2-4th Girls",
+   "h": "Cowboys",
+   "a": "Texans",
+   "r1": "Mollie Painter",
+   "r2": "Macie Painter",
+   "hc": "Logan Deffner"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Rookie",
+   "h": "Purdue",
+   "a": "Indiana",
+   "tt": "Rookie Ohio State",
+   "tc": "Ward",
+   "hc": "Stacey Dirksen"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Majors",
+   "h": "Michigan State",
+   "a": "Ohio State",
+   "tt": "Majors Penn State",
+   "tc": "Howell",
+   "hc": "Greg Hamilton"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Minors",
+   "h": "Oregon",
+   "a": "Iowa",
+   "tt": "Minors Ohio State",
+   "tc": "Rose",
+   "hc": "James Lewis"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Minors",
+   "h": "Washington",
+   "a": "Wisconsin",
+   "tt": "Minors Indiana",
+   "tc": "Clancy",
+   "hc": "Christopher Feltman"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "5-6th Girls",
+   "h": "Broncos",
+   "a": "Cowboys",
+   "r1": "Alli Canada",
+   "r2": "Mollie Painter",
+   "hc": "Jon-Erik Bennett"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Rookie",
+   "h": "Penn State",
+   "a": "Nebraska",
+   "tt": "Rookie Indiana",
+   "tc": "Williams",
+   "hc": "Sean Egenolf"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Majors",
+   "h": "Purdue",
+   "a": "Northwestern",
+   "tt": "Majors Oregon",
+   "tc": "Sitter",
+   "hc": "Randel Dirksen"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Majors",
+   "h": "Indiana",
+   "a": "Penn State",
+   "tt": "Majors Purdue",
+   "tc": "Dirksen",
+   "hc": "Aaron Halterman"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Minors",
+   "h": "Indiana",
+   "a": "Northwestern",
+   "tt": "Minors Wisconsin",
+   "tc": "Flory",
+   "hc": "Joshua Clancy"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "5-6th Girls",
+   "h": "Dolphins",
+   "a": "Texans",
+   "r1": "Macie Painter",
+   "hc": "Paul Bennett"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "5-6th Girls",
+   "h": "Chargers",
+   "a": "Colts",
+   "r1": "Mollie Painter",
+   "r2": "Aiden Jewell",
+   "hc": "Derek Dallas"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Majors",
+   "h": "Wisconsin",
+   "a": "Oregon",
+   "tt": "Majors Michigan State",
+   "tc": "Hamilton",
+   "hc": "Andre Ferguson"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Kindergarten",
+   "h": "Ravens JV",
+   "a": "Bengals JV",
+   "hc": "Cory Freeman"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Kindergarten",
+   "h": "Broncos JV",
+   "a": "Colts JV",
+   "hc": "Marshall Reed"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "1st Grade",
+   "h": "Cowboys Varsity",
+   "a": "Titans Varsity",
+   "hc": "Donald Ivey"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "1st Grade",
+   "h": "Seahawks Varsity",
+   "a": "Bears Varsity",
+   "hc": "Anthony Neu"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Rookie",
+   "h": "Ohio State",
+   "a": "Michigan",
+   "tt": "Rookie Purdue",
+   "tc": "Dirksen",
+   "hc": "Benjamin Ward"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Kindergarten",
+   "h": "Titans JV",
+   "a": "Chiefs JV",
+   "hc": "Davontray Thomas"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "1st Grade",
+   "h": "Chiefs Varsity",
+   "a": "Colts",
+   "hc": "Daren Johnson"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "Kindergarten",
+   "h": "Steelers JV",
+   "a": "Cowboys JV",
+   "hc": "Sean Egenolf"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "7-8th Girls",
+   "h": "Dolphins",
+   "a": "Texans",
+   "r1": "Cronin",
+   "r2": "Alli Canada",
+   "rn": "1 official must be 18+",
+   "hc": "Parish Crowell Sr"
+  },
+  {
+   "d": "2026-09-12",
+   "dv": "7-8th Girls",
+   "h": "Chargers",
+   "a": "Colts",
+   "r1": "Cronin",
+   "r2": "Aiden Jewell",
+   "rn": "1 official must be 18+",
+   "hc": "JB PAXSON"
+  },
+  {
+   "d": "2026-09-14",
+   "dv": "Rookie",
+   "h": "Nebraska",
+   "a": "Michigan",
+   "tt": "Rookie Penn State",
+   "tc": "Egenolf",
+   "hc": "Jordan Reagan"
+  },
+  {
+   "d": "2026-09-14",
+   "dv": "Rookie",
+   "h": "Penn State",
+   "a": "Purdue",
+   "tt": "Rookie Michigan",
+   "tc": "Bellinger",
+   "hc": "Sean Egenolf"
+  }
+ ]
+}
