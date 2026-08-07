@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#141414">
+<title>CGBFL Playbook Film &mdash; Center Grove Bantam Football League</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#141414;
+    --board-dark:#050505;
+    --chalk:#f7f6ef;
+    --chalk-dim:rgba(247,246,239,.62);
+    --chalk-faint:rgba(247,246,239,.34);
+    --red:#E2192C;
+    --line:rgba(247,246,239,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--board-dark);color:var(--chalk);
+    font-family:'Barlow Condensed',sans-serif;font-size:17px;
+    min-height:100vh;-webkit-tap-highlight-color:transparent;
+  }
+  button{font-family:'Barlow Condensed',sans-serif;cursor:pointer;border:none;background:none;color:inherit}
+  .frame{max-width:1080px;margin:0 auto;padding:16px 14px 64px}
+
+  header{text-align:center;padding:14px 0 10px;border-bottom:3px solid var(--red)}
+  header h1{font-family:'Anton',sans-serif;font-size:clamp(26px,7vw,44px);letter-spacing:.5px;text-transform:uppercase;line-height:1}
+  header h1 em{font-style:normal;color:var(--red)}
+  header p{color:var(--chalk-dim);letter-spacing:2.5px;text-transform:uppercase;font-size:12px;font-weight:600;margin-top:7px}
+
+  /* ---- offense switch ---- */
+  .decks{display:flex;gap:8px;margin:16px 0 12px}
+  .decks button{
+    flex:1;padding:11px 8px;border:2px solid var(--line);border-radius:11px;
+    font-family:'Anton',sans-serif;font-size:15px;letter-spacing:1.2px;
+    text-transform:uppercase;color:var(--chalk-dim);
+  }
+  .decks button[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+
+  /* ---- stage ---- */
+  .stage{background:var(--board);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  video{display:block;width:100%;aspect-ratio:16/9;background:#000;object-fit:contain}
+  .nowplaying{padding:12px 14px 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .nowplaying .call{font-family:'Anton',sans-serif;font-size:clamp(19px,4.6vw,28px);text-transform:uppercase;letter-spacing:.5px}
+  .nowplaying .fam{color:var(--red);font-weight:700;text-transform:uppercase;letter-spacing:1.6px;font-size:12px}
+  .nowplaying .len{color:var(--chalk-faint);font-size:13px;letter-spacing:1px;margin-left:auto}
+  .empty{padding:26px 16px;text-align:center;color:var(--chalk-dim)}
+
+  .controls{display:flex;flex-wrap:wrap;gap:7px;padding:10px 14px 14px}
+  .controls button{
+    border:2px solid var(--line);border-radius:10px;padding:9px 13px;min-height:44px;
+    font-weight:600;letter-spacing:1.1px;text-transform:uppercase;font-size:13px;color:var(--chalk-dim);
+  }
+  .controls button:hover{border-color:var(--chalk-faint);color:var(--chalk)}
+  .controls button[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+  .controls .grow{flex:1}
+  button:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+
+  /* ---- find ---- */
+  .find{margin:18px 0 10px;position:relative}
+  .find input{
+    width:100%;padding:13px 15px;border-radius:11px;border:2px solid var(--line);
+    background:var(--board);color:var(--chalk);font-family:'Barlow Condensed',sans-serif;
+    font-size:18px;letter-spacing:.4px;
+  }
+  .find input::placeholder{color:var(--chalk-faint)}
+  .find input:focus{outline:none;border-color:var(--red)}
+
+  /* ---- play list ---- */
+  .family{margin-top:22px}
+  .family h2{
+    font-family:'Anton',sans-serif;font-size:15px;letter-spacing:2.2px;text-transform:uppercase;
+    padding-bottom:6px;border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:9px;
+  }
+  .family h2 small{color:var(--chalk-faint);font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;letter-spacing:1.2px;font-size:12px;margin-left:auto}
+  .rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:7px;margin-top:9px}
+  .row{
+    display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+    padding:11px 13px;border:2px solid var(--line);border-radius:11px;min-height:52px;
+  }
+  .row:hover{border-color:var(--chalk-faint)}
+  .row[aria-current="true"]{border-color:var(--red);background:rgba(226,25,44,.12)}
+  .row .call{flex:1;font-size:17px;font-weight:600;letter-spacing:.3px}
+  .row[aria-current="true"] .call{color:#fff}
+  /* signature: clip length as a proportional bar, so a coach sees these are short looks */
+  .row .bar{width:44px;height:4px;background:rgba(247,246,239,.14);border-radius:2px;overflow:hidden;flex:none}
+  .row .bar i{display:block;height:100%;background:var(--red);border-radius:2px}
+  .row .sec{color:var(--chalk-faint);font-size:12px;letter-spacing:.8px;font-variant-numeric:tabular-nums;flex:none;width:26px;text-align:right}
+
+  .foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);
+    color:var(--chalk-faint);font-size:13px;letter-spacing:.6px;text-align:center;line-height:1.6}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <header>
+    <h1>Playbook <em>Film</em></h1>
+    <p>Center Grove Bantam Football</p>
+  </header>
+
+  <div class="decks" role="group" aria-label="Choose offense">
+    <button id="deckBase" aria-pressed="true">Base Offense</button>
+    <button id="deckGun" aria-pressed="false">Shotgun</button>
+  </div>
+
+  <div class="stage">
+    <video id="vid" playsinline preload="metadata" controls></video>
+    <div class="nowplaying" id="np">
+      <span class="call" id="npCall">Pick a play below</span>
+    </div>
+    <div class="controls">
+      <button id="btnReplay">Replay</button>
+      <button id="btnLoop" aria-pressed="false">Loop</button>
+      <button id="btnSlow" aria-pressed="false">Half speed</button>
+      <span class="grow"></span>
+      <button id="btnPrev">&larr; Prev</button>
+      <button id="btnNext">Next &rarr;</button>
+    </div>
+  </div>
+
+  <div class="find">
+    <input id="q" type="search" placeholder="Find a play: belly, 47, jet, boot, open&hellip;" autocomplete="off" aria-label="Find a play">
+  </div>
+
+  <div id="list"></div>
+
+  <p class="foot">
+    Clips are padded 1.5 seconds before the snap and 2 seconds after the whistle.<br>
+    Questions or a wrong clip? Contact the CGBFL board.
+  </p>
+
+</div>
+
+<script>
+const DATA = {"meta":{"source":"CG Bantam Playbook.MOV","pad_pre_seconds":1.5,"pad_post_seconds":2.0,"note":"start/end are offsets in seconds within the named file, pad already applied"},"base":[{"slug":"formations","label":"Formations & Motions","file":"playbook-base-formations.mp4","duration":109.0,"plays":[{"play":"100 Formation","file":"playbook-base-formations.mp4","start":0.0,"end":19.0,"family":"Formations & Motions"},{"play":"900 Formation","file":"playbook-base-formations.mp4","start":16.5,"end":34.0,"family":"Formations & Motions"},{"play":"100 Open Formation","file":"playbook-base-formations.mp4","start":31.5,"end":50.0,"family":"Formations & Motions"},{"play":"900 Open Formation","file":"playbook-base-formations.mp4","start":47.5,"end":62.0,"family":"Formations & Motions"},{"play":"100 Double Formation","file":"playbook-base-formations.mp4","start":59.5,"end":74.0,"family":"Formations & Motions"},{"play":"900 Double Formation","file":"playbook-base-formations.mp4","start":71.5,"end":83.0,"family":"Formations & Motions"},{"play":"Lucy Motion","file":"playbook-base-formations.mp4","start":80.5,"end":92.0,"family":"Formations & Motions"},{"play":"Roger Motion","file":"playbook-base-formations.mp4","start":89.5,"end":109.0,"family":"Formations & Motions"}]},{"slug":"sweep","label":"Sweep & Ice","file":"playbook-base-sweep.mp4","duration":94.5,"plays":[{"play":"121 Sweep","file":"playbook-base-sweep.mp4","start":0.0,"end":10.5,"family":"Sweep & Ice"},{"play":"929 Sweep","file":"playbook-base-sweep.mp4","start":14.0,"end":23.5,"family":"Sweep & Ice"},{"play":"121 ICE","file":"playbook-base-sweep.mp4","start":43.0,"end":51.5,"family":"Sweep & Ice"},{"play":"929 ICE","file":"playbook-base-sweep.mp4","start":52.0,"end":60.5,"family":"Sweep & Ice"},{"play":"900 Open, 21 Sweep","file":"playbook-base-sweep.mp4","start":69.0,"end":78.5,"family":"Sweep & Ice"},{"play":"100 Open, 29 Sweep","file":"playbook-base-sweep.mp4","start":86.0,"end":94.5,"family":"Sweep & Ice"}]},{"slug":"doubledive","label":"Double Dive","file":"playbook-base-doubledive.mp4","duration":24.5,"plays":[{"play":"900 Open, 13 Double Dive","file":"playbook-base-doubledive.mp4","start":0.0,"end":12.5,"family":"Double Dive"},{"play":"100 Open, 17 Double Dive","file":"playbook-base-doubledive.mp4","start":15.0,"end":24.5,"family":"Double Dive"}]},{"slug":"belly","label":"Belly & Weak Belly","file":"playbook-base-belly.mp4","duration":125.5,"plays":[{"play":"143 Belly","file":"playbook-base-belly.mp4","start":0.0,"end":9.5,"family":"Belly & Weak Belly"},{"play":"947 Belly","file":"playbook-base-belly.mp4","start":13.0,"end":21.5,"family":"Belly & Weak Belly"},{"play":"943 Weak Belly","file":"playbook-base-belly.mp4","start":24.0,"end":32.5,"family":"Belly & Weak Belly"},{"play":"147 Weak Belly","file":"playbook-base-belly.mp4","start":35.0,"end":42.5,"family":"Belly & Weak Belly"},{"play":"100 Open 43 Belly","file":"playbook-base-belly.mp4","start":44.0,"end":52.5,"family":"Belly & Weak Belly"},{"play":"900 Open 47 Belly","file":"playbook-base-belly.mp4","start":55.0,"end":63.5,"family":"Belly & Weak Belly"},{"play":"100 Open 47 Weak Belly","file":"playbook-base-belly.mp4","start":66.0,"end":74.5,"family":"Belly & Weak Belly"},{"play":"900 Open 43 Weak Belly","file":"playbook-base-belly.mp4","start":78.0,"end":85.5,"family":"Belly & Weak Belly"},{"play":"100 Open, Lucy, 43 Belly","file":"playbook-base-belly.mp4","start":86.0,"end":98.5,"family":"Belly & Weak Belly"},{"play":"900 Open, Roger, 47 Belly","file":"playbook-base-belly.mp4","start":98.0,"end":109.5,"family":"Belly & Weak Belly"},{"play":"100, Roger, 47 Belly","file":"playbook-base-belly.mp4","start":108.0,"end":117.5,"family":"Belly & Weak Belly"},{"play":"900, Lucy, 43 Belly","file":"playbook-base-belly.mp4","start":116.0,"end":125.5,"family":"Belly & Weak Belly"}]},{"slug":"jet","label":"Jet & Weak Jet","file":"playbook-base-jet.mp4","duration":80.5,"plays":[{"play":"100 Open, 21 Jet","file":"playbook-base-jet.mp4","start":0.0,"end":11.5,"family":"Jet & Weak Jet"},{"play":"900 Open, 29 JET","file":"playbook-base-jet.mp4","start":13.0,"end":21.5,"family":"Jet & Weak Jet"},{"play":"921 Weak Jet","file":"playbook-base-jet.mp4","start":25.0,"end":35.5,"family":"Jet & Weak Jet"},{"play":"129 Weak Jet","file":"playbook-base-jet.mp4","start":42.0,"end":50.5,"family":"Jet & Weak Jet"},{"play":"100 Double 21 JET","file":"playbook-base-jet.mp4","start":49.0,"end":57.5,"family":"Jet & Weak Jet"},{"play":"900 Double 29 JET","file":"playbook-base-jet.mp4","start":56.0,"end":66.5,"family":"Jet & Weak Jet"},{"play":"100 Double 29 JET","file":"playbook-base-jet.mp4","start":66.0,"end":73.5,"family":"Jet & Weak Jet"},{"play":"900 Double 21 JET","file":"playbook-base-jet.mp4","start":72.0,"end":80.5,"family":"Jet & Weak Jet"}]},{"slug":"scissors","label":"Scissors","file":"playbook-base-scissors.mp4","duration":24.5,"plays":[{"play":"143 Scissors","file":"playbook-base-scissors.mp4","start":0.0,"end":10.5,"family":"Scissors"},{"play":"947 Scissors","file":"playbook-base-scissors.mp4","start":16.0,"end":24.5,"family":"Scissors"}]},{"slug":"down","label":"Down","file":"playbook-base-down.mp4","duration":25.5,"plays":[{"play":"142 Down","file":"playbook-base-down.mp4","start":0.0,"end":7.5,"family":"Down"},{"play":"948 Down","file":"playbook-base-down.mp4","start":16.0,"end":25.5,"family":"Down"}]},{"slug":"boot","label":"Boot","file":"playbook-base-boot.mp4","duration":43.5,"plays":[{"play":"121 Boot","file":"playbook-base-boot.mp4","start":0.0,"end":9.5,"family":"Boot"},{"play":"929 Boot","file":"playbook-base-boot.mp4","start":8.0,"end":17.5,"family":"Boot"},{"play":"900 Open, 21 Boot","file":"playbook-base-boot.mp4","start":27.0,"end":37.5,"family":"Boot"},{"play":"100 Open, 29 Boot","file":"playbook-base-boot.mp4","start":35.0,"end":43.5,"family":"Boot"}]},{"slug":"papass","label":"Play Action Pass","file":"playbook-base-papass.mp4","duration":56.5,"plays":[{"play":"900 Open, 13 Double Dive Pass","file":"playbook-base-papass.mp4","start":0.0,"end":8.5,"family":"Play Action Pass"},{"play":"100 Open, 17 Double Dive Pass","file":"playbook-base-papass.mp4","start":6.0,"end":15.5,"family":"Play Action Pass"},{"play":"143 Scissors Pass","file":"playbook-base-papass.mp4","start":22.0,"end":33.5,"family":"Play Action Pass"},{"play":"947 Scissors Pass","file":"playbook-base-papass.mp4","start":43.0,"end":56.5,"family":"Play Action Pass"}]}],"shotgun":[{"slug":"shotgun","label":"Shotgun","file":"playbook-shotgun.mp4","duration":243.0,"plays":[{"play":"Deuce Right Formation","file":"playbook-shotgun.mp4","start":0.0,"end":12.0,"family":"Shotgun"},{"play":"Deuce Left Formation","file":"playbook-shotgun.mp4","start":16.5,"end":30.0,"family":"Shotgun"},{"play":"Deuce Left 47","file":"playbook-shotgun.mp4","start":50.5,"end":60.0,"family":"Shotgun"},{"play":"Deuce Right 43","file":"playbook-shotgun.mp4","start":65.5,"end":73.0,"family":"Shotgun"},{"play":"Deuce Left 18","file":"playbook-shotgun.mp4","start":76.5,"end":87.0,"family":"Shotgun"},{"play":"Deuce Right 12","file":"playbook-shotgun.mp4","start":95.5,"end":104.0,"family":"Shotgun"},{"play":"Deuce Right Slip Right","file":"playbook-shotgun.mp4","start":126.5,"end":137.0,"family":"Shotgun"},{"play":"Deuce Left Slip Left","file":"playbook-shotgun.mp4","start":144.5,"end":153.0,"family":"Shotgun"},{"play":"Deuce Left 47 Boot","file":"playbook-shotgun.mp4","start":156.5,"end":168.0,"family":"Shotgun"},{"play":"Deuce Right 43 Boot","file":"playbook-shotgun.mp4","start":173.5,"end":184.0,"family":"Shotgun"},{"play":"Deuce Left Bubble","file":"playbook-shotgun.mp4","start":190.5,"end":200.0,"family":"Shotgun"},{"play":"Deuce Right Bubble","file":"playbook-shotgun.mp4","start":197.5,"end":207.0,"family":"Shotgun"},{"play":"Deuce Right Hitches","file":"playbook-shotgun.mp4","start":209.5,"end":217.0,"family":"Shotgun"},{"play":"Deuce Right Stutter","file":"playbook-shotgun.mp4","start":220.5,"end":230.0,"family":"Shotgun"},{"play":"Deuce Right 83","file":"playbook-shotgun.mp4","start":233.5,"end":243.0,"family":"Shotgun"}]}]};
+
+const vid=document.getElementById('vid'), listEl=document.getElementById('list'),
+      npCall=document.getElementById('npCall'), qEl=document.getElementById('q');
+let deck='base', flat=[], cur=-1, looping=false;
+
+function rebuild(){
+  const groups = DATA[deck];
+  flat = [];
+  groups.forEach(g=>g.plays.forEach(p=>flat.push(p)));
+  render();
+}
+
+function render(){
+  const q = qEl.value.trim().toLowerCase();
+  const groups = DATA[deck];
+  listEl.innerHTML='';
+  let shown=0;
+  groups.forEach(g=>{
+    const hits = g.plays.filter(p=>!q || p.play.toLowerCase().includes(q));
+    if(!hits.length) return;
+    shown += hits.length;
+    const sec=document.createElement('section');
+    sec.className='family';
+    const h=document.createElement('h2');
+    h.innerHTML = g.label + ' <small>' + hits.length + (hits.length===1?' play':' plays') + '</small>';
+    sec.appendChild(h);
+    const rows=document.createElement('div');
+    rows.className='rows';
+    hits.forEach(p=>{
+      const i = flat.indexOf(p);
+      const len = Math.round(p.end - p.start);
+      const b=document.createElement('button');
+      b.className='row';
+      b.setAttribute('aria-current', i===cur ? 'true' : 'false');
+      b.innerHTML = '<span class="call"></span>'
+                  + '<span class="bar"><i style="width:'+Math.min(100,len/14*100)+'%"></i></span>'
+                  + '<span class="sec">'+len+'s</span>';
+      b.querySelector('.call').textContent = p.play;
+      b.addEventListener('click', ()=>play(i));
+      rows.appendChild(b);
+    });
+    sec.appendChild(rows);
+    listEl.appendChild(sec);
+  });
+  if(!shown){
+    const d=document.createElement('div');
+    d.className='empty';
+    d.textContent='No play matches "'+qEl.value.trim()+'". Try a formation, a number, or a concept like belly or jet.';
+    listEl.appendChild(d);
+  }
+}
+
+function play(i){
+  const p = flat[i];
+  if(!p) return;
+  cur = i;
+  npCall.textContent = p.play;
+  const want = p.file;
+  const load = ()=>{ vid.currentTime = p.start; vid.play().catch(()=>{}); };
+  if(!vid.src.endsWith(want)){
+    vid.src = want;
+    vid.addEventListener('loadedmetadata', load, {once:true});
+    vid.load();
+  } else {
+    load();
+  }
+  render();
+  document.querySelector('.stage').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+vid.addEventListener('timeupdate', ()=>{
+  const p = flat[cur];
+  if(!p) return;
+  if(vid.currentTime >= p.end){
+    if(looping){ vid.currentTime = p.start; }
+    else { vid.pause(); vid.currentTime = p.end; }
+  }
+});
+
+document.getElementById('btnReplay').addEventListener('click', ()=>{ if(cur>=0) play(cur); });
+document.getElementById('btnPrev').addEventListener('click', ()=>{ if(cur>0) play(cur-1); });
+document.getElementById('btnNext').addEventListener('click', ()=>{ if(cur>=0 && cur<flat.length-1) play(cur+1); });
+
+const btnLoop=document.getElementById('btnLoop');
+btnLoop.addEventListener('click', ()=>{
+  looping=!looping; btnLoop.setAttribute('aria-pressed', looping);
+});
+const btnSlow=document.getElementById('btnSlow');
+btnSlow.addEventListener('click', ()=>{
+  const on = vid.playbackRate !== 0.5;
+  vid.playbackRate = on ? 0.5 : 1;
+  btnSlow.setAttribute('aria-pressed', on);
+});
+
+const dB=document.getElementById('deckBase'), dG=document.getElementById('deckGun');
+function setDeck(d){
+  deck=d; cur=-1; vid.pause(); vid.removeAttribute('src'); vid.load();
+  npCall.textContent='Pick a play below';
+  dB.setAttribute('aria-pressed', d==='base');
+  dG.setAttribute('aria-pressed', d==='shotgun');
+  rebuild();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+dB.addEventListener('click', ()=>setDeck('base'));
+dG.addEventListener('click', ()=>setDeck('shotgun'));
+
+qEl.addEventListener('input', render);
+
+document.addEventListener('keydown', e=>{
+  if(document.activeElement===qEl) return;
+  if(e.key==='ArrowRight'){ e.preventDefault(); if(cur>=0&&cur<flat.length-1) play(cur+1); }
+  if(e.key==='ArrowLeft'){ e.preventDefault(); if(cur>0) play(cur-1); }
+  if(e.key==='r'||e.key==='R'){ if(cur>=0) play(cur); }
+});
+
+rebuild();
+</script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+{
+  "meta": {
+    "source": "CG Bantam Playbook.MOV",
+    "pad_pre_seconds": 1.5,
+    "pad_post_seconds": 2.0,
+    "note": "start/end are offsets in seconds within the named file, pad already applied"
+  },
+  "base": [
+    {
+      "slug": "formations",
+      "label": "Formations & Motions",
+      "file": "playbook-base-formations.mp4",
+      "duration": 109.0,
+      "plays": [
+        {
+          "play": "100 Formation",
+          "file": "playbook-base-formations.mp4",
+          "start": 0.0,
+          "end": 19.0,
+          "family": "Formations & Motions"
+        },
+        {
+          "play": "900 Formation",
+          "file": "playbook-base-formations.mp4",
+          "start": 16.5,
+          "end": 34.0,
+          "family": "Formations & Motions"
+        },
+        {
+          "play": "100 Open Formation",
+          "file": "playbook-base-formations.mp4",
+          "start": 31.5,
+          "end": 50.0,
+          "family": "Formations & Motions"
+        },
+        {
+          "play": "900 Open Formation",
+          "file": "playbook-base-formations.mp4",
+          "start": 47.5,
+          "end": 62.0,
+          "family": "Formations & Motions"
+        },
+        {
+          "play": "100 Double Formation",
+          "file": "playbook-base-formations.mp4",
+          "start": 59.5,
+          "end": 74.0,
+          "family": "Formations & Motions"
+        },
+        {
+          "play": "900 Double Formation",
+          "file": "playbook-base-formations.mp4",
+          "start": 71.5,
+          "end": 83.0,
+          "family": "Formations & Motions"
+        },
+        {
+          "play": "Lucy Motion",
+          "file": "playbook-base-formations.mp4",
+          "start": 80.5,
+          "end": 92.0,
+          "family": "Formations & Motions"
+        },
+        {
+          "play": "Roger Motion",
+          "file": "playbook-base-formations.mp4",
+          "start": 89.5,
+          "end": 109.0,
+          "family": "Formations & Motions"
+        }
+      ]
+    },
+    {
+      "slug": "sweep",
+      "label": "Sweep & Ice",
+      "file": "playbook-base-sweep.mp4",
+      "duration": 94.5,
+      "plays": [
+        {
+          "play": "121 Sweep",
+          "file": "playbook-base-sweep.mp4",
+          "start": 0.0,
+          "end": 10.5,
+          "family": "Sweep & Ice"
+        },
+        {
+          "play": "929 Sweep",
+          "file": "playbook-base-sweep.mp4",
+          "start": 14.0,
+          "end": 23.5,
+          "family": "Sweep & Ice"
+        },
+        {
+          "play": "121 ICE",
+          "file": "playbook-base-sweep.mp4",
+          "start": 43.0,
+          "end": 51.5,
+          "family": "Sweep & Ice"
+        },
+        {
+          "play": "929 ICE",
+          "file": "playbook-base-sweep.mp4",
+          "start": 52.0,
+          "end": 60.5,
+          "family": "Sweep & Ice"
+        },
+        {
+          "play": "900 Open, 21 Sweep",
+          "file": "playbook-base-sweep.mp4",
+          "start": 69.0,
+          "end": 78.5,
+          "family": "Sweep & Ice"
+        },
+        {
+          "play": "100 Open, 29 Sweep",
+          "file": "playbook-base-sweep.mp4",
+          "start": 86.0,
+          "end": 94.5,
+          "family": "Sweep & Ice"
+        }
+      ]
+    },
+    {
+      "slug": "doubledive",
+      "label": "Double Dive",
+      "file": "playbook-base-doubledive.mp4",
+      "duration": 24.5,
+      "plays": [
+        {
+          "play": "900 Open, 13 Double Dive",
+          "file": "playbook-base-doubledive.mp4",
+          "start": 0.0,
+          "end": 12.5,
+          "family": "Double Dive"
+        },
+        {
+          "play": "100 Open, 17 Double Dive",
+          "file": "playbook-base-doubledive.mp4",
+          "start": 15.0,
+          "end": 24.5,
+          "family": "Double Dive"
+        }
+      ]
+    },
+    {
+      "slug": "belly",
+      "label": "Belly & Weak Belly",
+      "file": "playbook-base-belly.mp4",
+      "duration": 125.5,
+      "plays": [
+        {
+          "play": "143 Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 0.0,
+          "end": 9.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "947 Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 13.0,
+          "end": 21.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "943 Weak Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 24.0,
+          "end": 32.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "147 Weak Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 35.0,
+          "end": 42.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "100 Open 43 Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 44.0,
+          "end": 52.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "900 Open 47 Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 55.0,
+          "end": 63.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "100 Open 47 Weak Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 66.0,
+          "end": 74.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "900 Open 43 Weak Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 78.0,
+          "end": 85.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "100 Open, Lucy, 43 Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 86.0,
+          "end": 98.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "900 Open, Roger, 47 Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 98.0,
+          "end": 109.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "100, Roger, 47 Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 108.0,
+          "end": 117.5,
+          "family": "Belly & Weak Belly"
+        },
+        {
+          "play": "900, Lucy, 43 Belly",
+          "file": "playbook-base-belly.mp4",
+          "start": 116.0,
+          "end": 125.5,
+          "family": "Belly & Weak Belly"
+        }
+      ]
+    },
+    {
+      "slug": "jet",
+      "label": "Jet & Weak Jet",
+      "file": "playbook-base-jet.mp4",
+      "duration": 80.5,
+      "plays": [
+        {
+          "play": "100 Open, 21 Jet",
+          "file": "playbook-base-jet.mp4",
+          "start": 0.0,
+          "end": 11.5,
+          "family": "Jet & Weak Jet"
+        },
+        {
+          "play": "900 Open, 29 JET",
+          "file": "playbook-base-jet.mp4",
+          "start": 13.0,
+          "end": 21.5,
+          "family": "Jet & Weak Jet"
+        },
+        {
+          "play": "921 Weak Jet",
+          "file": "playbook-base-jet.mp4",
+          "start": 25.0,
+          "end": 35.5,
+          "family": "Jet & Weak Jet"
+        },
+        {
+          "play": "129 Weak Jet",
+          "file": "playbook-base-jet.mp4",
+          "start": 42.0,
+          "end": 50.5,
+          "family": "Jet & Weak Jet"
+        },
+        {
+          "play": "100 Double 21 JET",
+          "file": "playbook-base-jet.mp4",
+          "start": 49.0,
+          "end": 57.5,
+          "family": "Jet & Weak Jet"
+        },
+        {
+          "play": "900 Double 29 JET",
+          "file": "playbook-base-jet.mp4",
+          "start": 56.0,
+          "end": 66.5,
+          "family": "Jet & Weak Jet"
+        },
+        {
+          "play": "100 Double 29 JET",
+          "file": "playbook-base-jet.mp4",
+          "start": 66.0,
+          "end": 73.5,
+          "family": "Jet & Weak Jet"
+        },
+        {
+          "play": "900 Double 21 JET",
+          "file": "playbook-base-jet.mp4",
+          "start": 72.0,
+          "end": 80.5,
+          "family": "Jet & Weak Jet"
+        }
+      ]
+    },
+    {
+      "slug": "scissors",
+      "label": "Scissors",
+      "file": "playbook-base-scissors.mp4",
+      "duration": 24.5,
+      "plays": [
+        {
+          "play": "143 Scissors",
+          "file": "playbook-base-scissors.mp4",
+          "start": 0.0,
+          "end": 10.5,
+          "family": "Scissors"
+        },
+        {
+          "play": "947 Scissors",
+          "file": "playbook-base-scissors.mp4",
+          "start": 16.0,
+          "end": 24.5,
+          "family": "Scissors"
+        }
+      ]
+    },
+    {
+      "slug": "down",
+      "label": "Down",
+      "file": "playbook-base-down.mp4",
+      "duration": 25.5,
+      "plays": [
+        {
+          "play": "142 Down",
+          "file": "playbook-base-down.mp4",
+          "start": 0.0,
+          "end": 7.5,
+          "family": "Down"
+        },
+        {
+          "play": "948 Down",
+          "file": "playbook-base-down.mp4",
+          "start": 16.0,
+          "end": 25.5,
+          "family": "Down"
+        }
+      ]
+    },
+    {
+      "slug": "boot",
+      "label": "Boot",
+      "file": "playbook-base-boot.mp4",
+      "duration": 43.5,
+      "plays": [
+        {
+          "play": "121 Boot",
+          "file": "playbook-base-boot.mp4",
+          "start": 0.0,
+          "end": 9.5,
+          "family": "Boot"
+        },
+        {
+          "play": "929 Boot",
+          "file": "playbook-base-boot.mp4",
+          "start": 8.0,
+          "end": 17.5,
+          "family": "Boot"
+        },
+        {
+          "play": "900 Open, 21 Boot",
+          "file": "playbook-base-boot.mp4",
+          "start": 27.0,
+          "end": 37.5,
+          "family": "Boot"
+        },
+        {
+          "play": "100 Open, 29 Boot",
+          "file": "playbook-base-boot.mp4",
+          "start": 35.0,
+          "end": 43.5,
+          "family": "Boot"
+        }
+      ]
+    },
+    {
+      "slug": "papass",
+      "label": "Play Action Pass",
+      "file": "playbook-base-papass.mp4",
+      "duration": 56.5,
+      "plays": [
+        {
+          "play": "900 Open, 13 Double Dive Pass",
+          "file": "playbook-base-papass.mp4",
+          "start": 0.0,
+          "end": 8.5,
+          "family": "Play Action Pass"
+        },
+        {
+          "play": "100 Open, 17 Double Dive Pass",
+          "file": "playbook-base-papass.mp4",
+          "start": 6.0,
+          "end": 15.5,
+          "family": "Play Action Pass"
+        },
+        {
+          "play": "143 Scissors Pass",
+          "file": "playbook-base-papass.mp4",
+          "start": 22.0,
+          "end": 33.5,
+          "family": "Play Action Pass"
+        },
+        {
+          "play": "947 Scissors Pass",
+          "file": "playbook-base-papass.mp4",
+          "start": 43.0,
+          "end": 56.5,
+          "family": "Play Action Pass"
+        }
+      ]
+    }
+  ],
+  "shotgun": [
+    {
+      "slug": "shotgun",
+      "label": "Shotgun",
+      "file": "playbook-shotgun.mp4",
+      "duration": 243.0,
+      "plays": [
+        {
+          "play": "Deuce Right Formation",
+          "file": "playbook-shotgun.mp4",
+          "start": 0.0,
+          "end": 12.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Left Formation",
+          "file": "playbook-shotgun.mp4",
+          "start": 16.5,
+          "end": 30.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Left 47",
+          "file": "playbook-shotgun.mp4",
+          "start": 50.5,
+          "end": 60.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Right 43",
+          "file": "playbook-shotgun.mp4",
+          "start": 65.5,
+          "end": 73.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Left 18",
+          "file": "playbook-shotgun.mp4",
+          "start": 76.5,
+          "end": 87.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Right 12",
+          "file": "playbook-shotgun.mp4",
+          "start": 95.5,
+          "end": 104.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Right Slip Right",
+          "file": "playbook-shotgun.mp4",
+          "start": 126.5,
+          "end": 137.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Left Slip Left",
+          "file": "playbook-shotgun.mp4",
+          "start": 144.5,
+          "end": 153.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Left 47 Boot",
+          "file": "playbook-shotgun.mp4",
+          "start": 156.5,
+          "end": 168.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Right 43 Boot",
+          "file": "playbook-shotgun.mp4",
+          "start": 173.5,
+          "end": 184.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Left Bubble",
+          "file": "playbook-shotgun.mp4",
+          "start": 190.5,
+          "end": 200.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Right Bubble",
+          "file": "playbook-shotgun.mp4",
+          "start": 197.5,
+          "end": 207.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Right Hitches",
+          "file": "playbook-shotgun.mp4",
+          "start": 209.5,
+          "end": 217.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Right Stutter",
+          "file": "playbook-shotgun.mp4",
+          "start": 220.5,
+          "end": 230.0,
+          "family": "Shotgun"
+        },
+        {
+          "play": "Deuce Right 83",
+          "file": "playbook-shotgun.mp4",
+          "start": 233.5,
+          "end": 243.0,
+          "family": "Shotgun"
+        }
+      ]
+    }
+  ]
+}
