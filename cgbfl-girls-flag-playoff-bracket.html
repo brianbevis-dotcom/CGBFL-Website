@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CGBFL Girls Flag Playoffs &middot; Bracket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#C8102E;--ink:#141414;--slate:#2A2E33;--chalk:#F3F1EC;
+    --line:#D6D2C8;--dim:#7C7C7C;--gold:#C9A227;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--chalk);color:var(--ink);font-family:'Barlow Condensed',system-ui,sans-serif;font-size:17px;line-height:1.35;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+
+  header{border-bottom:5px solid var(--ink);padding:34px 0 18px}
+  .eyebrow{font-size:13px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;color:var(--red);margin-bottom:10px}
+  h1{font-family:'Anton',sans-serif;font-size:clamp(42px,8vw,88px);line-height:.86;text-transform:uppercase;font-weight:400}
+  h1 em{font-style:normal;color:var(--red)}
+  .standfirst{margin-top:16px;max-width:62ch;font-size:19px;color:var(--slate)}
+
+  .div{margin-top:56px}
+  .divhead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid var(--ink);padding-bottom:7px;margin-bottom:6px}
+  .divhead h2{font-family:'Anton',sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400}
+  .divhead .tag{font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--ink);padding:5px 10px}
+  .divnote{font-size:16px;color:var(--dim);margin:10px 0 22px}
+
+  .bracket{display:grid;gap:26px;align-items:center}
+  .b6{grid-template-columns:repeat(3,minmax(210px,1fr))}
+  .b4{grid-template-columns:repeat(2,minmax(210px,1fr));max-width:640px}
+  .col{display:flex;flex-direction:column;gap:26px;justify-content:space-around;height:100%}
+  .colhead{font-family:'Anton',sans-serif;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:2px}
+
+  .game{background:#fff;border:1px solid var(--line);border-left:5px solid var(--ink);position:relative}
+  .gtop{display:flex;flex-direction:column;gap:2px;padding:6px 10px;border-bottom:1px solid var(--line);background:#FAF9F6}
+  .gtoprow{display:flex;justify-content:space-between;align-items:center}
+  .gid{font-family:'Anton',sans-serif;font-size:13px;color:var(--red);letter-spacing:.06em}
+  .gwhen{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:600}
+  .gmeta{font-size:14px;color:var(--slate);font-weight:600}
+  .gmeta .field{text-transform:uppercase;letter-spacing:.04em}
+  .team{display:flex;align-items:center;gap:9px;padding:9px 10px;font-size:17px;color:var(--slate);font-weight:500}
+  .team + .team{border-top:1px solid var(--line)}
+  .seed{font-family:'Anton',sans-serif;font-size:13px;background:var(--ink);color:#fff;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .team.adv .seed{background:var(--red)}
+  .line{flex:1;border-bottom:1px dotted var(--line);height:1px;margin-left:6px}
+
+  .bye{background:transparent;border:1px dashed var(--line);border-left:5px solid var(--line);padding:12px 10px;font-size:15px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:600}
+
+  .final{border-left-color:var(--red);border:3px solid var(--red)}
+  .final .gtop{background:var(--red)}
+  .final .gid,.final .gwhen,.final .gmeta{color:#fff}
+  .champ{margin-top:12px;border-top:3px solid var(--gold);padding-top:8px;font-family:'Anton',sans-serif;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+  .champ span{color:var(--dim);letter-spacing:.06em;font-family:'Barlow Condensed',sans-serif;font-weight:500}
+
+  .notes{margin-top:70px;border-top:5px solid var(--ink);padding-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px}
+  .notes h4{font-family:'Anton',sans-serif;font-size:16px;text-transform:uppercase;margin-bottom:7px}
+  .notes p,.notes li{font-size:16px;color:var(--slate)}
+  .notes ul{list-style:none}
+  .notes li{padding-left:14px;position:relative;margin-bottom:4px}
+  .notes li:before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--red)}
+
+  @media print{body{background:#fff;font-size:12px}.wrap{padding:0}.div{page-break-inside:avoid}}
+  @media (max-width:760px){
+    .b6,.b4{grid-template-columns:1fr}
+    .col{gap:18px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Center Grove Bantam Football League &middot; Girls Flag Postseason</div>
+  <h1>Girls Flag<br><em>Playoff Bracket</em></h1>
+  <p class="standfirst">Three divisions, single elimination, no reseeding. Seeds come from final regular season standings. Fill in winners as games are played and the next matchup is set.</p>
+</header>
+
+<!-- 2ND-4TH -->
+<section class="div">
+  <div class="divhead"><h2>2nd &ndash; 4th Grade</h2><span class="tag">6 Teams</span></div>
+  <p class="divnote">Top two seeds receive a first round bye. Five games to a champion. Home field is Moore.</p>
+
+  <div class="bracket b6">
+    <div class="col">
+      <div class="colhead">Round 1 &middot; Tue Sept 15</div>
+      <div class="bye">1 seed &mdash; bye</div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">G1</span><span class="gwhen">Sept 15</span></div><div class="gmeta">6:00p &middot; <span class="field">Moore Field</span></div></div>
+        <div class="team"><span class="seed">3</span>3 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">6</span>6 seed<span class="line"></span></div>
+      </div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">G2</span><span class="gwhen">Sept 15</span></div><div class="gmeta">7:00p &middot; <span class="field">Moore Field</span></div></div>
+        <div class="team"><span class="seed">4</span>4 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">5</span>5 seed<span class="line"></span></div>
+      </div>
+      <div class="bye">2 seed &mdash; bye</div>
+    </div>
+
+    <div class="col">
+      <div class="colhead">Semifinals &middot; Thu Sept 17</div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">G3</span><span class="gwhen">Sept 17</span></div><div class="gmeta">6:00p &middot; <span class="field">Moore Field</span></div></div>
+        <div class="team adv"><span class="seed">1</span>1 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">W</span>Winner G2<span class="line"></span></div>
+      </div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">G4</span><span class="gwhen">Sept 17</span></div><div class="gmeta">7:00p &middot; <span class="field">Moore Field</span></div></div>
+        <div class="team adv"><span class="seed">2</span>2 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">W</span>Winner G1<span class="line"></span></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="colhead">Championship &middot; Sat Sept 19</div>
+      <div class="game final">
+        <div class="gtop"><div class="gtoprow"><span class="gid">G5</span><span class="gwhen">Sept 19</span></div><div class="gmeta">9:00a &middot; <span class="field">Collins Field</span></div></div>
+        <div class="team"><span class="seed">W</span>Winner G3<span class="line"></span></div>
+        <div class="team"><span class="seed">W</span>Winner G4<span class="line"></span></div>
+      </div>
+      <div class="champ">Champion <span>&mdash; 2nd&ndash;4th Grade</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5TH-6TH -->
+<section class="div">
+  <div class="divhead"><h2>5th &ndash; 6th Grade</h2><span class="tag">6 Teams</span></div>
+  <p class="divnote">Same structure as 2nd&ndash;4th. Top two seeds receive a first round bye. Home field is Watson.</p>
+
+  <div class="bracket b6">
+    <div class="col">
+      <div class="colhead">Round 1 &middot; Tue Sept 15</div>
+      <div class="bye">1 seed &mdash; bye</div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">F1</span><span class="gwhen">Sept 15</span></div><div class="gmeta">6:00p &middot; <span class="field">Watson Field</span></div></div>
+        <div class="team"><span class="seed">3</span>3 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">6</span>6 seed<span class="line"></span></div>
+      </div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">F2</span><span class="gwhen">Sept 15</span></div><div class="gmeta">7:00p &middot; <span class="field">Watson Field</span></div></div>
+        <div class="team"><span class="seed">4</span>4 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">5</span>5 seed<span class="line"></span></div>
+      </div>
+      <div class="bye">2 seed &mdash; bye</div>
+    </div>
+
+    <div class="col">
+      <div class="colhead">Semifinals &middot; Thu Sept 17</div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">F3</span><span class="gwhen">Sept 17</span></div><div class="gmeta">6:00p &middot; <span class="field">Watson Field</span></div></div>
+        <div class="team adv"><span class="seed">1</span>1 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">W</span>Winner F2<span class="line"></span></div>
+      </div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">F4</span><span class="gwhen">Sept 17</span></div><div class="gmeta">7:00p &middot; <span class="field">Watson Field</span></div></div>
+        <div class="team adv"><span class="seed">2</span>2 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">W</span>Winner F1<span class="line"></span></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="colhead">Championship &middot; Sat Sept 19</div>
+      <div class="game final">
+        <div class="gtop"><div class="gtoprow"><span class="gid">F5</span><span class="gwhen">Sept 19</span></div><div class="gmeta">10:00a &middot; <span class="field">Collins Field</span></div></div>
+        <div class="team"><span class="seed">W</span>Winner F3<span class="line"></span></div>
+        <div class="team"><span class="seed">W</span>Winner F4<span class="line"></span></div>
+      </div>
+      <div class="champ">Champion <span>&mdash; 5th&ndash;6th Grade</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7TH-8TH -->
+<section class="div">
+  <div class="divhead"><h2>7th &ndash; 8th Grade</h2><span class="tag">4 Teams</span></div>
+  <p class="divnote">All four teams qualify. Two semifinals and a title game, three games total.</p>
+
+  <div class="bracket b4">
+    <div class="col">
+      <div class="colhead">Semifinals &middot; Wed Sept 16</div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">E1</span><span class="gwhen">Sept 16</span></div><div class="gmeta">6:30p &middot; <span class="field">Moore Field</span></div></div>
+        <div class="team"><span class="seed">1</span>1 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">4</span>4 seed<span class="line"></span></div>
+      </div>
+      <div class="game">
+        <div class="gtop"><div class="gtoprow"><span class="gid">E2</span><span class="gwhen">Sept 16</span></div><div class="gmeta">8:00p &middot; <span class="field">Moore Field</span></div></div>
+        <div class="team"><span class="seed">2</span>2 seed<span class="line"></span></div>
+        <div class="team"><span class="seed">3</span>3 seed<span class="line"></span></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="colhead">Championship &middot; Sat Sept 19</div>
+      <div class="game final">
+        <div class="gtop"><div class="gtoprow"><span class="gid">E3</span><span class="gwhen">Sept 19</span></div><div class="gmeta">11:00a &middot; <span class="field">Collins Field</span></div></div>
+        <div class="team"><span class="seed">W</span>Winner E1<span class="line"></span></div>
+        <div class="team"><span class="seed">W</span>Winner E2<span class="line"></span></div>
+      </div>
+      <div class="champ">Champion <span>&mdash; 7th&ndash;8th Grade</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="notes">
+  <div>
+    <h4>Game count</h4>
+    <ul>
+      <li>2nd&ndash;4th: 5 games</li>
+      <li>5th&ndash;6th: 5 games</li>
+      <li>7th&ndash;8th: 3 games</li>
+      <li>Total: 13 games</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Seeding</h4>
+    <p>Seeds are set by final regular season record. Tiebreakers run in order: head to head, then points allowed in division play, then point differential capped at 14 per game, then coin flip at the Board meeting.</p>
+  </div>
+  <div>
+    <h4>Bracket integrity</h4>
+    <p>No reseeding after the first round. The 1 seed always draws the winner of the 4 versus 5 game and the 2 seed always draws the winner of the 3 versus 6 game, so the top two seeds stay on opposite sides of the bracket.</p>
+  </div>
+  <div>
+    <h4>Ties in the postseason</h4>
+    <p>Every playoff game is played to a winner. Use the league overtime format: alternating possessions from the 10 yard line, one play per possession is not used, each team gets four downs. Repeat until someone leads after equal possessions.</p>
+  </div>
+  <div>
+    <h4>Schedule at a glance</h4>
+    <ul>
+      <li>Tue Sept 15 &mdash; Round 1, 2nd&ndash;4th and 5th&ndash;6th, 6:00p and 7:00p</li>
+      <li>Wed Sept 16 &mdash; 7th&ndash;8th semifinals, Moore Field, 6:30p</li>
+      <li>Thu Sept 17 &mdash; Semifinals, 2nd&ndash;4th and 5th&ndash;6th, 6:00p and 7:00p</li>
+      <li>Sat Sept 19 &mdash; All three championship games, Collins Field</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Championship day</h4>
+    <p>All three title games play on Collins Field back to back. 2nd&ndash;4th kicks off at 9:00a, 5th&ndash;6th at 10:00a, and 7th&ndash;8th at 11:00a.</p>
+  </div>
+  <div>
+    <h4>Weather</h4>
+    <p>Keep one open date after the first round for makeups. If a title game cannot be played and no date remains, the higher seed is declared champion.</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

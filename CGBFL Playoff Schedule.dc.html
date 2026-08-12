@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Barlow+Condensed:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#F3F1EC;color:#141414;font-family:'Barlow Condensed',system-ui,sans-serif;font-size:17px;line-height:1.35;-webkit-font-smoothing:antialiased}
+  a{color:#C8102E;text-decoration:none}
+  a:hover{color:#141414}
+  @media print{body{background:#fff}}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="--accent:{{ accent }};max-width:1080px;margin:0 auto;padding:0 20px 80px">
+
+<header style="border-bottom:5px solid #141414;padding:34px 0 18px">
+  <div style="font-size:13px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;color:var(--accent,#C8102E);margin-bottom:10px">Center Grove Bantam Football League · 2026 Postseason</div>
+  <h1 style="font-family:Anton,sans-serif;font-size:clamp(42px,8vw,88px);line-height:.86;text-transform:uppercase;font-weight:400">Playoff<br><span style="color:var(--accent,#C8102E)">Schedule</span></h1>
+  <p style="margin-top:16px;max-width:60ch;font-size:19px;color:#2A2E33;text-wrap:pretty"></p>
+</header>
+
+<div data-filter-bar="1" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 0 0;position:sticky;top:0;background:#F3F1EC;z-index:5;border-bottom:1px solid #D6D2C8;padding-bottom:14px">
+  <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#7C7C7C;margin-right:2px">Filter by division</span>
+  <button type="button" data-div="All" onClick="{{ onFilter }}" style="font-family:Anton,sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:2px solid #141414;background:#141414;color:#fff;cursor:pointer">All</button>
+  <button type="button" data-div="Rookie" onClick="{{ onFilter }}" style="font-family:Anton,sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:2px solid #141414;background:transparent;color:#141414;cursor:pointer">Rookie</button>
+  <button type="button" data-div="Minor" onClick="{{ onFilter }}" style="font-family:Anton,sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:2px solid #141414;background:transparent;color:#141414;cursor:pointer">Minor</button>
+  <button type="button" data-div="Major" onClick="{{ onFilter }}" style="font-family:Anton,sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:2px solid #141414;background:transparent;color:#141414;cursor:pointer">Major</button>
+  <button type="button" data-div="2nd–4th Grade Girls Flag" onClick="{{ onFilter }}" style="font-family:Anton,sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:2px solid #141414;background:transparent;color:#141414;cursor:pointer">2nd–4th Girls Flag</button>
+  <button type="button" data-div="5th–6th Grade Girls Flag" onClick="{{ onFilter }}" style="font-family:Anton,sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:2px solid #141414;background:transparent;color:#141414;cursor:pointer">5th–6th Girls Flag</button>
+  <button type="button" data-div="7th–8th Grade Girls Flag" onClick="{{ onFilter }}" style="font-family:Anton,sans-serif;font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border:2px solid #141414;background:transparent;color:#141414;cursor:pointer">7th–8th Girls Flag</button>
+  <span data-filter-count="1" style="font-size:15px;color:#7C7C7C;margin-left:auto"></span>
+</div>
+
+<section data-screen-label="Mon Sept 14" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Monday, Sept 14</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:#141414;padding:5px 10px">7TH-8TH GIRLS FLAG SEMIFINALS</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Moore only · 6:15 and 7:15 · all four teams qualify, no first round</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #D6D2C8">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:15p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Moore</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">E1</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">7th–8th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">1 seed vs 4 seed — semifinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:15p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Moore</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">E2</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">7th–8th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">2 seed vs 3 seed — semifinal</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section data-screen-label="Tue Sept 15" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Tuesday, Sept 15</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:#141414;padding:5px 10px">Girls Flag Round 1</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Moore and Watson · 6:00 and 7:00 · top two seeds bye in both six team divisions</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #D6D2C8">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Moore</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">G1</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">2nd–4th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">3 seed vs 6 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Watson</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">F1</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">5th–6th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">3 seed vs 6 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Moore</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">G2</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">2nd–4th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">4 seed vs 5 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Watson</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">F2</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">5th–6th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">4 seed vs 5 seed</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section data-screen-label="Thu Sept 17" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Thursday, Sept 17</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:#141414;padding:5px 10px">Girls Flag Semifinals</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Moore and Watson · 6:00 and 7:00&nbsp;</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #D6D2C8">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Moore</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">G3</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">2nd–4th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">1 seed vs Winner G2 — semifinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Watson</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">F3</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">5th–6th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">1 seed vs Winner F2 — semifinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Moore</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">G4</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">2nd–4th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">2 seed vs Winner G1 — semifinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Watson</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">F4</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">5th–6th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">2 seed vs Winner F1 — semifinal</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section data-screen-label="Sat Sept 19" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Saturday, Sept 19</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--accent,#C8102E);padding:5px 10px">Girls Flag Championships</span>
+  </div>
+  
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Collins Field</p><table style="width:100%;border-collapse:collapse;background:#fff;border:3px solid var(--accent,#C8102E)">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">9:00a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">G5</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">2nd–4th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner G3 vs Winner G4 — 2nd–4th Championship</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">10:00a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">F5</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">5th–6th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner F3 vs Winner F4 — 5th–6th Championship</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">11:00a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">E3</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:168px;color:#2A2E33">7th–8th Grade Girls Flag</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner E1 vs Winner E2 — 7th–8th Championship</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section data-screen-label="Mon Sept 21" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Monday, Sept 21</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:#141414;padding:5px 10px">TACKLE OPENING ROUND</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Collins Field and Adams Field · 6:00 and 7:30</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #D6D2C8">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">R1</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Rookie</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">3 seed vs 6 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">R2</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Rookie</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">4 seed vs 5 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M1</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">3 seed vs 14 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M2</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">4 seed vs 13 seed</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section data-screen-label="Tue Sept 22" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Tuesday, Sept 22</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:#141414;padding:5px 10px">TACKLE OPENING ROUND</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Collins Field and Adams Field · 6:00 and 7:30</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #D6D2C8">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M3</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">5 seed vs 12 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M4</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">6 seed vs 11 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M5</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">7 seed vs 10 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M6</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">8 seed vs 9 seed</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section data-screen-label="Wed Sept 23" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Wednesday, Sept 23</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:#141414;padding:5px 10px">TACKLE OPENING ROUND</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Collins Field and Adams Field · 6:00 and 7:30</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #D6D2C8">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">J1</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Major</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">1 seed vs 8 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">J2</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Major</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">4 seed vs 5 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">J3</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Major</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">2 seed vs 7 seed</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">J4</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Major</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">3 seed vs 6 seed</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<sc-if value="{{ showWeatherHold }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Thu Sept 24 hold" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Thursday, Sept 24</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:#141414;padding:5px 10px">Weather Hold</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Collins Field and Adams Field · 6:00 and 7:30 · reserved, no games scheduled</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #D6D2C8">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#B4B0A6;font-style:italic;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#B4B0A6;font-style:italic">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:#B4B0A6;width:56px">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:14px;width:92px;color:#B4B0A6;font-style:italic">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:17px;color:#B4B0A6;font-style:italic">Reserved — opening round makeup</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#B4B0A6;font-style:italic;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#B4B0A6;font-style:italic">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:#B4B0A6;width:56px">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:14px;width:92px;color:#B4B0A6;font-style:italic">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:17px;color:#B4B0A6;font-style:italic">Reserved — opening round makeup</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#B4B0A6;font-style:italic;white-space:nowrap;width:78px">7:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#B4B0A6;font-style:italic">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:#B4B0A6;width:56px">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:14px;width:92px;color:#B4B0A6;font-style:italic">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:17px;color:#B4B0A6;font-style:italic">Reserved — opening round makeup</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#B4B0A6;font-style:italic;white-space:nowrap;width:78px">7:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#B4B0A6;font-style:italic">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:#B4B0A6;width:56px">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:14px;width:92px;color:#B4B0A6;font-style:italic">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:17px;color:#B4B0A6;font-style:italic">Reserved — opening round makeup</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+</sc-if>
+
+<section data-screen-label="Sat Sept 26" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Saturday, Sept 26</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:#141414;padding:5px 10px">TACKLE QUARTERS &amp; SEMIS</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Adams Field, Collins Field and Moore Field · 9:00, 10:30, 12:00</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #D6D2C8">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">9:00a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Moore</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M8</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner M2 vs Winner M3 — quarterfinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">9:00a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M10</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner M1 vs Winner M4 — quarterfinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#B4B0A6;font-style:italic;white-space:nowrap;width:78px">9:00a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#B4B0A6;font-style:italic">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:#B4B0A6;width:56px">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:14px;width:92px;color:#B4B0A6;font-style:italic">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:17px;color:#B4B0A6;font-style:italic">Open —</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">10:30a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">R3</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Rookie</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">1 seed vs Winner R2 — semifinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">10:30a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Moore</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M7</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">1 seed vs Winner M6 — quarterfinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">10:30a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">J6</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Major</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner J3 vs Winner J4 — semifinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">12:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">R4</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Rookie</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">2 seed vs Winner R1 — semifinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">12:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">J5</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Major</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner J1 vs Winner J2 — semifinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">12:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Moore</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M9</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">2 seed vs Winner M5 — quarterfinal</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#B4B0A6;font-style:italic;white-space:nowrap;width:78px">1:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#B4B0A6;font-style:italic">All three</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:#B4B0A6;width:56px">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:14px;width:92px;color:#B4B0A6;font-style:italic">—</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-size:17px;color:#B4B0A6;font-style:italic">Open —</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section data-screen-label="Tue Sept 29" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Tuesday, Sept 29</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:#141414;padding:5px 10px">TACKLE MINOR SEMIFINALS</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Adams Field · 6:00 and 7:30</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #D6D2C8">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:#141414;color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">6:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M11</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner M7 vs Winner M8</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">7:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Adams</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M12</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner M9 vs Winner M10</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section data-screen-label="Sat Oct 3 championships" style="margin-top:48px;break-inside:avoid">
+  <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid #141414;padding-bottom:7px;margin-bottom:4px">
+    <h2 style="font-family:Anton,sans-serif;font-size:clamp(26px,4.4vw,40px);text-transform:uppercase;line-height:1;font-weight:400">Saturday, Oct 3</h2>
+    <span style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--accent,#C8102E);padding:5px 10px">BOWL CHAMPIONSHIP</span>
+  </div>
+  <p style="font-size:16px;color:#7C7C7C;margin:10px 0 16px">Collins Field</p>
+  <table style="width:100%;border-collapse:collapse;background:#fff;border:3px solid var(--accent,#C8102E)">
+    <thead><tr>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Time</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Field</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Game</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Division</th>
+      <th style="font-family:Anton,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;text-align:left;padding:9px 12px;background:var(--accent,#C8102E);color:#fff;font-weight:400">Matchup</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">10:30a</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">R5</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Rookie</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner R3 vs Winner R4 — Rookie Championship</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">12:00p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">M13</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Minor</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner M11 vs Winner M12 — Minor Championship</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:17px;color:#141414;white-space:nowrap;width:78px">1:30p</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:15px;width:100px;color:#2A2E33">Collins</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-family:Anton,sans-serif;font-size:14px;color:var(--accent,#C8102E);width:56px">J7</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:14px;width:92px;color:#2A2E33">Major</td>
+        <td style="padding:10px 12px;border-top:1px solid #D6D2C8;font-weight:500;font-size:17px;color:#2A2E33">Winner J5 vs Winner J6 — Major Championship</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div style="margin-top:64px;border-top:5px solid #141414;padding-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px">
+  <div>
+    <h4 style="font-family:Anton,sans-serif;font-size:16px;text-transform:uppercase;margin-bottom:7px;font-weight:400">Overall game count</h4>
+    <p style="font-size:16px;color:#2A2E33;text-wrap:pretty">Thirty-eight postseason games in all: twenty five in Rookie, Minor and Major, and thirteen in girls flag — five for 2nd–4th, five for 5th–6th and three for 7th–8th.</p>
+  </div>
+  <div>
+    <h4 style="font-family:Anton,sans-serif;font-size:16px;text-transform:uppercase;margin-bottom:7px;font-weight:400">Seeding</h4>
+    <p style="font-size:16px;color:#2A2E33;text-wrap:pretty">Seeds are set by final regular season record. Tiebreakers run in order: head to head, then points allowed in division play, then point differential capped at 14 per game, then coin flip at the Board meeting.</p>
+  </div>
+  <div>
+    <h4 style="font-family:Anton,sans-serif;font-size:16px;text-transform:uppercase;margin-bottom:7px;font-weight:400">Bracket integrity</h4>
+    <p style="font-size:16px;color:#2A2E33;text-wrap:pretty">No reseeding after the first round.&nbsp;</p>
+  </div>
+  <div>
+    
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:4px">
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+  <div>
+    <h4 style="font-family:Anton,sans-serif;font-size:16px;text-transform:uppercase;margin-bottom:7px;font-weight:400">Tower duty</h4><p style="margin: 0"></p>
+    <p style="font-size:16px;color:#2A2E33;text-wrap:pretty">Thirty-eight games need coverage. Girls Flag are two towers each weekday, Moore and Watson Fields.&nbsp; Tackle Weekdays are two towers per date. Sept 26 is two towers at 9:00 and three each at 10:30 and 12:00. Sept 19 and Oct 3 is one tower on Collins for all three finals.</p>
+  </div>
+  <div>
+    <h4 style="font-family:Anton,sans-serif;font-size:16px;text-transform:uppercase;margin-bottom:7px;font-weight:400"></h4>
+    <div>
+    <h4 style="font-family:Anton,sans-serif;font-size:16px;text-transform:uppercase;margin-bottom:7px;font-weight:400">OPEN SLOTS</h4>
+    <p style="font-size:16px;color:#2A2E33;text-wrap:pretty">Thursday Sept 24 is held open on Collins and Adams for opening round makeups.</p>
+  </div><p style="font-size:16px;color:#2A2E33;text-wrap:pretty"></p>
+  </div>
+  <div>
+    
+    
+  <h4 style="font-family:Anton,sans-serif;font-size:16px;text-transform:uppercase;margin-bottom:7px;font-weight:400">Lights</h4><p style="font-size:16px;color:#2A2E33;text-wrap:pretty">Five weeknight dates carry a 7:30p kickoff, counting the Thursday hold. Lights will be on for start of all 7:30p games</p></div>
+  <div style="box-sizing: border-box"></div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#C8102E&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#C8102E&quot;,&quot;#1F5C3A&quot;,&quot;#1B3A6B&quot;,&quot;#B8860B&quot;]},&quot;showWeatherHold&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { division: 'All' };
+  rootRef = React.createRef();
+
+  componentDidMount() { this.apply(); }
+  componentDidUpdate() { this.apply(); }
+
+  apply() {
+    const root = this.rootRef.current;
+    if (!root) return;
+    const div = this.state.division;
+    const accent = this.props.accent ?? '#C8102E';
+
+    root.querySelectorAll('[data-filter-bar] button').forEach(b => {
+      const on = b.dataset.div === div;
+      b.style.background = on ? (div === 'All' ? '#141414' : accent) : 'transparent';
+      b.style.borderColor = on && div !== 'All' ? accent : '#141414';
+      b.style.color = on ? '#fff' : '#141414';
+    });
+
+    let shown = 0;
+    root.querySelectorAll('section').forEach(sec => {
+      let visible = 0;
+      sec.querySelectorAll('tbody tr').forEach(tr => {
+        const cell = tr.cells[3];
+        const label = cell ? cell.textContent.trim() : '';
+        const match = div === 'All' || label === div;
+        tr.style.display = match ? '' : 'none';
+        if (match && label && label !== '—') visible++;
+      });
+      sec.style.display = div === 'All' || visible > 0 ? '' : 'none';
+      shown += visible;
+    });
+
+    const count = root.querySelector('[data-filter-count]');
+    if (count) count.textContent = div === 'All' ? shown + ' games' : shown + ' ' + div + ' games';
+  }
+
+  renderVals() {
+    return {
+      rootRef: this.rootRef,
+      accent: this.props.accent ?? '#C8102E',
+      showWeatherHold: this.props.showWeatherHold ?? true,
+      onFilter: (e) => this.setState({ division: e.currentTarget.dataset.div }),
+    };
+  }
+}
+</script>
+</body>
+</html>
