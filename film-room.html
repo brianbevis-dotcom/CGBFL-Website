@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Film Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --field:#0B1410;
+    --panel:#111E18;
+    --panel-2:#16281F;
+    --line:#2A4B39;
+    --rule:#264A38;
+    --chalk:#E8EDE7;
+    --chalk-dim:#8FA69A;
+    --amber:#FFB627;
+    --amber-dim:#7A5A17;
+    --live:#4BD07A;
+    --display:"Barlow Condensed","Oswald","Haettenschweiler","Arial Narrow",sans-serif;
+    --body:"Inter","Segoe UI",Helvetica,Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--field);
+    color:var(--chalk);
+    font-family:var(--body);
+    font-size:14px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:1180px;margin:0 auto;padding:18px 18px 60px}
+
+  /* ---------- header ---------- */
+  .top{
+    display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding-bottom:12px;border-bottom:1px solid var(--rule);margin-bottom:18px;
+  }
+  .mark{
+    font-family:var(--display);font-weight:700;font-size:30px;letter-spacing:.06em;
+    text-transform:uppercase;line-height:1;
+  }
+  .mark span{color:var(--amber)}
+  .tagline{color:var(--chalk-dim);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  .top .spacer{flex:1}
+
+  button{font-family:inherit;color:inherit;cursor:pointer}
+
+  .btn{
+    background:var(--panel-2);border:1px solid var(--rule);color:var(--chalk);
+    padding:8px 14px;border-radius:2px;font-size:13px;font-weight:500;
+    transition:background .12s ease,border-color .12s ease;
+  }
+  .btn:hover{background:#1E3A2C;border-color:#3B6E53}
+  .btn:focus-visible,.pill:focus-visible,.chip:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .btn.primary{background:var(--amber);color:#14210E;border-color:var(--amber);font-weight:600}
+  .btn.primary:hover{background:#FFC94D}
+
+  /* ---------- stage ---------- */
+  .stage{
+    position:relative;background:#000;border:1px solid var(--rule);
+    aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .stage video{width:100%;height:100%;display:block;background:#000}
+  .zoomer{position:absolute;inset:0;transform-origin:center center;will-change:transform}
+  #ytHost{position:absolute;inset:0}
+  #ytHost iframe{width:100%;height:100%;display:block;border:0}
+  .grab{position:absolute;inset:0;cursor:grab;background:transparent}
+  .grab.dragging{cursor:grabbing}
+  .zoomtag{
+    position:absolute;top:10px;left:10px;background:rgba(11,20,16,.82);border:1px solid var(--rule);
+    color:var(--amber);font-family:var(--display);font-size:15px;letter-spacing:.05em;padding:3px 9px;
+    pointer-events:none;display:none;
+  }
+  .empty{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:14px;text-align:center;padding:24px;
+  }
+  .empty h2{font-family:var(--display);font-weight:600;font-size:24px;letter-spacing:.05em;
+    text-transform:uppercase;margin:0;color:var(--chalk)}
+  .empty p{margin:0;color:var(--chalk-dim);max-width:44ch;line-height:1.5}
+  .stage.drag{outline:2px dashed var(--amber);outline-offset:-10px}
+
+  /* ---------- scoreboard ---------- */
+  .board{
+    display:flex;align-items:stretch;gap:0;background:var(--panel);
+    border:1px solid var(--rule);border-top:none;flex-wrap:wrap;
+  }
+  .cell{padding:9px 16px;border-right:1px solid var(--rule);min-width:0}
+  .cell:last-child{border-right:none}
+  .cell .k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim);display:block;margin-bottom:2px}
+  .cell .v{font-family:var(--display);font-weight:600;font-size:24px;line-height:1;
+    font-variant-numeric:tabular-nums;letter-spacing:.03em}
+  .cell.big .v{color:var(--amber);font-size:28px}
+  .cell.grow{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px}
+  .state{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+  .state.on{color:var(--live)}
+  .state.rev{color:var(--amber)}
+
+  /* ---------- timeline: the yard-line strip ---------- */
+  .field{
+    position:relative;height:56px;margin-top:14px;background:var(--panel);
+    border:1px solid var(--rule);cursor:pointer;user-select:none;touch-action:none;
+  }
+  .hashes{
+    position:absolute;inset:0;
+    background-image:
+      repeating-linear-gradient(to right, rgba(143,166,154,.30) 0 1px, transparent 1px 10%),
+      repeating-linear-gradient(to right, rgba(143,166,154,.12) 0 1px, transparent 1px 2%);
+    background-position:0 0;
+    pointer-events:none;
+  }
+  .played{position:absolute;top:0;bottom:0;left:0;width:0;background:rgba(255,182,39,.14);pointer-events:none}
+  .loopband{position:absolute;top:0;bottom:0;background:rgba(75,208,122,.16);
+    border-left:1px solid var(--live);border-right:1px solid var(--live);display:none;pointer-events:none}
+  .head{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--amber);pointer-events:none;
+    box-shadow:0 0 0 1px rgba(11,20,16,.7)}
+  .head::after{content:"";position:absolute;top:-5px;left:-4px;border-left:5px solid transparent;
+    border-right:5px solid transparent;border-top:7px solid var(--amber)}
+  .pin{position:absolute;bottom:0;width:2px;height:16px;background:var(--chalk);pointer-events:none}
+  .pin::before{content:"";position:absolute;bottom:16px;left:-3px;width:8px;height:8px;background:var(--chalk);
+    border-radius:50%}
+
+  /* ---------- control rows ---------- */
+  .rack{margin-top:14px;display:grid;gap:10px}
+  .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    background:var(--panel);border:1px solid var(--rule);padding:10px 12px}
+  .row .lab{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim);
+    width:82px;flex-shrink:0}
+
+  .pill{
+    background:transparent;border:1px solid var(--rule);border-radius:2px;padding:7px 11px;
+    font-family:var(--display);font-size:16px;font-weight:500;letter-spacing:.04em;
+    font-variant-numeric:tabular-nums;min-width:46px;transition:background .1s ease;
+  }
+  .pill:hover{background:var(--panel-2);border-color:#3B6E53}
+  .pill.wide{min-width:70px}
+  .pill.hero{background:var(--amber);color:#14210E;border-color:var(--amber);font-weight:700;min-width:88px;font-size:18px}
+  .pill.hero:hover{background:#FFC94D}
+  .pill.act{border-color:var(--amber);color:var(--amber)}
+  .pill.live{border-color:var(--live);color:var(--live)}
+  .pill[disabled]{opacity:.35;cursor:not-allowed}
+
+  .sep{width:1px;align-self:stretch;background:var(--rule);margin:0 4px}
+
+  input[type=range]{accent-color:var(--amber);width:150px}
+  select,input[type=text]{
+    background:var(--panel-2);border:1px solid var(--rule);color:var(--chalk);
+    font-family:inherit;font-size:13px;padding:7px 9px;border-radius:2px;
+  }
+  input[type=text]{flex:1;min-width:140px}
+  select:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+
+  /* ---------- marks ---------- */
+  .cols{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+  @media(min-width:900px){.cols{grid-template-columns:1.35fr 1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--rule)}
+  .card h3{
+    font-family:var(--display);font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    margin:0;padding:10px 14px;border-bottom:1px solid var(--rule);color:var(--chalk-dim);
+    display:flex;align-items:center;gap:8px;
+  }
+  .card h3 b{color:var(--amber);font-weight:600}
+  .card .pad{padding:12px 14px}
+
+  .marklist{max-height:260px;overflow:auto;margin:0;padding:0;list-style:none}
+  .marklist li{
+    display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(38,74,56,.5);
+  }
+  .marklist li:last-child{border-bottom:none}
+  .marklist .tc{font-family:var(--display);font-size:17px;font-variant-numeric:tabular-nums;
+    color:var(--amber);min-width:88px;text-align:left}
+  .marklist .note{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--chalk)}
+  .marklist .mini{background:none;border:none;color:var(--chalk-dim);font-size:12px;padding:3px 6px}
+  .marklist .mini:hover{color:var(--amber)}
+  .none{color:var(--chalk-dim);padding:14px;font-size:13px}
+
+  .keys{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:12.5px;align-items:baseline}
+  .keys kbd{
+    font-family:var(--display);font-size:14px;letter-spacing:.05em;background:var(--panel-2);
+    border:1px solid var(--rule);border-bottom-width:2px;border-radius:2px;padding:1px 7px;white-space:nowrap;
+  }
+  .keys span{color:var(--chalk-dim)}
+
+  /* ---------- stat tagging ---------- */
+  .tagwrap{margin-top:14px}
+  .rosterbar{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px;border-bottom:1px solid var(--rule);
+    max-height:132px;overflow:auto}
+  .chip{
+    background:var(--panel-2);border:1px solid var(--rule);color:var(--chalk);border-radius:2px;
+    padding:5px 10px;font-family:var(--display);font-size:16px;letter-spacing:.03em;
+    font-variant-numeric:tabular-nums;
+  }
+  .chip:hover{border-color:#3B6E53}
+  .chip.sel{background:var(--amber);color:#14210E;border-color:var(--amber);font-weight:700}
+  .chip small{font-family:var(--body);font-size:11px;font-weight:500;opacity:.75;margin-left:5px;letter-spacing:0}
+
+  .actgrid{display:flex;flex-wrap:wrap;gap:6px}
+  .act{
+    background:transparent;border:1px solid var(--rule);color:var(--chalk);border-radius:2px;
+    padding:7px 11px;font-size:12.5px;font-weight:500;
+  }
+  .act:hover{background:var(--panel-2);border-color:#3B6E53}
+  .act.off{border-left:3px solid var(--amber)}
+  .act.def{border-left:3px solid var(--live)}
+  .act:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .act[disabled]{opacity:.3;cursor:not-allowed}
+
+  .who{font-family:var(--display);font-size:20px;letter-spacing:.04em;color:var(--amber);
+    min-width:120px;font-variant-numeric:tabular-nums}
+  .who.none{color:var(--chalk-dim);font-size:13px;font-family:var(--body);letter-spacing:0}
+
+  .sheet{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums}
+  .sheet th{
+    font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--chalk-dim);text-align:right;padding:7px 7px;border-bottom:1px solid var(--rule);
+    position:sticky;top:0;background:var(--panel);white-space:nowrap;
+  }
+  .sheet th:first-child,.sheet td:first-child{text-align:left;padding-left:14px}
+  .sheet td{padding:6px 7px;text-align:right;border-bottom:1px solid rgba(38,74,56,.45);white-space:nowrap}
+  .sheet td.name{font-family:var(--display);font-size:16px;letter-spacing:.03em}
+  .sheet td.zero{color:#3E5C4C}
+  .sheet tbody tr:hover{background:rgba(255,182,39,.05)}
+  .scroll{max-height:300px;overflow:auto}
+  .logline .tc{cursor:pointer}
+
+  .reelrow .ord{font-family:var(--display);font-size:15px;color:var(--chalk-dim);min-width:22px}
+  .reelrow.playing{background:rgba(75,208,122,.10)}
+  .reelrow.playing .ord{color:var(--live)}
+  .reelrow .dur{font-family:var(--display);font-size:15px;color:var(--chalk-dim);
+    font-variant-numeric:tabular-nums;min-width:52px;text-align:right}
+  .reelrow .src{font-size:11px;color:#3E5C4C;max-width:120px;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap}
+  .hide{display:none !important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="mark">Film<span>/</span>Room</div>
+    <div class="tagline">Frame accurate game study</div>
+    <div class="spacer"></div>
+    <input type="text" id="ytUrl" placeholder="Paste a YouTube link" style="min-width:200px;max-width:260px" />
+    <button class="btn" id="ytLoad">Load link</button>
+    <button class="btn primary" id="pick">Load game video</button>
+    <input type="file" id="file" accept="video/*" class="hide" />
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="zoomer" id="zoomer">
+      <video id="v" playsinline></video>
+      <div id="ytHost" class="hide"></div>
+    </div>
+    <div class="grab hide" id="grab"></div>
+    <div class="empty" id="empty">
+      <h2>Drop a game file here</h2>
+      <p>Nothing uploads anywhere. The video plays straight off your drive, so a full game file opens instantly. MP4 works best. Or paste a YouTube link up top.</p>
+      <button class="btn" id="pick2">Choose a file</button>
+    </div>
+  </div>
+
+  <div class="board">
+    <div class="cell big"><span class="k">Timecode</span><span class="v" id="tc">00:00:00.00</span></div>
+    <div class="cell"><span class="k">Frame</span><span class="v" id="fr">0</span></div>
+    <div class="cell"><span class="k">Speed</span><span class="v" id="sp">1.00x</span></div>
+    <div class="cell"><span class="k">Length</span><span class="v" id="dur">00:00:00</span></div>
+    <div class="cell grow">
+      <span class="state" id="stLoop">Loop off</span>
+      <span class="state" id="stPlay">Stopped</span>
+    </div>
+  </div>
+
+  <div class="field" id="field">
+    <div class="hashes"></div>
+    <div class="played" id="played"></div>
+    <div class="loopband" id="loopband"></div>
+    <div class="head" id="head" style="left:0"></div>
+  </div>
+
+  <div class="rack">
+
+    <div class="row">
+      <span class="lab">Transport</span>
+      <button class="pill wide" id="revBtn" title="Reverse play, press again to speed up (J)">&#9664;&#9664; REV</button>
+      <button class="pill" id="stepB" title="One frame back (Left arrow)">&#9664;| 1f</button>
+      <button class="pill hero" id="playBtn" title="Play / pause (Space)">PLAY</button>
+      <button class="pill" id="stepF" title="One frame forward (Right arrow)">|&#9654; 1f</button>
+      <button class="pill wide" id="fwdBtn" title="Fast forward, press again to speed up (L)">FF &#9654;&#9654;</button>
+      <span class="sep"></span>
+      <button class="pill" id="fs" title="Fullscreen (F)">Full</button>
+    </div>
+
+    <div class="row">
+      <span class="lab">Rewind</span>
+      <button class="pill" data-jump="-10">-10s</button>
+      <button class="pill" data-jump="-5">-5s</button>
+      <button class="pill" data-jump="-3">-3s</button>
+      <button class="pill" data-jump="-1">-1s</button>
+      <button class="pill" data-jump="-0.5">-.5s</button>
+      <span class="sep"></span>
+      <button class="pill" data-jump="0.5">+.5s</button>
+      <button class="pill" data-jump="1">+1s</button>
+      <button class="pill" data-jump="3">+3s</button>
+      <button class="pill" data-jump="5">+5s</button>
+      <button class="pill" data-jump="10">+10s</button>
+    </div>
+
+    <div class="row">
+      <span class="lab">Speed</span>
+      <button class="pill" data-rate="0.1">.1x</button>
+      <button class="pill" data-rate="0.25">.25x</button>
+      <button class="pill" data-rate="0.5">.5x</button>
+      <button class="pill act" data-rate="1">1x</button>
+      <button class="pill" data-rate="1.5">1.5x</button>
+      <button class="pill" data-rate="2">2x</button>
+      <input type="range" id="rate" min="0.05" max="3" step="0.05" value="1" aria-label="Playback speed" />
+      <span class="sep"></span>
+      <span class="lab" style="width:auto">Frame rate</span>
+      <select id="fps" aria-label="Frame rate">
+        <option value="23.976">23.98</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="29.97">29.97</option>
+        <option value="30" selected>30</option>
+        <option value="50">50</option>
+        <option value="59.94">59.94</option>
+        <option value="60">60</option>
+      </select>
+      <button class="pill wide" id="detect" title="Play a second of video and measure the real frame rate">Detect</button>
+    </div>
+
+    <div class="row">
+      <span class="lab">Zoom</span>
+      <button class="pill" data-zoom="1">1x</button>
+      <button class="pill" data-zoom="1.5">1.5x</button>
+      <button class="pill" data-zoom="2">2x</button>
+      <button class="pill" data-zoom="3">3x</button>
+      <button class="pill" data-zoom="4">4x</button>
+      <input type="range" id="zoom" min="1" max="6" step="0.1" value="1" aria-label="Zoom" />
+      <button class="pill wide" id="zoomReset">Reset</button>
+      <span class="state" id="zoomHint">Drag the picture to pan when zoomed</span>
+    </div>
+
+    <div class="row">
+      <span class="lab">Loop a play</span>
+      <button class="pill wide" id="setIn">Set in</button>
+      <button class="pill wide" id="setOut">Set out</button>
+      <button class="pill wide" id="loopBtn">Loop off</button>
+      <button class="pill wide" id="clearLoop">Clear</button>
+      <span class="state" id="loopRead" style="margin-left:4px">No in / out set</span>
+    </div>
+
+    <div class="row">
+      <span class="lab">Mark play</span>
+      <input type="text" id="noteIn" placeholder="Note this play, for example: 34 dive, backside LB overruns" />
+      <button class="pill wide" id="addMark">Mark</button>
+    </div>
+
+  </div>
+
+  <div class="cols">
+    <div class="card">
+      <h3>Marked plays <b id="markCount">0</b></h3>
+      <ul class="marklist" id="marks"></ul>
+      <div class="none" id="noMarks">Nothing marked yet. Press M while watching, or use the Mark button.</div>
+      <div class="pad" style="border-top:1px solid var(--rule);display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="exportMarks">Save marks to file</button>
+        <button class="btn" id="importMarks">Open saved marks</button>
+        <input type="file" id="marksFile" accept="application/json" class="hide" />
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Keyboard</h3>
+      <div class="pad keys">
+        <kbd>Space</kbd><span>Play or pause</span>
+        <kbd>&larr; &rarr;</kbd><span>One frame back or forward</span>
+        <kbd>Shift &larr; &rarr;</kbd><span>One second back or forward</span>
+        <kbd>, .</kbd><span>One frame back or forward</span>
+        <kbd>J</kbd><span>Reverse, press again to go faster</span>
+        <kbd>K</kbd><span>Pause</span>
+        <kbd>L</kbd><span>Forward, press again to go faster</span>
+        <kbd>I / O</kbd><span>Set loop in / out</span>
+        <kbd>P</kbd><span>Turn the loop on or off</span>
+        <kbd>M</kbd><span>Mark this play</span>
+        <kbd>F</kbd><span>Fullscreen</span>
+        <kbd>1 - 6</kbd><span>Speed presets</span>
+        <kbd>Home</kbd><span>Back to the start</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card tagwrap">
+    <h3>Team
+      <span style="flex:1"></span>
+      <button class="btn" id="loadLeague" style="padding:4px 10px;font-size:12px">Import league rosters</button>
+      <button class="btn" id="editRoster" style="padding:4px 10px;font-size:12px">Edit by hand</button>
+      <input type="file" id="leagueFile" accept=".csv,text/csv" class="hide" />
+    </h3>
+
+    <div class="pad" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--rule)">
+      <label style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)">Division</label>
+      <select id="divSel" aria-label="Division"><option value="">Rosters not loaded</option></select>
+      <label style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)">Team</label>
+      <select id="teamSel" aria-label="Team"><option value="">Pick a division first</option></select>
+      <span class="state" id="libState">No league file loaded</span>
+    </div>
+
+    <div class="pad hide" id="rosterEdit">
+      <p style="margin:0 0 8px;color:var(--chalk-dim);font-size:12.5px">
+        One player per line, number first: <b>34 Cole RB</b>. The name and position are optional.
+        This overrides whatever team is picked above.
+      </p>
+      <textarea id="rosterText" rows="6" style="width:100%;background:var(--panel-2);border:1px solid var(--rule);
+        color:var(--chalk);font-family:var(--body);font-size:13px;padding:9px;border-radius:2px"
+        placeholder="7 Miles QB&#10;22 Jaxon RB&#10;34 Cole LB&#10;51 Weston OL"></textarea>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button class="btn primary" id="saveRoster">Save roster</button>
+        <button class="btn" id="cancelRoster">Cancel</button>
+      </div>
+    </div>
+    <div class="rosterbar" id="rosterBar"></div>
+
+    <div class="pad" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--rule)">
+      <span class="who none" id="who">Pick a player above</span>
+      <span class="sep" style="height:24px"></span>
+      <label style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)">Yards</label>
+      <input type="text" id="yds" inputmode="numeric" placeholder="0" style="width:66px;flex:none;text-align:center" />
+      <button class="pill" id="undo" title="Remove the last thing logged">Undo</button>
+    </div>
+
+    <div class="pad" style="border-bottom:1px solid var(--rule)">
+      <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim);margin-bottom:8px">Offense</div>
+      <div class="actgrid" id="offActs"></div>
+      <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim);margin:14px 0 8px">Defense</div>
+      <div class="actgrid" id="defActs"></div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="card">
+      <h3>Stat sheet <b id="statPlayers">0</b>
+        <span style="flex:1"></span>
+        <button class="btn" id="exportStats" style="padding:4px 10px;font-size:12px">Export to Excel</button>
+      </h3>
+      <div class="scroll">
+        <table class="sheet" id="sheet"><thead></thead><tbody></tbody></table>
+      </div>
+      <div class="none" id="noStats">Tag a play and the numbers show up here.</div>
+    </div>
+
+    <div class="card">
+      <h3>Play log <b id="logCount">0</b>
+        <span style="flex:1"></span>
+        <button class="btn" id="exportLog" style="padding:4px 10px;font-size:12px">Save log</button>
+        <button class="btn" id="importLog" style="padding:4px 10px;font-size:12px">Open</button>
+        <input type="file" id="logFile" accept="application/json" class="hide" />
+      </h3>
+      <ul class="marklist" id="log" style="max-height:300px"></ul>
+      <div class="none" id="noLog">Nothing logged yet.</div>
+    </div>
+  </div>
+
+  <div class="card tagwrap" id="reelCard">
+    <h3>Highlight reel <b id="reelCount">0</b>
+      <span class="state" id="reelLen" style="letter-spacing:.06em">0:00</span>
+      <span style="flex:1"></span>
+      <button class="btn" id="reelPreview" style="padding:4px 10px;font-size:12px">Play reel</button>
+      <button class="btn" id="reelSave" style="padding:4px 10px;font-size:12px">Save</button>
+      <button class="btn" id="reelOpen" style="padding:4px 10px;font-size:12px">Open</button>
+      <button class="btn primary" id="reelExport" style="padding:4px 10px;font-size:12px">Export reel</button>
+      <input type="file" id="reelFile" accept="application/json" class="hide" />
+    </h3>
+
+    <div class="pad" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--rule)">
+      <input type="text" id="clipName" placeholder="Clip name, for example: 22 Jaxon 40 yard TD" />
+      <button class="pill wide" id="addClip">Add clip</button>
+      <span class="state" id="clipHint">Set in and out first, then add</span>
+    </div>
+
+    <ul class="marklist" id="reel" style="max-height:280px"></ul>
+    <div class="none" id="noReel">
+      No clips yet. Find a play, set the in and out points with the loop controls, name it, and add it.
+    </div>
+  </div>
+
+  <p class="foot">
+    Frame stepping lands on the exact frame boundary, so a step back and a step forward return you to where you were.
+    If the timecode drifts, set the frame rate to match the file or press Detect.
+  </p>
+
+</div>
+
+<script>
+/* =================================================================
+   MEDIA LAYER
+
+   One object that behaves like an HTMLVideoElement whether the source
+   is a local file or a YouTube embed. Everything downstream talks to
+   this and does not care which is which.
+   ================================================================= */
+(function(){
+  "use strict";
+
+  var vEl = document.getElementById('v');
+  var ytHost = document.getElementById('ytHost');
+  var bus = document.createElement('div');   // event hub
+
+  var mode = 'local';       // 'local' or 'yt'
+  var yt = null;            // YT.Player
+  var ytReady = false;
+  var ytDur = 0;
+  var ytRate = 1;
+  var lastState = -1;
+  var pendingId = null;
+
+  var M = {};
+
+  Object.defineProperty(M, 'mode', { get: function(){ return mode; } });
+
+  Object.defineProperty(M, 'currentTime', {
+    get: function(){
+      if(mode === 'yt') return (yt && ytReady && yt.getCurrentTime) ? yt.getCurrentTime() : 0;
+      return vEl.currentTime || 0;
+    },
+    set: function(t){
+      if(t < 0) t = 0;
+      if(mode === 'yt'){
+        if(yt && ytReady) { yt.seekTo(t, true); fire('seeked'); }
+        return;
+      }
+      vEl.currentTime = t;
+    }
+  });
+
+  Object.defineProperty(M, 'duration', {
+    get: function(){
+      if(mode === 'yt') return ytDur;
+      return vEl.duration || 0;
+    }
+  });
+
+  Object.defineProperty(M, 'paused', {
+    get: function(){
+      if(mode === 'yt') return lastState !== 1;
+      return vEl.paused;
+    }
+  });
+
+  Object.defineProperty(M, 'playbackRate', {
+    get: function(){ return mode === 'yt' ? ytRate : vEl.playbackRate; },
+    set: function(r){
+      if(mode === 'yt'){
+        if(!yt || !ytReady) { ytRate = r; return; }
+        var allowed = yt.getAvailablePlaybackRates ? yt.getAvailablePlaybackRates() : [0.25,0.5,1,1.5,2];
+        var best = allowed[0];
+        allowed.forEach(function(a){ if(Math.abs(a-r) < Math.abs(best-r)) best = a; });
+        ytRate = best;
+        yt.setPlaybackRate(best);
+        return;
+      }
+      vEl.playbackRate = r;
+    }
+  });
+
+  M.play = function(){
+    if(mode === 'yt'){ if(yt && ytReady) yt.playVideo(); return; }
+    var p = vEl.play();
+    if(p && p.catch) p.catch(function(){});
+  };
+  M.pause = function(){
+    if(mode === 'yt'){ if(yt && ytReady) yt.pauseVideo(); return; }
+    vEl.pause();
+  };
+
+  M.addEventListener = function(t, fn){ bus.addEventListener(t, fn); };
+  M.removeEventListener = function(t, fn){ bus.removeEventListener(t, fn); };
+  M.focus = function(){ if(mode === 'local') vEl.focus(); };
+
+  // Only meaningful for local files. Its absence is how the frame rate
+  // detector knows it cannot measure a YouTube stream.
+  Object.defineProperty(M, 'requestVideoFrameCallback', {
+    get: function(){
+      if(mode !== 'local' || !vEl.requestVideoFrameCallback) return undefined;
+      return vEl.requestVideoFrameCallback.bind(vEl);
+    }
+  });
+
+  function fire(type){ bus.dispatchEvent(new Event(type)); }
+
+  ['play','pause','seeked','timeupdate','loadedmetadata','ended'].forEach(function(t){
+    vEl.addEventListener(t, function(){ if(mode === 'local') fire(t); });
+  });
+
+  /* ---- local ---- */
+  M.loadLocal = function(file){
+    teardownYT();
+    mode = 'local';
+    vEl.classList.remove('hide');
+    ytHost.classList.add('hide');
+    document.getElementById('grab').classList.add('hide');
+    if(vEl.src) URL.revokeObjectURL(vEl.src);
+    vEl.src = URL.createObjectURL(file);
+    vEl.load();
+    M.zoomReset();
+  };
+
+  /* ---- youtube ---- */
+  function videoId(url){
+    url = String(url || '').trim();
+    if(/^[A-Za-z0-9_-]{11}$/.test(url)) return url;
+    var m = url.match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/|\/live\/)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  function teardownYT(){
+    if(yt && yt.destroy){ try{ yt.destroy(); }catch(e){} }
+    yt = null; ytReady = false; ytDur = 0; lastState = -1;
+    ytHost.innerHTML = '';
+  }
+
+  M.loadYouTube = function(url){
+    var id = videoId(url);
+    if(!id){ alert('That does not look like a YouTube link.'); return false; }
+
+    vEl.pause();
+    vEl.classList.add('hide');
+    ytHost.classList.remove('hide');
+    document.getElementById('grab').classList.remove('hide');
+    mode = 'yt';
+    M.zoomReset();
+
+    pendingId = id;
+    if(window.YT && window.YT.Player) buildPlayer();
+    else loadAPI();
+    return true;
+  };
+
+  function loadAPI(){
+    if(document.getElementById('yt-api')) return;
+    var s = document.createElement('script');
+    s.id = 'yt-api';
+    s.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(s);
+  }
+  window.onYouTubeIframeAPIReady = function(){ if(pendingId) buildPlayer(); };
+
+  function buildPlayer(){
+    teardownYT();
+    ytHost.innerHTML = '<div id="ytFrame"></div>';
+    yt = new YT.Player('ytFrame', {
+      videoId: pendingId,
+      playerVars: {
+        controls: 0, disablekb: 1, modestbranding: 1, rel: 0,
+        playsinline: 1, fs: 0, iv_load_policy: 3
+      },
+      events: {
+        onReady: function(){
+          ytReady = true;
+          ytDur = yt.getDuration() || 0;
+          M.playbackRate = 1;
+          fire('loadedmetadata');
+        },
+        onStateChange: function(e){
+          lastState = e.data;
+          if(e.data === 1){ if(!ytDur) ytDur = yt.getDuration() || 0; fire('play'); }
+          else if(e.data === 2) fire('pause');
+          else if(e.data === 0) fire('ended');
+        },
+        onError: function(){
+          alert('YouTube would not load that video. Private videos and videos with embedding turned off cannot be used here. Unlisted is fine.');
+        }
+      }
+    });
+  }
+
+  // YouTube gives no timeupdate, so synthesize one while it rolls
+  setInterval(function(){ if(mode === 'yt' && lastState === 1) fire('timeupdate'); }, 200);
+
+  /* =================================================================
+     ZOOM AND PAN
+     ================================================================= */
+  var zoomer = document.getElementById('zoomer');
+  var grab = document.getElementById('grab');
+  var stage = document.getElementById('stage');
+  var zoomSlider = document.getElementById('zoom');
+  var zoomHint = document.getElementById('zoomHint');
+
+  var z = 1, px = 0, py = 0;
+
+  function clampPan(){
+    var r = stage.getBoundingClientRect();
+    var mx = Math.max(0, (r.width  * (z - 1)) / 2);
+    var my = Math.max(0, (r.height * (z - 1)) / 2);
+    px = Math.max(-mx, Math.min(mx, px));
+    py = Math.max(-my, Math.min(my, py));
+  }
+
+  function applyZoom(){
+    clampPan();
+    zoomer.style.transform = 'translate(' + px + 'px,' + py + 'px) scale(' + z + ')';
+    zoomSlider.value = z;
+    zoomHint.textContent = z > 1
+      ? z.toFixed(1) + 'x   drag the picture to pan'
+      : 'Drag the picture to pan when zoomed';
+    zoomHint.className = z > 1 ? 'state on' : 'state';
+    document.querySelectorAll('[data-zoom]').forEach(function(b){
+      b.classList.toggle('act', Math.abs(parseFloat(b.dataset.zoom) - z) < 0.001);
+    });
+    // the overlay must catch drags whenever zoomed, and always in YouTube
+    // mode so clicks never reach YouTube's own controls
+    grab.classList.toggle('hide', !(z > 1 || mode === 'yt'));
+  }
+
+  M.setZoom = function(n, anchorX, anchorY){
+    var prev = z;
+    z = Math.max(1, Math.min(6, n));
+    if(anchorX !== undefined){
+      var r = stage.getBoundingClientRect();
+      var ax = anchorX - r.left - r.width / 2;
+      var ay = anchorY - r.top - r.height / 2;
+      px -= ax * (z / prev - 1);
+      py -= ay * (z / prev - 1);
+    } else {
+      px *= z / prev;
+      py *= z / prev;
+    }
+    if(z === 1){ px = 0; py = 0; }
+    applyZoom();
+  };
+  M.zoomReset = function(){ z = 1; px = 0; py = 0; applyZoom(); };
+
+  zoomSlider.addEventListener('input', function(){ M.setZoom(parseFloat(zoomSlider.value)); });
+  document.querySelectorAll('[data-zoom]').forEach(function(b){
+    b.addEventListener('click', function(){ M.setZoom(parseFloat(b.dataset.zoom)); });
+  });
+  document.getElementById('zoomReset').addEventListener('click', function(){ M.zoomReset(); });
+
+  var dragging = false, sx = 0, sy = 0, spx = 0, spy = 0;
+  grab.addEventListener('pointerdown', function(e){
+    if(z <= 1) return;
+    dragging = true; sx = e.clientX; sy = e.clientY; spx = px; spy = py;
+    grab.classList.add('dragging');
+    grab.setPointerCapture(e.pointerId);
+  });
+  grab.addEventListener('pointermove', function(e){
+    if(!dragging) return;
+    px = spx + (e.clientX - sx);
+    py = spy + (e.clientY - sy);
+    applyZoom();
+  });
+  ['pointerup','pointercancel'].forEach(function(t){
+    grab.addEventListener(t, function(){ dragging = false; grab.classList.remove('dragging'); });
+  });
+  grab.addEventListener('dblclick', function(e){
+    M.setZoom(z > 1 ? 1 : 2.5, e.clientX, e.clientY);
+  });
+  vEl.addEventListener('dblclick', function(e){
+    M.setZoom(z > 1 ? 1 : 2.5, e.clientX, e.clientY);
+  });
+  stage.addEventListener('wheel', function(e){
+    if(!e.shiftKey) return;
+    e.preventDefault();
+    M.setZoom(z * (e.deltaY < 0 ? 1.12 : 0.89), e.clientX, e.clientY);
+  }, {passive:false});
+
+  window.addEventListener('resize', applyZoom);
+  applyZoom();
+
+  window.CGMedia = M;
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+
+  var v = window.CGMedia;
+  var vEl = document.getElementById('v');
+  var stage = document.getElementById('stage');
+  var empty = document.getElementById('empty');
+  var fileInput = document.getElementById('file');
+  var marksFile = document.getElementById('marksFile');
+
+  var tcEl = document.getElementById('tc');
+  var frEl = document.getElementById('fr');
+  var spEl = document.getElementById('sp');
+  var durEl = document.getElementById('dur');
+  var stPlay = document.getElementById('stPlay');
+  var stLoop = document.getElementById('stLoop');
+
+  var field = document.getElementById('field');
+  var head = document.getElementById('head');
+  var played = document.getElementById('played');
+  var loopband = document.getElementById('loopband');
+
+  var playBtn = document.getElementById('playBtn');
+  var revBtn = document.getElementById('revBtn');
+  var fwdBtn = document.getElementById('fwdBtn');
+  var rateSlider = document.getElementById('rate');
+  var fpsSel = document.getElementById('fps');
+  var loopBtn = document.getElementById('loopBtn');
+  var loopRead = document.getElementById('loopRead');
+  var noteIn = document.getElementById('noteIn');
+  var marksUl = document.getElementById('marks');
+  var noMarks = document.getElementById('noMarks');
+  var markCount = document.getElementById('markCount');
+
+  var fps = 30;
+  var loaded = false;
+  var sourceName = '';
+  var inPt = null, outPt = null, looping = false;
+  var marks = [];
+
+  var revSpeeds = [1, 2, 4, 8];
+  var revIdx = -1;          // -1 means not reversing
+  var revLast = 0;
+
+  var fwdSpeeds = [1.5, 2, 3, 4];
+  var fwdIdx = -1;
+
+  /* ---------- formatting ---------- */
+  function pad(n, w){ n = Math.floor(n); var s = String(n); while(s.length < w) s = '0' + s; return s; }
+
+  function timecode(t){
+    if(!isFinite(t) || t < 0) t = 0;
+    var h = Math.floor(t/3600), m = Math.floor(t%3600/60), s = Math.floor(t%60);
+    var f = Math.floor((t - Math.floor(t)) * fps);
+    if(f >= Math.round(fps)) f = Math.round(fps) - 1;
+    return pad(h,2)+':'+pad(m,2)+':'+pad(s,2)+'.'+pad(f,2);
+  }
+  function clock(t){
+    if(!isFinite(t) || t < 0) t = 0;
+    return pad(Math.floor(t/3600),2)+':'+pad(Math.floor(t%3600/60),2)+':'+pad(Math.floor(t%60),2);
+  }
+
+  /* ---------- loading ---------- */
+  function loadFile(f){
+    if(!f) return;
+    v.loadLocal(f);
+    loaded = true;
+    sourceName = f.name;
+    empty.classList.add('hide');
+    stopReverse(); fwdIdx = -1;
+    setRate(1);
+    inPt = null; outPt = null; looping = false;
+    marks = [];
+    drawLoop(); renderMarks(); paint();
+    v.focus();
+  }
+
+  function loadLink(){
+    var url = document.getElementById('ytUrl').value;
+    if(!url.trim()) return;
+    if(!v.loadYouTube(url)) return;
+    loaded = true;
+    sourceName = 'youtube:' + url.trim();
+    empty.classList.add('hide');
+    stopReverse(); fwdIdx = -1;
+    setRate(1);
+    inPt = null; outPt = null; looping = false;
+    marks = [];
+    drawLoop(); renderMarks(); paint();
+  }
+
+  document.getElementById('ytLoad').addEventListener('click', loadLink);
+  document.getElementById('ytUrl').addEventListener('keydown', function(e){
+    e.stopPropagation();
+    if(e.key === 'Enter'){ e.preventDefault(); loadLink(); }
+  });
+
+  document.getElementById('pick').addEventListener('click', function(){ fileInput.click(); });
+  document.getElementById('pick2').addEventListener('click', function(){ fileInput.click(); });
+  fileInput.addEventListener('change', function(e){ loadFile(e.target.files[0]); });
+
+  ['dragenter','dragover'].forEach(function(ev){
+    stage.addEventListener(ev, function(e){ e.preventDefault(); stage.classList.add('drag'); });
+    document.addEventListener(ev, function(e){ e.preventDefault(); });
+  });
+  ['dragleave','drop'].forEach(function(ev){
+    stage.addEventListener(ev, function(e){ e.preventDefault(); stage.classList.remove('drag'); });
+  });
+  document.addEventListener('drop', function(e){
+    e.preventDefault();
+    stage.classList.remove('drag');
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f && f.type.indexOf('video') === 0) loadFile(f);
+  });
+
+  v.addEventListener('loadedmetadata', function(){
+    durEl.textContent = clock(v.duration);
+    paint();
+  });
+
+  /* ---------- frame math ---------- */
+  function currentFrame(){ return Math.round(v.currentTime * fps); }
+
+  function seekFrame(fr){
+    if(!loaded) return;
+    if(fr < 0) fr = 0;
+    var t = (fr + 0.5) / fps;
+    var max = (v.duration || 0) - (0.5 / fps);
+    if(t > max) t = Math.max(0, max);
+    v.currentTime = t;
+    paint();
+  }
+
+  function step(n){
+    stopReverse(); fwdIdx = -1;
+    if(!v.paused) v.pause();
+    seekFrame(currentFrame() + n);
+  }
+
+  function jump(sec){
+    stopReverse(); fwdIdx = -1;
+    if(!loaded) return;
+    var t = v.currentTime + sec;
+    if(t < 0) t = 0;
+    if(v.duration && t > v.duration) t = v.duration;
+    v.currentTime = t;
+    paint();
+  }
+
+  /* ---------- transport ---------- */
+  function setRate(r){
+    r = Math.max(0.05, Math.min(4, r));
+    try { v.playbackRate = r; } catch(e){}
+    rateSlider.value = Math.min(3, r);
+    spEl.textContent = r.toFixed(2) + 'x';
+    document.querySelectorAll('[data-rate]').forEach(function(b){
+      b.classList.toggle('act', Math.abs(parseFloat(b.dataset.rate) - r) < 0.001);
+    });
+  }
+
+  function playPause(){
+    if(!loaded) return;
+    if(revIdx >= 0){ stopReverse(); return; }
+    if(v.paused){ fwdIdx = -1; setRate(1); v.play(); } else { v.pause(); }
+  }
+
+  function startReverse(){
+    if(!loaded) return;
+    v.pause();
+    fwdIdx = -1;
+    if(revIdx < 0){ revIdx = 0; } else { revIdx = Math.min(revIdx + 1, revSpeeds.length - 1); }
+    revLast = performance.now();
+    revBtn.classList.add('act');
+    spEl.textContent = '-' + revSpeeds[revIdx].toFixed(2) + 'x';
+    requestAnimationFrame(reverseTick);
+    paint();
+  }
+
+  function stopReverse(){
+    if(revIdx >= 0){ revIdx = -1; revBtn.classList.remove('act'); setRate(v.playbackRate || 1); }
+  }
+
+  function reverseTick(now){
+    if(revIdx < 0) return;
+    // YouTube only seeks by time, so hammering it every frame stalls the
+    // player. Step it in chunks instead.
+    if(v.mode === 'yt' && now - revLast < 130){ requestAnimationFrame(reverseTick); return; }
+    var dt = (now - revLast) / 1000;
+    revLast = now;
+    var t = v.currentTime - dt * revSpeeds[revIdx];
+    var floorPt = (looping && inPt !== null) ? inPt : 0;
+    if(t <= floorPt){
+      if(looping && outPt !== null){ t = outPt; }
+      else { t = Math.max(0, floorPt); stopReverse(); }
+    }
+    v.currentTime = t;
+    paint();
+    if(revIdx >= 0) requestAnimationFrame(reverseTick);
+  }
+
+  function fastForward(){
+    if(!loaded) return;
+    stopReverse();
+    if(fwdIdx < 0){ fwdIdx = 0; } else { fwdIdx = Math.min(fwdIdx + 1, fwdSpeeds.length - 1); }
+    setRate(fwdSpeeds[fwdIdx]);
+    if(v.paused) v.play();
+  }
+
+  playBtn.addEventListener('click', playPause);
+  revBtn.addEventListener('click', startReverse);
+  fwdBtn.addEventListener('click', fastForward);
+  document.getElementById('stepB').addEventListener('click', function(){ step(-1); });
+  document.getElementById('stepF').addEventListener('click', function(){ step(1); });
+
+  document.querySelectorAll('[data-jump]').forEach(function(b){
+    b.addEventListener('click', function(){ jump(parseFloat(b.dataset.jump)); });
+  });
+  document.querySelectorAll('[data-rate]').forEach(function(b){
+    b.addEventListener('click', function(){ stopReverse(); fwdIdx = -1; setRate(parseFloat(b.dataset.rate)); });
+  });
+  rateSlider.addEventListener('input', function(){ stopReverse(); fwdIdx = -1; setRate(parseFloat(rateSlider.value)); });
+
+  v.addEventListener('play', function(){ stPlay.textContent = 'Rolling'; stPlay.className = 'state on'; playBtn.textContent = 'PAUSE'; });
+  v.addEventListener('pause', function(){
+    stPlay.textContent = revIdx >= 0 ? 'Reversing' : 'Stopped';
+    stPlay.className = revIdx >= 0 ? 'state rev' : 'state';
+    playBtn.textContent = 'PLAY';
+  });
+
+  document.getElementById('fs').addEventListener('click', function(){
+    if(document.fullscreenElement) document.exitFullscreen();
+    else if(stage.requestFullscreen) stage.requestFullscreen();
+  });
+
+  /* ---------- frame rate detect ---------- */
+  document.getElementById('detect').addEventListener('click', function(){
+    if(!loaded || !v.requestVideoFrameCallback){
+      alert(v.mode === 'yt'
+        ? 'Frame rate cannot be measured on a YouTube stream. Pick it from the list, 30 is right for most game footage.'
+        : 'Pick the frame rate from the list. This browser cannot measure it.');
+      return;
+    }
+    var samples = [], last = null, n = 0;
+    setRate(1);
+    var wasPaused = v.paused;
+    v.play();
+    var btn = this; btn.textContent = 'Reading';
+    function cb(now, meta){
+      if(last !== null){
+        var d = meta.mediaTime - last;
+        if(d > 0.001 && d < 0.2) samples.push(d);
+      }
+      last = meta.mediaTime;
+      if(++n < 70){ v.requestVideoFrameCallback(cb); return; }
+      btn.textContent = 'Detect';
+      if(wasPaused) v.pause();
+      if(!samples.length) return;
+      samples.sort(function(a,b){ return a-b; });
+      var med = samples[Math.floor(samples.length/2)];
+      var guess = 1/med;
+      var opts = [23.976,24,25,29.97,30,50,59.94,60], best = opts[0];
+      opts.forEach(function(o){ if(Math.abs(o-guess) < Math.abs(best-guess)) best = o; });
+      fpsSel.value = String(best);
+      fps = best;
+      paint();
+    }
+    v.requestVideoFrameCallback(cb);
+  });
+
+  fpsSel.addEventListener('change', function(){ fps = parseFloat(fpsSel.value); paint(); });
+
+  /* ---------- loop ---------- */
+  function drawLoop(){
+    if(inPt === null && outPt === null){
+      loopband.style.display = 'none';
+      loopRead.textContent = 'No in / out set';
+      return;
+    }
+    var d = v.duration || 0;
+    var a = inPt === null ? 0 : inPt;
+    var b = outPt === null ? d : outPt;
+    if(d > 0){
+      loopband.style.display = 'block';
+      loopband.style.left = (a/d*100) + '%';
+      loopband.style.width = Math.max(0.3, (b-a)/d*100) + '%';
+    }
+    loopRead.textContent = 'In ' + (inPt === null ? '--' : timecode(inPt)) +
+                           '   Out ' + (outPt === null ? '--' : timecode(outPt)) +
+                           (inPt !== null && outPt !== null ? '   (' + (outPt-inPt).toFixed(2) + 's)' : '');
+  }
+
+  function setLooping(on){
+    looping = on;
+    loopBtn.textContent = on ? 'Loop on' : 'Loop off';
+    loopBtn.classList.toggle('live', on);
+    stLoop.textContent = on ? 'Loop on' : 'Loop off';
+    stLoop.className = on ? 'state on' : 'state';
+  }
+
+  document.getElementById('setIn').addEventListener('click', function(){
+    if(!loaded) return;
+    inPt = v.currentTime;
+    if(outPt !== null && outPt <= inPt) outPt = null;
+    drawLoop();
+  });
+  document.getElementById('setOut').addEventListener('click', function(){
+    if(!loaded) return;
+    outPt = v.currentTime;
+    if(inPt !== null && inPt >= outPt) inPt = null;
+    drawLoop();
+  });
+  loopBtn.addEventListener('click', function(){
+    if(inPt === null && outPt === null) return;
+    setLooping(!looping);
+    if(looping && inPt !== null && v.currentTime < inPt) v.currentTime = inPt;
+  });
+  document.getElementById('clearLoop').addEventListener('click', function(){
+    inPt = null; outPt = null; setLooping(false); drawLoop();
+  });
+
+  v.addEventListener('timeupdate', function(){
+    if(looping && outPt !== null && v.currentTime >= outPt){
+      v.currentTime = (inPt === null ? 0 : inPt);
+      if(v.paused) v.play();
+    }
+  });
+
+  /* ---------- marks ---------- */
+  function addMark(){
+    if(!loaded) return;
+    var note = noteIn.value.trim();
+    marks.push({ t: v.currentTime, note: note || ('Play ' + (marks.length + 1)) });
+    marks.sort(function(a,b){ return a.t - b.t; });
+    noteIn.value = '';
+    renderMarks();
+  }
+
+  function renderMarks(){
+    marksUl.innerHTML = '';
+    document.querySelectorAll('.pin').forEach(function(p){ p.remove(); });
+    markCount.textContent = marks.length;
+    noMarks.style.display = marks.length ? 'none' : 'block';
+
+    var d = v.duration || 0;
+    marks.forEach(function(m, i){
+      var li = document.createElement('li');
+
+      var tc = document.createElement('button');
+      tc.className = 'tc'; tc.style.background = 'none'; tc.style.border = 'none';
+      tc.textContent = timecode(m.t);
+      tc.title = 'Jump here';
+      tc.addEventListener('click', function(){ stopReverse(); v.pause(); v.currentTime = m.t; paint(); });
+
+      var note = document.createElement('div');
+      note.className = 'note'; note.textContent = m.note;
+
+      var loopIt = document.createElement('button');
+      loopIt.className = 'mini'; loopIt.textContent = 'Loop 8s'; loopIt.title = 'Loop this play';
+      loopIt.addEventListener('click', function(){
+        inPt = Math.max(0, m.t - 1);
+        outPt = Math.min(v.duration || m.t + 7, m.t + 7);
+        drawLoop(); setLooping(true);
+        v.currentTime = inPt; v.play();
+      });
+
+      var del = document.createElement('button');
+      del.className = 'mini'; del.textContent = 'Remove';
+      del.addEventListener('click', function(){ marks.splice(i,1); renderMarks(); });
+
+      li.appendChild(tc); li.appendChild(note); li.appendChild(loopIt); li.appendChild(del);
+      marksUl.appendChild(li);
+
+      if(d > 0){
+        var pin = document.createElement('div');
+        pin.className = 'pin';
+        pin.style.left = (m.t/d*100) + '%';
+        field.appendChild(pin);
+      }
+    });
+  }
+
+  document.getElementById('addMark').addEventListener('click', addMark);
+  noteIn.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); addMark(); }
+    e.stopPropagation();
+  });
+
+  document.getElementById('exportMarks').addEventListener('click', function(){
+    var blob = new Blob([JSON.stringify({ fps: fps, marks: marks }, null, 2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'game-marks.json';
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  });
+  document.getElementById('importMarks').addEventListener('click', function(){ marksFile.click(); });
+  marksFile.addEventListener('change', function(e){
+    var f = e.target.files[0];
+    if(!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try{
+        var data = JSON.parse(r.result);
+        if(data.fps){ fps = data.fps; fpsSel.value = String(data.fps); }
+        marks = (data.marks || []).filter(function(m){ return typeof m.t === 'number'; });
+        renderMarks(); paint();
+      }catch(err){ alert('That file could not be read as saved marks.'); }
+    };
+    r.readAsText(f);
+  });
+
+  /* ---------- timeline scrubbing ---------- */
+  var scrubbing = false;
+  function scrubTo(clientX){
+    if(!loaded || !v.duration) return;
+    var r = field.getBoundingClientRect();
+    var p = (clientX - r.left) / r.width;
+    p = Math.max(0, Math.min(1, p));
+    v.currentTime = p * v.duration;
+    paint();
+  }
+  field.addEventListener('pointerdown', function(e){
+    scrubbing = true; stopReverse(); field.setPointerCapture(e.pointerId); scrubTo(e.clientX);
+  });
+  field.addEventListener('pointermove', function(e){ if(scrubbing) scrubTo(e.clientX); });
+  field.addEventListener('pointerup', function(){ scrubbing = false; });
+  field.addEventListener('pointercancel', function(){ scrubbing = false; });
+
+  /* ---------- paint ---------- */
+  function paint(){
+    var t = v.currentTime || 0;
+    tcEl.textContent = timecode(t);
+    frEl.textContent = loaded ? String(currentFrame()) : '0';
+    var d = v.duration || 0;
+    if(d > 0){
+      var p = (t/d*100);
+      head.style.left = p + '%';
+      played.style.width = p + '%';
+    }
+  }
+
+  function loop(){
+    if(loaded && (!v.paused || revIdx >= 0)) paint();
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  v.addEventListener('seeked', paint);
+
+  /* ---------- keyboard ---------- */
+  document.addEventListener('keydown', function(e){
+    var tag = (e.target.tagName || '').toLowerCase();
+    if(tag === 'input' || tag === 'select' || tag === 'textarea') return;
+    if(e.metaKey || e.ctrlKey) return;
+
+    var k = e.key;
+    switch(k){
+      case ' ': e.preventDefault(); playPause(); break;
+      case 'ArrowLeft': e.preventDefault(); e.shiftKey ? jump(-1) : step(-1); break;
+      case 'ArrowRight': e.preventDefault(); e.shiftKey ? jump(1) : step(1); break;
+      case ',': step(-1); break;
+      case '.': step(1); break;
+      case 'Home': e.preventDefault(); stopReverse(); v.currentTime = 0; paint(); break;
+      case 'End': e.preventDefault(); stopReverse(); if(v.duration) v.currentTime = v.duration - 0.05; paint(); break;
+      default:
+        var lower = k.toLowerCase();
+        if(lower === 'j'){ startReverse(); }
+        else if(lower === 'k'){ stopReverse(); v.pause(); }
+        else if(lower === 'l'){ fastForward(); }
+        else if(lower === 'i'){ document.getElementById('setIn').click(); }
+        else if(lower === 'o'){ document.getElementById('setOut').click(); }
+        else if(lower === 'p'){ loopBtn.click(); }
+        else if(lower === 'm'){ addMark(); }
+        else if(lower === 'f'){ document.getElementById('fs').click(); }
+        else if(lower >= '1' && lower <= '6'){
+          var presets = [0.1,0.25,0.5,1,1.5,2];
+          stopReverse(); fwdIdx = -1; setRate(presets[parseInt(lower,10)-1]);
+        }
+    }
+  });
+
+  setLooping(false);
+  drawLoop();
+  paint();
+
+  // handed to the reel builder
+  window.CGPlayer = {
+    inPoint:  function(){ return inPt; },
+    outPoint: function(){ return outPt; },
+    source:   function(){ return sourceName; },
+    isLoaded: function(){ return loaded; },
+    setLoop:  function(a, b, on){
+      inPt = a; outPt = b;
+      drawLoop();
+      setLooping(!!on);
+    },
+    stopAll: function(){ stopReverse(); fwdIdx = -1; setRate(1); v.pause(); }
+  };
+})();
+</script>
+
+<script>
+/* ---------- stat tagging ---------- */
+(function(){
+  "use strict";
+
+  var v = window.CGMedia;
+
+  // action key, label, side, does it take yards, which column it feeds
+  var ACTIONS = [
+    {k:'carry',   l:'Carry',        s:'off', y:true,  col:'car',  yc:'ruy'},
+    {k:'rushtd',  l:'Rush TD',      s:'off', y:true,  col:'car',  yc:'ruy', td:true},
+    {k:'comp',    l:'Pass comp',    s:'off', y:true,  col:'cmp',  yc:'pay', att:true},
+    {k:'inc',     l:'Pass inc',     s:'off', y:false, col:null,   att:true},
+    {k:'passtd',  l:'Pass TD',      s:'off', y:true,  col:'cmp',  yc:'pay', att:true, ptd:true},
+    {k:'pick',    l:'Thrown INT',   s:'off', y:false, col:'int_t', att:true},
+    {k:'rec',     l:'Reception',    s:'off', y:true,  col:'rec',  yc:'rey'},
+    {k:'rectd',   l:'Rec TD',       s:'off', y:true,  col:'rec',  yc:'rey', td:true},
+    {k:'block',   l:'Key block',    s:'off', y:false, col:'blk'},
+    {k:'fum',     l:'Fumble lost',  s:'off', y:false, col:'fum'},
+    {k:'pen',     l:'Penalty',      s:'off', y:false, col:'pen'},
+
+    {k:'tkl',     l:'Tackle',       s:'def', y:false, col:'tkl'},
+    {k:'ast',     l:'Assist',       s:'def', y:false, col:'ast'},
+    {k:'tfl',     l:'TFL',          s:'def', y:false, col:'tfl', also:'tkl'},
+    {k:'sack',    l:'Sack',         s:'def', y:false, col:'sck', also:'tkl'},
+    {k:'int',     l:'Interception', s:'def', y:false, col:'itc'},
+    {k:'pbu',     l:'Pass breakup', s:'def', y:false, col:'pbu'},
+    {k:'ff',      l:'Forced fumble',s:'def', y:false, col:'ffm'},
+    {k:'rec_f',   l:'Fumble rec',   s:'def', y:false, col:'frc'},
+    {k:'defpen',  l:'Penalty',      s:'def', y:false, col:'pen'},
+    {k:'miss',    l:'Missed tackle',s:'def', y:false, col:'mis'}
+  ];
+
+  var COLS = [
+    {k:'car', h:'Car'}, {k:'ruy', h:'Rush yd'}, {k:'cmp', h:'Cmp'}, {k:'att', h:'Att'},
+    {k:'pay', h:'Pass yd'}, {k:'rec', h:'Rec'}, {k:'rey', h:'Rec yd'}, {k:'td', h:'TD'},
+    {k:'blk', h:'Blk'}, {k:'tkl', h:'Tkl'}, {k:'ast', h:'Ast'}, {k:'tfl', h:'TFL'},
+    {k:'sck', h:'Sck'}, {k:'itc', h:'INT'}, {k:'pbu', h:'PBU'}, {k:'ffm', h:'FF'},
+    {k:'frc', h:'FR'}, {k:'mis', h:'Miss'}, {k:'fum', h:'Fum'}, {k:'int_t', h:'Int thr'}, {k:'pen', h:'Pen'}
+  ];
+
+  var roster = [];     // {num, name, pos}
+  var events = [];     // {t, num, act, yds}
+  var picked = null;
+
+  var rosterBar = document.getElementById('rosterBar');
+  var rosterEdit = document.getElementById('rosterEdit');
+  var rosterText = document.getElementById('rosterText');
+  var whoEl = document.getElementById('who');
+  var ydsEl = document.getElementById('yds');
+  var logUl = document.getElementById('log');
+  var noLog = document.getElementById('noLog');
+  var noStats = document.getElementById('noStats');
+  var sheet = document.getElementById('sheet');
+
+  function pad(n,w){ var s=String(Math.floor(n)); while(s.length<w) s='0'+s; return s; }
+  function clock(t){
+    if(!isFinite(t)||t<0) t=0;
+    return pad(t/3600,2)+':'+pad(t%3600/60,2)+':'+pad(t%60,2);
+  }
+  function actOf(k){ for(var i=0;i<ACTIONS.length;i++) if(ACTIONS[i].k===k) return ACTIONS[i]; return null; }
+  function playerOf(num){ for(var i=0;i<roster.length;i++) if(roster[i].num===num) return roster[i]; return null; }
+  function label(num){
+    var p = playerOf(num);
+    return p && p.name ? ('#'+num+' '+p.name) : ('#'+num);
+  }
+
+  /* ---------------------------------------------------------------
+     LEAGUE ROSTERS
+
+     Point this at a rosters.json served from the CGBFL repo and every
+     coach who opens this file gets the full league without importing
+     anything. Leave it empty and the Import button does the same job
+     from a SportsEngine roster export.
+
+     Shape:
+       { "Rookie": { "Bears": [ {"num":"22","name":"Jaxon","pos":"RB"} ] } }
+  ----------------------------------------------------------------*/
+  var LEAGUE_ROSTER_URL = '';
+
+  var LIBRARY = {};
+  var DIV_ORDER = ['Junior Trojans','Rookie','Minor','Major'];
+
+  var divSel = document.getElementById('divSel');
+  var teamSel = document.getElementById('teamSel');
+  var libState = document.getElementById('libState');
+
+  function canonDivision(raw){
+    var s = String(raw || '').toLowerCase();
+    s = s.replace(/\bgrade\b/g,'').replace(/(\d)(st|nd|rd|th)\b/g,'$1').replace(/[^a-z0-9 ]/g,' ');
+    s = s.replace(/\s+/g,' ').trim();
+    if(/jr|junior|jrt/.test(s)) return 'Junior Trojans';
+    if(/rookie/.test(s)) return 'Rookie';
+    if(/minor/.test(s)) return 'Minor';
+    if(/major/.test(s)) return 'Major';
+    return raw ? String(raw).trim() : 'Unassigned';
+  }
+
+  function divisionsSorted(){
+    return Object.keys(LIBRARY).sort(function(a,b){
+      var ia = DIV_ORDER.indexOf(a), ib = DIV_ORDER.indexOf(b);
+      if(ia < 0) ia = 99; if(ib < 0) ib = 99;
+      return ia - ib || a.localeCompare(b);
+    });
+  }
+
+  function drawPickers(){
+    var divs = divisionsSorted();
+    var keepDiv = divSel.value;
+    divSel.innerHTML = '';
+    if(!divs.length){
+      divSel.innerHTML = '<option value="">Rosters not loaded</option>';
+      teamSel.innerHTML = '<option value="">Pick a division first</option>';
+      return;
+    }
+    divSel.appendChild(new Option('Select division',''));
+    divs.forEach(function(d){ divSel.appendChild(new Option(d, d)); });
+    if(divs.indexOf(keepDiv) >= 0) divSel.value = keepDiv;
+    drawTeams();
+  }
+
+  function drawTeams(){
+    var d = divSel.value;
+    teamSel.innerHTML = '';
+    if(!d || !LIBRARY[d]){
+      teamSel.appendChild(new Option('Pick a division first',''));
+      return;
+    }
+    teamSel.appendChild(new Option('Select team',''));
+    Object.keys(LIBRARY[d]).sort().forEach(function(t){
+      teamSel.appendChild(new Option(t + '  (' + LIBRARY[d][t].length + ')', t));
+    });
+  }
+
+  divSel.addEventListener('change', function(){ drawTeams(); });
+  teamSel.addEventListener('change', function(){
+    var d = divSel.value, t = teamSel.value;
+    if(!d || !t || !LIBRARY[d] || !LIBRARY[d][t]) return;
+    roster = LIBRARY[d][t].map(function(p){ return {num:p.num, name:p.name, pos:p.pos}; });
+    roster.sort(function(a,b){ return parseInt(a.num,10) - parseInt(b.num,10); });
+    picked = null;
+    pick(null);
+    drawRoster(); drawSheet();
+  });
+
+  function libraryCounts(){
+    var divs = 0, teams = 0, players = 0;
+    Object.keys(LIBRARY).forEach(function(d){
+      divs++;
+      Object.keys(LIBRARY[d]).forEach(function(t){ teams++; players += LIBRARY[d][t].length; });
+    });
+    return divs + ' divisions, ' + teams + ' teams, ' + players + ' players';
+  }
+
+  /* ---- CSV import ---- */
+  function parseCSV(text){
+    var rows = [], row = [], cell = '', q = false;
+    text = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+    for(var i=0;i<text.length;i++){
+      var c = text[i];
+      if(q){
+        if(c === '"'){ if(text[i+1] === '"'){ cell += '"'; i++; } else q = false; }
+        else cell += c;
+      } else {
+        if(c === '"') q = true;
+        else if(c === ','){ row.push(cell); cell = ''; }
+        else if(c === '\n'){ row.push(cell); rows.push(row); row = []; cell = ''; }
+        else cell += c;
+      }
+    }
+    if(cell.length || row.length){ row.push(cell); rows.push(row); }
+    return rows.filter(function(r){ return r.some(function(x){ return String(x).trim(); }); });
+  }
+
+  function findCol(headers, patterns){
+    for(var p=0;p<patterns.length;p++){
+      for(var i=0;i<headers.length;i++){
+        if(patterns[p].test(headers[i])) return i;
+      }
+    }
+    return -1;
+  }
+
+  function importLeague(text){
+    var rows = parseCSV(text);
+    if(rows.length < 2){ alert('That file has no rows I can read.'); return; }
+
+    var headers = rows[0].map(function(h){ return String(h).toLowerCase().trim(); });
+    var cDiv   = findCol(headers, [/division/, /^level$/, /program/, /age group/]);
+    var cTeam  = findCol(headers, [/team name/, /^team$/, /roster name/, /^squad$/]);
+    var cNum   = findCol(headers, [/jersey/, /uniform/, /^number$/, /^no\.?$/, /^#$/]);
+    var cFirst = findCol(headers, [/first name/, /^first$/]);
+    var cLast  = findCol(headers, [/last name/, /^last$/]);
+    var cName  = findCol(headers, [/^name$/, /player name/, /athlete/, /full name/]);
+    var cPos   = findCol(headers, [/position/, /^pos\.?$/]);
+
+    if(cTeam < 0){
+      alert('I could not find a team column. The file needs a header row with a Team column, plus Division, Jersey and name columns.');
+      return;
+    }
+
+    var lib = {}, count = 0;
+    rows.slice(1).forEach(function(r){
+      var team = String(r[cTeam] || '').trim();
+      if(!team) return;
+      var div = canonDivision(cDiv >= 0 ? r[cDiv] : '');
+
+      var name = '';
+      if(cFirst >= 0 || cLast >= 0){
+        name = [cFirst >= 0 ? r[cFirst] : '', cLast >= 0 ? r[cLast] : '']
+          .map(function(x){ return String(x || '').trim(); }).filter(Boolean).join(' ');
+      } else if(cName >= 0){
+        name = String(r[cName] || '').trim();
+        if(name.indexOf(',') > 0){
+          var parts = name.split(',');
+          name = parts[1].trim() + ' ' + parts[0].trim();
+        }
+      }
+
+      var num = cNum >= 0 ? String(r[cNum] || '').replace(/[^0-9]/g,'') : '';
+      var pos = cPos >= 0 ? String(r[cPos] || '').trim().toUpperCase() : '';
+
+      if(!num && !name) return;
+
+      if(!lib[div]) lib[div] = {};
+      if(!lib[div][team]) lib[div][team] = [];
+      lib[div][team].push({ num: num || '--', name: name, pos: pos });
+      count++;
+    });
+
+    if(!count){ alert('No players came out of that file. Check that it has a header row.'); return; }
+
+    Object.keys(lib).forEach(function(d){
+      Object.keys(lib[d]).forEach(function(t){
+        lib[d][t].sort(function(a,b){ return parseInt(a.num,10) - parseInt(b.num,10); });
+      });
+    });
+
+    LIBRARY = lib;
+    libState.textContent = libraryCounts();
+    libState.className = 'state on';
+    drawPickers();
+  }
+
+  document.getElementById('loadLeague').addEventListener('click', function(){
+    document.getElementById('leagueFile').click();
+  });
+  document.getElementById('leagueFile').addEventListener('change', function(e){
+    var f = e.target.files[0];
+    if(!f) return;
+    var r = new FileReader();
+    r.onload = function(){ importLeague(String(r.result)); };
+    r.readAsText(f);
+  });
+
+  if(LEAGUE_ROSTER_URL){
+    fetch(LEAGUE_ROSTER_URL, {cache:'no-store'})
+      .then(function(res){ return res.json(); })
+      .then(function(data){
+        var lib = {};
+        Object.keys(data).forEach(function(d){
+          var cd = canonDivision(d);
+          lib[cd] = lib[cd] || {};
+          Object.keys(data[d]).forEach(function(t){
+            lib[cd][t] = data[d][t].map(function(p){
+              return { num: String(p.num || p.jersey || '--'), name: p.name || '', pos: p.pos || '' };
+            });
+          });
+        });
+        LIBRARY = lib;
+        libState.textContent = libraryCounts();
+        libState.className = 'state on';
+        drawPickers();
+      })
+      .catch(function(){
+        libState.textContent = 'League file did not load, import one instead';
+      });
+  }
+
+  /* ---- roster ---- */
+  function parseRoster(text){
+    var out = [];
+    text.split(/\n+/).forEach(function(line){
+      line = line.trim();
+      if(!line) return;
+      var m = line.match(/^#?(\d{1,2})\s*(.*)$/);
+      if(!m) return;
+      var rest = (m[2]||'').trim().split(/\s+/);
+      var pos = '';
+      if(rest.length > 1 && /^[A-Za-z/]{1,5}$/.test(rest[rest.length-1])){
+        pos = rest.pop().toUpperCase();
+      }
+      out.push({ num: m[1], name: rest.join(' '), pos: pos });
+    });
+    return out;
+  }
+
+  function drawRoster(){
+    rosterBar.innerHTML = '';
+    var rc = document.getElementById('rosterCount');
+    if(rc) rc.textContent = roster.length;
+    if(!roster.length){
+      var hint = document.createElement('div');
+      hint.className = 'none';
+      hint.style.padding = '2px';
+      hint.textContent = 'Pick a division and team above, or press Edit by hand.';
+      rosterBar.appendChild(hint);
+      return;
+    }
+    roster.forEach(function(p){
+      var b = document.createElement('button');
+      b.className = 'chip' + (picked === p.num ? ' sel' : '');
+      b.innerHTML = p.num + (p.name || p.pos ? '<small>' + [p.name, p.pos].filter(Boolean).join(' ') + '</small>' : '');
+      b.addEventListener('click', function(){ pick(p.num); });
+      rosterBar.appendChild(b);
+    });
+  }
+
+  function pick(num){
+    picked = (picked === num) ? null : num;
+    if(picked){
+      whoEl.className = 'who';
+      whoEl.textContent = label(picked);
+    } else {
+      whoEl.className = 'who none';
+      whoEl.textContent = 'Pick a player above';
+    }
+    drawRoster();
+    drawActions();
+  }
+
+  document.getElementById('editRoster').addEventListener('click', function(){
+    rosterText.value = roster.map(function(p){
+      return [p.num, p.name, p.pos].filter(Boolean).join(' ');
+    }).join('\n');
+    rosterEdit.classList.toggle('hide');
+  });
+  document.getElementById('cancelRoster').addEventListener('click', function(){
+    rosterEdit.classList.add('hide');
+  });
+  document.getElementById('saveRoster').addEventListener('click', function(){
+    roster = parseRoster(rosterText.value);
+    rosterEdit.classList.add('hide');
+    if(picked && !playerOf(picked)) pick(null);
+    drawRoster(); drawSheet();
+  });
+
+  /* ---- action buttons ---- */
+  function drawActions(){
+    ['off','def'].forEach(function(side){
+      var host = document.getElementById(side + 'Acts');
+      host.innerHTML = '';
+      ACTIONS.filter(function(a){ return a.s === side; }).forEach(function(a){
+        var b = document.createElement('button');
+        b.className = 'act ' + side;
+        b.textContent = a.l + (a.y ? ' +yd' : '');
+        b.disabled = !picked;
+        b.addEventListener('click', function(){ log(a); });
+        host.appendChild(b);
+      });
+    });
+  }
+
+  function log(a){
+    if(!picked) return;
+    var y = a.y ? parseInt(ydsEl.value, 10) : 0;
+    if(isNaN(y)) y = 0;
+    events.push({ t: v.currentTime || 0, num: picked, act: a.k, yds: y });
+    ydsEl.value = '';
+    drawLog(); drawSheet();
+  }
+
+  document.getElementById('undo').addEventListener('click', function(){
+    events.pop(); drawLog(); drawSheet();
+  });
+
+  ydsEl.addEventListener('keydown', function(e){ e.stopPropagation(); });
+
+  /* ---- log ---- */
+  function drawLog(){
+    logUl.innerHTML = '';
+    document.getElementById('logCount').textContent = events.length;
+    noLog.style.display = events.length ? 'none' : 'block';
+
+    events.slice().reverse().forEach(function(ev){
+      var idx = events.indexOf(ev);
+      var a = actOf(ev.act);
+      var li = document.createElement('li');
+      li.className = 'logline';
+
+      var tc = document.createElement('button');
+      tc.className = 'tc'; tc.style.background='none'; tc.style.border='none';
+      tc.textContent = clock(ev.t);
+      tc.title = 'Jump to this play';
+      tc.addEventListener('click', function(){ v.pause(); v.currentTime = ev.t; });
+
+      var txt = document.createElement('div');
+      txt.className = 'note';
+      txt.textContent = label(ev.num) + '  ' + (a ? a.l : ev.act) + (ev.yds ? '  ' + ev.yds + ' yd' : '');
+
+      var del = document.createElement('button');
+      del.className = 'mini'; del.textContent = 'Remove';
+      del.addEventListener('click', function(){ events.splice(idx,1); drawLog(); drawSheet(); });
+
+      li.appendChild(tc); li.appendChild(txt); li.appendChild(del);
+      logUl.appendChild(li);
+    });
+  }
+
+  /* ---- stat sheet ---- */
+  function totals(){
+    var by = {};
+    function row(num){
+      if(!by[num]){
+        by[num] = { num: num };
+        COLS.forEach(function(c){ by[num][c.k] = 0; });
+      }
+      return by[num];
+    }
+    events.forEach(function(ev){
+      var a = actOf(ev.act);
+      if(!a) return;
+      var r = row(ev.num);
+      if(a.col) r[a.col] += 1;
+      if(a.also) r[a.also] += 1;
+      if(a.att) r.att += 1;
+      if(a.yc) r[a.yc] += ev.yds;
+      if(a.td || a.ptd) r.td += 1;
+    });
+    return Object.keys(by).sort(function(x,y2){ return parseInt(x,10) - parseInt(y2,10); })
+      .map(function(k){ return by[k]; });
+  }
+
+  function drawSheet(){
+    var rows = totals();
+    document.getElementById('statPlayers').textContent = rows.length;
+    noStats.style.display = rows.length ? 'none' : 'block';
+
+    var thead = sheet.querySelector('thead');
+    var tbody = sheet.querySelector('tbody');
+    thead.innerHTML = ''; tbody.innerHTML = '';
+    if(!rows.length){ return; }
+
+    // only show columns that have something in them
+    var live = COLS.filter(function(c){
+      return rows.some(function(r){ return r[c.k]; });
+    });
+
+    var tr = document.createElement('tr');
+    tr.appendChild(th('Player'));
+    live.forEach(function(c){ tr.appendChild(th(c.h)); });
+    thead.appendChild(tr);
+
+    rows.forEach(function(r){
+      var t = document.createElement('tr');
+      var nm = document.createElement('td');
+      nm.className = 'name';
+      nm.textContent = label(r.num);
+      t.appendChild(nm);
+      live.forEach(function(c){
+        var td = document.createElement('td');
+        td.textContent = r[c.k];
+        if(!r[c.k]) td.className = 'zero';
+        t.appendChild(td);
+      });
+      tbody.appendChild(t);
+    });
+
+    function th(text){ var e = document.createElement('th'); e.textContent = text; return e; }
+  }
+
+  /* ---- export ---- */
+  function download(name, text, type){
+    var blob = new Blob([text], {type: type || 'text/plain'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  }
+  function csvCell(s){
+    s = String(s);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }
+
+  document.getElementById('exportStats').addEventListener('click', function(){
+    var rows = totals();
+    if(!rows.length){ alert('Nothing tagged yet.'); return; }
+    var head = ['Number','Name','Position'].concat(COLS.map(function(c){ return c.h; }));
+    var lines = [head.map(csvCell).join(',')];
+    rows.forEach(function(r){
+      var p = playerOf(r.num) || {};
+      var line = [r.num, p.name || '', p.pos || ''].concat(COLS.map(function(c){ return r[c.k]; }));
+      lines.push(line.map(csvCell).join(','));
+    });
+    lines.push('');
+    lines.push(['Time','Number','Name','Action','Yards'].join(','));
+    events.forEach(function(ev){
+      var a = actOf(ev.act), p = playerOf(ev.num) || {};
+      lines.push([clock(ev.t), ev.num, p.name || '', a ? a.l : ev.act, ev.yds].map(csvCell).join(','));
+    });
+    download('game-stats.csv', lines.join('\n'), 'text/csv');
+  });
+
+  document.getElementById('exportLog').addEventListener('click', function(){
+    download('game-log.json', JSON.stringify({
+      division: divSel.value, team: teamSel.value,
+      library: LIBRARY, roster: roster, events: events
+    }, null, 2), 'application/json');
+  });
+  document.getElementById('importLog').addEventListener('click', function(){
+    document.getElementById('logFile').click();
+  });
+  document.getElementById('logFile').addEventListener('change', function(e){
+    var f = e.target.files[0];
+    if(!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try{
+        var d = JSON.parse(r.result);
+        if(d.library && Object.keys(d.library).length){
+          LIBRARY = d.library;
+          libState.textContent = libraryCounts();
+          libState.className = 'state on';
+        }
+        roster = d.roster || [];
+        events = d.events || [];
+        picked = null;
+        drawPickers();
+        if(d.division){ divSel.value = d.division; drawTeams(); }
+        if(d.team) teamSel.value = d.team;
+        drawRoster(); drawActions(); drawLog(); drawSheet();
+      }catch(err){ alert('That file could not be read as a saved log.'); }
+    };
+    r.readAsText(f);
+  });
+
+  drawPickers();
+  drawRoster();
+  drawActions();
+  drawLog();
+  drawSheet();
+})();
+</script>
+
+<script>
+/* ---------- highlight reel ---------- */
+(function(){
+  "use strict";
+
+  var v = window.CGMedia;
+  var P = window.CGPlayer;
+
+  var clips = [];          // {name, src, in, out}
+  var playing = -1;
+  var watcher = null;
+
+  var reelUl = document.getElementById('reel');
+  var noReel = document.getElementById('noReel');
+  var clipName = document.getElementById('clipName');
+  var clipHint = document.getElementById('clipHint');
+  var previewBtn = document.getElementById('reelPreview');
+
+  function pad(n,w){ var s=String(Math.floor(n)); while(s.length<w) s='0'+s; return s; }
+  function mmss(t){
+    if(!isFinite(t) || t < 0) t = 0;
+    var h = Math.floor(t/3600);
+    return (h ? h + ':' + pad(t%3600/60,2) : Math.floor(t%3600/60)) + ':' + pad(t%60,2);
+  }
+  function total(){ return clips.reduce(function(a,c){ return a + (c.out - c.in); }, 0); }
+
+  /* ---- add ---- */
+  document.getElementById('addClip').addEventListener('click', function(){
+    if(!P.isLoaded()){ clipHint.textContent = 'Load a video first'; return; }
+    var a = P.inPoint(), b = P.outPoint();
+    if(a === null || b === null || b <= a){
+      clipHint.textContent = 'Set both in and out first, out after in';
+      clipHint.className = 'state rev';
+      return;
+    }
+    clips.push({
+      name: clipName.value.trim() || ('Clip ' + (clips.length + 1)),
+      src: P.source(),
+      in: a,
+      out: b
+    });
+    clipName.value = '';
+    clipHint.textContent = 'Added';
+    clipHint.className = 'state on';
+    draw();
+  });
+  clipName.addEventListener('keydown', function(e){
+    e.stopPropagation();
+    if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('addClip').click(); }
+  });
+
+  function move(i, d){
+    var j = i + d;
+    if(j < 0 || j >= clips.length) return;
+    var t = clips[i]; clips[i] = clips[j]; clips[j] = t;
+    draw();
+  }
+
+  function draw(){
+    reelUl.innerHTML = '';
+    document.getElementById('reelCount').textContent = clips.length;
+    document.getElementById('reelLen').textContent = mmss(total());
+    noReel.style.display = clips.length ? 'none' : 'block';
+
+    clips.forEach(function(c, i){
+      var li = document.createElement('li');
+      li.className = 'reelrow' + (i === playing ? ' playing' : '');
+
+      var ord = document.createElement('span');
+      ord.className = 'ord'; ord.textContent = (i + 1);
+
+      var jump = document.createElement('button');
+      jump.className = 'tc'; jump.style.background = 'none'; jump.style.border = 'none';
+      jump.style.minWidth = '70px';
+      jump.textContent = mmss(c.in);
+      jump.title = 'Load this clip into the loop';
+      jump.addEventListener('click', function(){
+        stopPreview();
+        P.setLoop(c.in, c.out, true);
+        v.currentTime = c.in;
+        v.play();
+      });
+
+      var name = document.createElement('div');
+      name.className = 'note'; name.textContent = c.name;
+      name.title = 'Click to rename';
+      name.style.cursor = 'text';
+      name.addEventListener('click', function(){
+        var n = prompt('Clip name', c.name);
+        if(n !== null){ c.name = n.trim() || c.name; draw(); }
+      });
+
+      var src = document.createElement('span');
+      src.className = 'src'; src.textContent = c.src || '';
+      src.title = c.src || '';
+
+      var dur = document.createElement('span');
+      dur.className = 'dur'; dur.textContent = (c.out - c.in).toFixed(1) + 's';
+
+      var up = document.createElement('button');
+      up.className = 'mini'; up.textContent = 'Up';
+      up.addEventListener('click', function(){ move(i, -1); });
+
+      var down = document.createElement('button');
+      down.className = 'mini'; down.textContent = 'Down';
+      down.addEventListener('click', function(){ move(i, 1); });
+
+      var del = document.createElement('button');
+      del.className = 'mini'; del.textContent = 'Remove';
+      del.addEventListener('click', function(){ clips.splice(i,1); draw(); });
+
+      [ord, jump, name, src, dur, up, down, del].forEach(function(e){ li.appendChild(e); });
+      reelUl.appendChild(li);
+    });
+  }
+
+  /* ---- preview: plays the clips back to back off the loaded source ---- */
+  function stopPreview(){
+    if(watcher){ cancelAnimationFrame(watcher); watcher = null; }
+    playing = -1;
+    previewBtn.textContent = 'Play reel';
+    v.pause();
+    draw();
+  }
+
+  function playFrom(i){
+    if(i >= clips.length){ stopPreview(); return; }
+    playing = i;
+    draw();
+    var c = clips[i];
+    P.setLoop(c.in, c.out, false);   // loop off, we advance instead
+    v.currentTime = c.in;
+    v.play();
+
+    function tick(){
+      if(playing !== i) return;
+      if(v.currentTime >= c.out - 0.02){
+        var next = i + 1;
+        if(next < clips.length && clips[next].src !== c.src){
+          stopPreview();
+          alert('The next clip comes from a different source file. Preview stops here. The export script handles multiple sources.');
+          return;
+        }
+        playFrom(next);
+        return;
+      }
+      watcher = requestAnimationFrame(tick);
+    }
+    watcher = requestAnimationFrame(tick);
+  }
+
+  previewBtn.addEventListener('click', function(){
+    if(playing >= 0){ stopPreview(); return; }
+    if(!clips.length) return;
+    if(!P.isLoaded()){ alert('Load the source video first.'); return; }
+    previewBtn.textContent = 'Stop';
+    playFrom(0);
+  });
+
+  /* ---- save and open ---- */
+  function download(name, text, type){
+    var blob = new Blob([text], {type: type || 'text/plain'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  }
+
+  document.getElementById('reelSave').addEventListener('click', function(){
+    download('reel.json', JSON.stringify({ clips: clips }, null, 2), 'application/json');
+  });
+  document.getElementById('reelOpen').addEventListener('click', function(){
+    document.getElementById('reelFile').click();
+  });
+  document.getElementById('reelFile').addEventListener('change', function(e){
+    var f = e.target.files[0];
+    if(!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try{
+        var d = JSON.parse(r.result);
+        clips = (d.clips || []).filter(function(c){ return typeof c.in === 'number' && typeof c.out === 'number'; });
+        draw();
+      }catch(err){ alert('That file could not be read as a saved reel.'); }
+    };
+    r.readAsText(f);
+  });
+
+  /* ---- export: a shell script that renders the reel with ffmpeg ---- */
+  function shq(s){ return "'" + String(s).replace(/'/g, "'\\''") + "'"; }
+  function safe(s){ return String(s).replace(/[^A-Za-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40) || 'clip'; }
+
+  document.getElementById('reelExport').addEventListener('click', function(){
+    if(!clips.length){ alert('Add some clips first.'); return; }
+
+    var yt = clips.filter(function(c){ return /^youtube:/.test(c.src || ''); });
+    var sources = [];
+    clips.forEach(function(c){ if(sources.indexOf(c.src) < 0) sources.push(c.src); });
+
+    var L = [];
+    L.push('#!/bin/bash');
+    L.push('# Highlight reel built in Film Room');
+    L.push('# ' + clips.length + ' clips, ' + total().toFixed(1) + ' seconds');
+    L.push('#');
+    L.push('# Put this script in the same folder as the source video, then:');
+    L.push('#   chmod +x build-reel.sh');
+    L.push('#   ./build-reel.sh');
+    L.push('#');
+    L.push('# Every clip is re-encoded so the cuts land exactly where you set them,');
+    L.push('# then joined with no second pass. Straight cuts, no transitions.');
+    L.push('');
+    L.push('set -euo pipefail');
+    L.push('');
+    L.push('OUT="highlight-reel.mp4"');
+    L.push('WORK="reel-parts"');
+    L.push('');
+    L.push('# Optional sponsor bumper prepended to the front of the reel.');
+    L.push('# Point this at a file and it goes in first.');
+    L.push('BUMPER=""');
+    L.push('');
+    L.push('# Everything is normalized to this so clips from different cameras join cleanly.');
+    L.push('SIZE="1920:1080"');
+    L.push('FPS="30"');
+    L.push('');
+
+    if(sources.length > 1){
+      L.push('# This reel pulls from more than one source. Confirm each path.');
+    }
+    sources.forEach(function(s, i){
+      var isYT = /^youtube:/.test(s || '');
+      var name = isYT ? 'CHANGE-ME.mp4' : (s || 'CHANGE-ME.mp4');
+      L.push('SRC' + (i+1) + '=' + shq(name) + (isYT ? '   # was a YouTube link: ' + s.replace(/^youtube:/,'') : ''));
+    });
+    L.push('');
+
+    if(yt.length){
+      L.push('# Note: ' + yt.length + ' clip(s) were marked against a YouTube link.');
+      L.push('# ffmpeg needs a real file. Use the original footage those uploads came from');
+      L.push('# and set the SRC path above to it. Timestamps carry over unchanged.');
+      L.push('');
+    }
+
+    L.push('for BIN in ffmpeg; do');
+    L.push('  command -v "$BIN" >/dev/null || { echo "$BIN not found. brew install ffmpeg"; exit 1; }');
+    L.push('done');
+    L.push('');
+    L.push('rm -rf "$WORK"; mkdir -p "$WORK"');
+    L.push('');
+
+    clips.forEach(function(c, i){
+      var si = sources.indexOf(c.src) + 1;
+      var dur = (c.out - c.in);
+      var part = 'part-' + pad(i+1,3) + '-' + safe(c.name) + '.mp4';
+      L.push('echo "[' + (i+1) + '/' + clips.length + '] ' + c.name.replace(/"/g,'') + '"');
+      L.push('ffmpeg -hide_banner -loglevel error -y \\');
+      L.push('  -ss ' + c.in.toFixed(3) + ' -i "$SRC' + si + '" -t ' + dur.toFixed(3) + ' \\');
+      L.push('  -vf "scale=$SIZE:force_original_aspect_ratio=decrease,pad=$SIZE:(ow-iw)/2:(oh-ih)/2,fps=$FPS,setsar=1" \\');
+      L.push('  -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p \\');
+      L.push('  -c:a aac -b:a 128k -ar 48000 -ac 2 \\');
+      L.push('  "$WORK/' + part + '"');
+      L.push('');
+    });
+
+    L.push('LIST="$WORK/list.txt"');
+    L.push(': > "$LIST"');
+    L.push('if [ -n "$BUMPER" ] && [ -f "$BUMPER" ]; then');
+    L.push('  ffmpeg -hide_banner -loglevel error -y -i "$BUMPER" \\');
+    L.push('    -vf "scale=$SIZE:force_original_aspect_ratio=decrease,pad=$SIZE:(ow-iw)/2:(oh-ih)/2,fps=$FPS,setsar=1" \\');
+    L.push('    -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p \\');
+    L.push('    -c:a aac -b:a 128k -ar 48000 -ac 2 "$WORK/part-000-bumper.mp4"');
+    L.push('  echo "file \'part-000-bumper.mp4\'" >> "$LIST"');
+    L.push('fi');
+    L.push('for f in "$WORK"/part-[0-9]*.mp4; do');
+    L.push('  case "$f" in *part-000-bumper.mp4) continue;; esac');
+    L.push('  echo "file \'$(basename "$f")\'" >> "$LIST"');
+    L.push('done');
+    L.push('');
+    L.push('ffmpeg -hide_banner -loglevel error -y -f concat -safe 0 -i "$LIST" -c copy "$OUT"');
+    L.push('');
+    L.push('rm -rf "$WORK"');
+    L.push('echo');
+    L.push('echo "Done: $OUT"');
+    L.push('ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT" | awk \'{printf "Runtime: %d:%02d\\n", $1/60, $1%60}\'');
+    L.push('');
+
+    download('build-reel.sh', L.join('\n'), 'text/x-shellscript');
+    download('reel.json', JSON.stringify({ clips: clips }, null, 2), 'application/json');
+  });
+
+  draw();
+})();
+</script>
+</body>
+</html>
