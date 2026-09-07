@@ -900,7 +900,11 @@
   });
 
   /* ---------- frame math ---------- */
-  function currentFrame(){ return Math.round(v.currentTime * fps); }
+  // Seeks land at (frame + 0.5) / fps, mid frame, which is the reliable way
+  // to make a browser commit to a specific frame. Reading that back has to
+  // floor, not round: Math.round would push the .5 up and report the next
+  // frame, which makes a step back cancel itself out.
+  function currentFrame(){ return Math.floor((v.currentTime * fps) + 1e-6); }
 
   function seekFrame(fr){
     if(!loaded) return;
