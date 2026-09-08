@@ -73,10 +73,11 @@
   .grab{position:absolute;inset:0;cursor:grab;background:transparent}
   .grab.dragging{cursor:grabbing}
   .zoomtag{
-    position:absolute;top:10px;left:10px;background:rgba(11,20,16,.82);border:1px solid var(--rule);
-    color:var(--amber);font-family:var(--display);font-size:15px;letter-spacing:.05em;padding:3px 9px;
-    pointer-events:none;display:none;
+    position:absolute;top:10px;left:10px;right:10px;background:rgba(11,20,16,.88);
+    border:1px solid var(--rule);color:var(--amber);font-family:var(--body);font-size:13px;
+    line-height:1.45;padding:8px 11px;pointer-events:none;display:none;z-index:5;
   }
+  .zoomtag b{color:var(--chalk)}
   .empty{
     position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:14px;text-align:center;padding:24px;
@@ -259,6 +260,7 @@
       <div id="ytHost" class="hide"></div>
     </div>
     <div class="grab hide" id="grab"></div>
+    <div class="zoomtag" id="ytMsg"></div>
     <div class="empty" id="empty">
       <h2>Drop a game file here</h2>
       <p>Nothing uploads anywhere. The video plays straight off your drive, so a full game file opens instantly. MP4 works best. Or paste a YouTube link up top.</p>
@@ -294,6 +296,7 @@
       <button class="pill" id="stepF" title="One frame forward (Right arrow)">|&#9654; 1f</button>
       <button class="pill wide" id="fwdBtn" title="Fast forward, press again to speed up (L)">FF &#9654;&#9654;</button>
       <span class="sep"></span>
+      <button class="pill" id="mute" title="Mute or unmute">Audio</button>
       <button class="pill" id="fs" title="Fullscreen (F)">Full</button>
     </div>
 
@@ -520,6 +523,9 @@
   var ytRate = 1;
   var lastState = -1;
   var pendingId = null;
+  var readyTimer = null;
+  var autoplayTimer = null;
+  var wantPlay = false;
 
   var M = {};
 
@@ -549,7 +555,7 @@
 
   Object.defineProperty(M, 'paused', {
     get: function(){
-      if(mode === 'yt') return lastState !== 1;
+      if(mode === 'yt') return !(lastState === 1 || lastState === 3);
       return vEl.paused;
     }
   });
@@ -571,14 +577,50 @@
   });
 
   M.play = function(){
-    if(mode === 'yt'){ if(yt && ytReady) yt.playVideo(); return; }
+    if(mode === 'yt'){
+      if(!yt || !ytReady){ wantPlay = true; return; }
+      yt.playVideo();
+      // Browsers block programmatic playback with sound until the page has
+      // some engagement. If nothing starts, retry muted so film study is not
+      // held up, and say what happened.
+      clearTimeout(autoplayTimer);
+      autoplayTimer = setTimeout(function(){
+        if(lastState === 1 || lastState === 3) return;
+        try{
+          yt.mute();
+          yt.playVideo();
+          muteBtn.textContent = 'Muted';
+          muteBtn.classList.add('act');
+          msg('Started muted because the browser blocked audio on an automatic start. Press <b>Audio</b> to turn sound on.', 6000);
+        }catch(err){}
+      }, 1400);
+      return;
+    }
     var p = vEl.play();
     if(p && p.catch) p.catch(function(){});
   };
   M.pause = function(){
+    wantPlay = false;
+    clearTimeout(autoplayTimer);
     if(mode === 'yt'){ if(yt && ytReady) yt.pauseVideo(); return; }
     vEl.pause();
   };
+
+  var muteBtn = document.getElementById('mute');
+  M.toggleMute = function(){
+    if(mode === 'yt'){
+      if(!yt || !ytReady) return;
+      var m = yt.isMuted();
+      if(m) yt.unMute(); else yt.mute();
+      muteBtn.textContent = m ? 'Audio' : 'Muted';
+      muteBtn.classList.toggle('act', !m);
+      return;
+    }
+    vEl.muted = !vEl.muted;
+    muteBtn.textContent = vEl.muted ? 'Muted' : 'Audio';
+    muteBtn.classList.toggle('act', vEl.muted);
+  };
+  muteBtn.addEventListener('click', function(){ M.toggleMute(); });
 
   M.addEventListener = function(t, fn){ bus.addEventListener(t, fn); };
   M.removeEventListener = function(t, fn){ bus.removeEventListener(t, fn); };
@@ -630,6 +672,12 @@
     var id = videoId(url);
     if(!id){ alert('That does not look like a YouTube link.'); return false; }
 
+    if(location.protocol === 'file:'){
+      msg('<b>YouTube will not play from a local file.</b> The player needs a real web origin to talk to this page. ' +
+          'Put film-room.html on GitHub Pages and open it from that address. Local video files work fine either way.', 0);
+      return false;
+    }
+
     vEl.pause();
     vEl.classList.add('hide');
     ytHost.classList.remove('hide');
@@ -638,16 +686,28 @@
     M.zoomReset();
 
     pendingId = id;
+    msg('Loading from YouTube', 0);
     if(window.YT && window.YT.Player) buildPlayer();
     else loadAPI();
     return true;
   };
+
+  function msg(html, ms){
+    var el = document.getElementById('ytMsg');
+    if(!html){ el.style.display = 'none'; return; }
+    el.innerHTML = html;
+    el.style.display = 'block';
+    if(ms) setTimeout(function(){ if(el.innerHTML === html) el.style.display = 'none'; }, ms);
+  }
 
   function loadAPI(){
     if(document.getElementById('yt-api')) return;
     var s = document.createElement('script');
     s.id = 'yt-api';
     s.src = 'https://www.youtube.com/iframe_api';
+    s.onerror = function(){
+      msg('<b>The YouTube player script did not load.</b> Check the connection, or a network filter may be blocking youtube.com.', 0);
+    };
     document.head.appendChild(s);
   }
   window.onYouTubeIframeAPIReady = function(){ if(pendingId) buildPlayer(); };
@@ -655,30 +715,58 @@
   function buildPlayer(){
     teardownYT();
     ytHost.innerHTML = '<div id="ytFrame"></div>';
+
+    var pv = {
+      controls: 0, disablekb: 1, modestbranding: 1, rel: 0,
+      playsinline: 1, fs: 0, iv_load_policy: 3, enablejsapi: 1
+    };
+    // Without a matching origin the API handshake never completes, onReady
+    // never fires, and the player sits there looking loaded but inert.
+    pv.origin = location.origin;
+
     yt = new YT.Player('ytFrame', {
+      host: 'https://www.youtube.com',
       videoId: pendingId,
-      playerVars: {
-        controls: 0, disablekb: 1, modestbranding: 1, rel: 0,
-        playsinline: 1, fs: 0, iv_load_policy: 3
-      },
+      playerVars: pv,
       events: {
         onReady: function(){
           ytReady = true;
+          clearTimeout(readyTimer);
           ytDur = yt.getDuration() || 0;
           M.playbackRate = 1;
+          msg('', 0);
           fire('loadedmetadata');
+          if(wantPlay){ wantPlay = false; M.play(); }
         },
         onStateChange: function(e){
           lastState = e.data;
-          if(e.data === 1){ if(!ytDur) ytDur = yt.getDuration() || 0; fire('play'); }
+          if(e.data === 1 || e.data === 3){
+            if(!ytDur) ytDur = yt.getDuration() || 0;
+            clearTimeout(autoplayTimer);
+            fire('play');
+          }
           else if(e.data === 2) fire('pause');
           else if(e.data === 0) fire('ended');
         },
-        onError: function(){
-          alert('YouTube would not load that video. Private videos and videos with embedding turned off cannot be used here. Unlisted is fine.');
+        onError: function(e){
+          var why = ({
+            2:   'That video ID is not valid.',
+            5:   'This video cannot be played in an embedded player.',
+            100: 'That video is private or has been removed.',
+            101: 'The uploader has turned off embedding for this video.',
+            150: 'The uploader has turned off embedding for this video.'
+          })[e.data] || 'YouTube refused to play that video.';
+          msg('<b>' + why + '</b> Unlisted videos work. Private ones and videos with embedding disabled do not.', 0);
         }
       }
     });
+
+    // If the handshake fails, say so rather than leaving a dead player on screen.
+    readyTimer = setTimeout(function(){
+      if(ytReady) return;
+      msg('<b>The YouTube player is not responding.</b> This is almost always the page origin. ' +
+          'Open this file from its GitHub Pages address rather than a local copy, and make sure nothing is blocking youtube.com.', 0);
+    }, 8000);
   }
 
   // YouTube gives no timeupdate, so synthesize one while it rolls
