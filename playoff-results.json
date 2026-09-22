@@ -1,3 +1,14 @@
 {
-  "games": {}
+  "games": {
+    "R2": {
+      "w": "Penn State",
+      "h": "Penn State",
+      "a": "Nebraska",
+      "sc": null,
+      "by": "Brian Bevis",
+      "at": "2026-09-22T17:01:52.627Z"
+    }
+  },
+  "updatedAt": "2026-09-22T17:01:52.627Z",
+  "updatedBy": "Brian Bevis"
 }
