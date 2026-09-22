@@ -133,6 +133,7 @@ table.edit tr.changed input,table.edit tr.changed select{border-color:#D9A400}
 table.edit tr.added td{background:#E8F5E9}
 table.edit input.date{width:130px} table.edit input.time{width:96px}
 table.edit input.team{width:130px} table.edit select.sel{width:112px}
+table.edit input.coachname{width:150px}
 table.edit .day{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);font-weight:700}
 .rowdel{background:none;border:1px solid var(--line);color:var(--grey);font-size:16px;line-height:1;
   padding:3px 8px;cursor:pointer}
@@ -416,7 +417,7 @@ td.duty .dot{display:inline-block;width:8px;height:8px;background:var(--red);mar
         <table class="edit" id="admTable">
           <thead><tr>
             <th>Date</th><th>Day</th><th>Kickoff</th><th>Field</th><th>Division</th>
-            <th>Home</th><th>Away</th><th>Tower duty team</th><th></th>
+            <th>Home</th><th>Away</th><th>Tower duty team</th><th>Coach</th><th></th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -2577,7 +2578,7 @@ td.duty .dot{display:inline-block;width:8px;height:8px;background:var(--red);mar
    Without a Worker URL the Admin tab still works — it just falls back to
    downloading the JSON for you to commit by hand.
    ===================================================================== */
-var WORKER_URL = "https://trojnas-gh-proxy.brianbevis.workers.dev/";
+var WORKER_URL = 'https://YOUR-WORKER.workers.dev';
 var GITHUB_BRANCH = 'main';
 
 var CONFIG = {
@@ -2617,6 +2618,14 @@ function shortTime(hhmm){
   return h12 + (m ? ':' + pad(m) : '') + ap;
 }
 function dutyKey(g){ return g.towerDivision + ' ' + g.towerTeam; }
+/* A game's coach field, when set, overrides the team's default coach name
+   for that one game -- the team-level name in DATA.coaches is still what
+   the other four (or however many) of that team's games show. */
+function resolvedCoachName(g){
+  if(g.coach) return g.coach;
+  var c = (DATA.coaches || {})[dutyKey(g)];
+  return (c && c.name) || '';
+}
 function slug(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
 function addMinutes(d, mins){ return new Date(d.getTime() + mins*60000); }
 function gameStart(g){
@@ -2685,7 +2694,7 @@ function eventLocation(g){
 }
 function eventDescription(g){
   var w = eventWindow(g), duty = dutyKey(g);
-  var coach = (DATA.coaches || {})[duty];
+  var coachName = resolvedCoachName(g);
   var lines = [
     'Tower duty assignment for ' + duty + '.','',
     'Game: ' + g.home + ' vs ' + g.away + ' (' + g.division + ' division)',
@@ -2694,7 +2703,7 @@ function eventDescription(g){
     'Report by: ' + to12h(pad(w.start.getHours())+':'+pad(w.start.getMinutes())) +
       ' (' + DATA.arriveEarlyMinutes + ' minutes before kickoff)'
   ];
-  if(coach && coach.name) lines.push('Coach on duty: ' + coach.name);
+  if(coachName) lines.push('Coach on duty: ' + coachName);
   lines.push('', 'Tower duty covers the scoreboard, game clock, and announcements for this game.',
              'If you cannot make it, arrange your own swap and notify the board.');
   return lines.join('\n');
@@ -2829,8 +2838,8 @@ function buildTicket(g, isNext){
   var chip = el('span','field-chip', g.field + ' Field');
   meta.appendChild(chip);
   meta.appendChild(document.createTextNode(' \u00a0' + g.division + ' division'));
-  var coach = (DATA.coaches || {})[dutyKey(g)];
-  if(coach && coach.name) meta.appendChild(document.createTextNode(' \u00a0\u00b7\u00a0 Coach ' + coach.name));
+  var coachName = resolvedCoachName(g);
+  if(coachName) meta.appendChild(document.createTextNode(' \u00a0\u00b7\u00a0 Coach ' + coachName));
   body.appendChild(meta);
   t.appendChild(body);
 
@@ -3242,6 +3251,20 @@ function renderAdminTable(){
       var parts = splitDuty(v); g.towerDivision = parts[0]; g.towerTeam = parts[1];
     })).firstChild.style.width = '168px';
 
+    /* Per-game coach name. Optional -- leaving it blank falls back to that
+       team's default name from the Coach on Duty grid below, exactly what
+       resolvedCoachName() does for tickets, printouts, and calendar invites. */
+    var teamCoachObj = (ADMIN.draft.coaches || {})[g.towerDivision + ' ' + g.towerTeam];
+    var teamDefaultName = (teamCoachObj && teamCoachObj.name) || '';
+    var coachInput = txt('coachname', g.coach || '', function(inp){
+      g.coach = inp.value.trim(); afterEdit();
+    });
+    coachInput.placeholder = teamDefaultName ? teamDefaultName + ' (default)' : 'Optional';
+    coachInput.title = teamDefaultName
+      ? 'Leave blank to use ' + teamDefaultName + ', this team\u2019s default coach'
+      : 'Leave blank to use this team\u2019s default coach (none set yet)';
+    cell(coachInput);
+
     var del = el('button','rowdel','\u00d7');
     del.title = 'Delete this game';
     del.setAttribute('aria-label','Delete game on ' + g.date);
@@ -3342,7 +3365,10 @@ function validateDraft(){
 
 function normalizeDraft(){
   var d = ADMIN.draft;
-  d.games.forEach(function(g){ g.day = dayFromDate(g.date); });
+  d.games.forEach(function(g){
+    g.day = dayFromDate(g.date);
+    if(!g.coach) delete g.coach;   // no override set -> keep JSON clean, fall back to team default
+  });
   d.games.sort(function(a,b){ return (a.date + a.time) < (b.date + b.time) ? -1 : 1; });
   d.fields = fieldOptions();
   /* Drop coach entries for teams that no longer hold any duty. */
