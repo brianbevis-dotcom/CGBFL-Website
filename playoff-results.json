@@ -111,8 +111,16 @@
       "sc": null,
       "by": "Board",
       "at": "2026-09-26T17:52:17.706Z"
+    },
+    "R3": {
+      "w": "Indiana",
+      "h": "Indiana",
+      "a": "Penn State",
+      "sc": null,
+      "by": "Board",
+      "at": "2026-09-26T17:52:24.565Z"
     }
   },
-  "updatedAt": "2026-09-26T17:52:17.706Z",
+  "updatedAt": "2026-09-26T17:52:24.565Z",
   "updatedBy": "Board"
 }
