@@ -256,6 +256,28 @@
   .toast.ok{background:var(--live);} .toast.err{background:var(--red);}
   .toast[hidden]{display:none;}
 
+  /* ---------- Ad hoc game edits ---------- */
+  .chg{font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--warn);margin:2px 0 3px;}
+  .chg b{font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:10px;}
+  .game.is-edited{box-shadow:inset 3px 0 0 var(--warn);}
+  .editbtn{margin-top:7px;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 9px;border:1.5px solid var(--rule);background:var(--paper);color:var(--ink-soft);border-radius:2px;cursor:pointer;}
+  .editbtn:hover{border-color:var(--ink);color:var(--ink);}
+  .editform{margin-top:8px;padding-top:8px;border-top:1px dashed var(--warn);display:grid;gap:7px;}
+  .editform .lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);}
+  .ef-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+  .ef-row label{flex:0 0 46px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);}
+  .ef-row input,.ef-row select{flex:1 1 90px;min-width:0;font-family:inherit;font-size:14px;padding:5px 6px;
+    border:1.5px solid var(--rule);border-radius:2px;background:var(--paper);color:var(--ink);}
+  .ef-row input.sm{flex:0 0 74px;}
+  .ef-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .ef-actions button{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:6px 11px;border-radius:2px;cursor:pointer;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);}
+  .ef-actions button.alt{background:var(--paper);color:var(--ink-soft);border-color:var(--rule);}
+  .ef-actions button.warn{background:var(--paper);color:var(--warn);border-color:var(--warn);}
+  .ef-actions button:disabled{opacity:.5;cursor:wait;}
+  .ef-note{font-size:12px;color:var(--ink-faint);font-style:italic;}
+
   /* ---------- Empty ---------- */
   .tag.sport-C{background:#6B21A8;color:var(--paper);}
   /* sport tags */
@@ -428,13 +450,15 @@
     <span id="adminStep2" hidden>
       <input type="text" id="adminName" placeholder="Your name" aria-label="Your name">
     </span>
-    <span class="msg" id="adminMsg">Tap the team that won. Scores are optional.</span>
+    <span class="msg" id="adminMsg">Tap the team that won, or use Edit game to move one.</span>
     <button class="btn sm ghost" id="adminExit" type="button" style="color:#fff;border-color:#555">Done</button>
   </div>
   <div id="board"></div>
   <p class="foot" id="foot"></p>
-  <p class="signin"><a id="signinLink" role="button" tabindex="0">Enter playoff results</a></p>
+  <p class="signin"><a id="signinLink" role="button" tabindex="0">Enter results or change a game</a></p>
   <div class="toast" id="toast" hidden></div>
+  <datalist id="dlTeams"></datalist>
+  <datalist id="dlFields"></datalist>
 </main>
 
 <script>
@@ -817,7 +841,8 @@ function card(g,past){
     if(bits.length) poLine+='<div class="po-line">'+bits.join(" · ")+'</div>';
     if(ADMIN.on) pick=pickerHtml(g,res);
   }
-  return '<article class="game'+(past?" past":"")+(champ?" is-champ":"")+'">'+
+  const chg=changeLine(g);
+  return '<article class="game'+(past?" past":"")+(champ?" is-champ":"")+(chg?" is-edited":"")+'">'+
     '<div class="spine"><i style="background:#'+hc[0]+'"></i><i style="background:#'+ac[0]+'"></i></div>'+
     '<div class="game-top">'+
       '<span class="tag sport-'+g.sp+'">'+(SPORT_LABEL[g.sp]||"Game")+'</span>'+
@@ -825,10 +850,10 @@ function card(g,past){
       (po?'<span class="tag po'+(champ?" champ":"")+'">'+esc(po.id)+' · '+esc(po.rd)+'</span>':'')+
       (g.tent?'<span class="tag tent">TBC</span>':'')+
       '<span class="field">'+esc(fieldLabel(g))+'</span>'+
-    '</div>'+
+    '</div>'+chg+
     '<p class="matchup">'+teamSpan(g.h,res)+'<span class="vs">vs</span>'+teamSpan(g.a,res)+'</p>'+poLine+
     (scoreHtml||'<div class="kick">Ends '+e12.hh+' '+e12.ampm+'</div>')+
-    (crew?'<div class="crew">'+crew+'</div>':"")+pick+
+    (crew?'<div class="crew">'+crew+'</div>':"")+pick+editUi(g)+
   '</article>';
 }
 
@@ -839,7 +864,7 @@ function tickClock(){
     d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})+" · "+
     d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
 }
-tickClock(); setInterval(()=>{tickClock();if(state.dates.has(TODAY))render();},60000);
+tickClock(); setInterval(()=>{tickClock();if(state.dates.has(TODAY)&&!EDITING.key)render();},60000);
 
 /* ---------- playoff results ----------
    Results live in playoff-results.json in CGBFL-Website.
@@ -939,8 +964,8 @@ function applyResults(data){
   const next=(data&&data.games)||{};
   const changed=JSON.stringify(next)!==JSON.stringify(RESULTS);
   RESULTS=next;
-  resolveBracket();
-  if(changed) render();
+  rebuild();
+  if(changed && !EDITING.key) render();
 }
 async function loadResults(){
   try{
@@ -1030,7 +1055,7 @@ function enterAdmin(){
   document.getElementById("adminStep2").hidden=false;
   document.getElementById("adminbar").hidden=false;
   document.getElementById("signinLink").textContent="Results mode is on";
-  adminMsg("Tap the team that won. Scores are optional.");
+  adminMsg("Tap the team that won, or use Edit game to move one.");
   if(state.view!=="list"){
     state.view="list";
     document.querySelectorAll(".viewswitch button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.view==="list"?"true":"false"));
@@ -1039,7 +1064,7 @@ function enterAdmin(){
     const live=PLAYOFF_DATES.filter(d=>d<=TODAY);
     setDates(live.length?live:PLAYOFF_DATES);
   }
-  loadResults(); render();
+  loadResults(); loadEdits(); render();
 }
 function tryPass(){
   if(document.getElementById("adminPass").value===ADMIN_PASS){ document.getElementById("adminPass").value=""; enterAdmin(); }
@@ -1050,8 +1075,8 @@ document.getElementById("signinLink").addEventListener("keydown",e=>{if(e.key===
 document.getElementById("adminGo").addEventListener("click",tryPass);
 document.getElementById("adminPass").addEventListener("keydown",e=>{if(e.key==="Enter")tryPass();});
 document.getElementById("adminExit").addEventListener("click",()=>{
-  ADMIN.on=false; document.getElementById("adminbar").hidden=true;
-  document.getElementById("signinLink").textContent="Enter playoff results"; render();
+  ADMIN.on=false; EDITING.key=null; document.getElementById("adminbar").hidden=true;
+  document.getElementById("signinLink").textContent="Enter results or change a game"; render();
 });
 
 let toastT;
@@ -1061,7 +1086,230 @@ function toast(msg,kind){
   clearTimeout(toastT); toastT=setTimeout(()=>{t.hidden=true;},4200);
 }
 
-resolveBracket();
+/* ---------- ad hoc game edits ----------
+   A game can be moved or corrected at any time: date, kickoff, field, either
+   team, or the division it is played in. Changes live in game-edits.json and
+   store only the fields that actually changed, so the schedule baked into this
+   page stays the source of truth for everything untouched. Reverting a game
+   drops its entry and the original comes straight back. */
+const EDITS_FILE = "game-edits.json";
+const EDITS_RAW  = "https://raw.githubusercontent.com/brianbevis-dotcom/CGBFL-Website/main/"+EDITS_FILE;
+const EDIT_FIELDS = ["d","t","cx","sd","h","a","dv"];
+const FIELD_LABELS = {d:"Date",t:"Time",cx:"Field",sd:"Side",h:"Home",a:"Away",dv:"Division"};
+let EDITS = {};
+const EDITING = {key:null};
+
+/* Division picks the sport bucket, so colors and the sport filter stay right. */
+const DIV_SPORT = {};
+const DIV_ORDER = ["Junior Trojans","Rookie","Minors","Majors","Kindergarten","1st Grade","2-4th Girls","5-6th Girls","7-8th Girls"];
+GAMES.forEach(g=>{ if(!DIV_SPORT[g.dv]) DIV_SPORT[g.dv]=g.sp; });
+const DIV_LIST = Object.keys(DIV_SPORT).sort((a,b)=>{
+  const ia=DIV_ORDER.indexOf(a), ib=DIV_ORDER.indexOf(b);
+  return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b);
+});
+const FIELD_LIST = [...new Set(GAMES.map(g=>g.cx))].sort();
+
+/* A key has to survive the edit that changes the game, so it is built from the
+   values baked into this page, never from the current ones. */
+function keyOf(g){ return g.po ? "PO:"+g.po.id : [g.bd,g.bt,g.bcx,g.bsd,g.bdv,g.bh,g.ba].join("|"); }
+function snapshot(g){
+  g.bd=g.d; g.bt=g.t; g.bte=g.te; g.bcx=g.cx; g.bsd=g.sd||"";
+  g.bdv=g.dv; g.bsp=g.sp;
+  g.bh = g.po ? g.po.hs : g.h;
+  g.ba = g.po ? g.po.as : g.a;
+  g.key=keyOf(g);
+}
+function initKeys(){ GAMES.forEach(snapshot); }
+
+function editOf(g){ return (EDITS.games||{})[g.key]||null; }
+
+/* Reset every editable field to what this page shipped with, then lay the saved
+   changes back over the top. Doing it this way means a reverted game needs no
+   cleanup, and a stale edit can never compound on an earlier one. */
+function applyEdits(){
+  GAMES.forEach(g=>{
+    g.d=g.bd; g.t=g.bt; g.te=g.bte; g.cx=g.bcx; g.sd=g.bsd; g.dv=g.bdv; g.sp=g.bsp;
+    if(g.po){ g.po.hs=g.bh; g.po.as=g.ba; } else { g.h=g.bh; g.a=g.ba; }
+    g.w=dowOf(g.d);
+    const e=editOf(g); if(!e) return;
+    const dur=minutes(g.bte)-minutes(g.bt);
+    EDIT_FIELDS.forEach(f=>{
+      if(e[f]===undefined || e[f]===null) return;
+      if(f==="h"||f==="a"){ if(g.po){ g.po[f==="h"?"hs":"as"]=e[f]; } else { g[f]=e[f]; } }
+      else g[f]=e[f];
+    });
+    if(e.t){ const m=minutes(g.t)+dur; g.te=String(Math.floor(m/60)%24).padStart(2,"0")+":"+String(m%60).padStart(2,"0"); }
+    if(e.dv && DIV_SPORT[e.dv]) g.sp=DIV_SPORT[e.dv];
+    g.w=dowOf(g.d);
+  });
+}
+function rebuild(){ applyEdits(); resolveBracket(); refreshDates(); }
+
+function refreshDates(){
+  const all=[...new Set(GAMES.map(g=>g.d).concat(Object.keys(NOTES)))].sort();
+  if(all.join()!==ALL_DATES.join()){ ALL_DATES.length=0; all.forEach(d=>ALL_DATES.push(d)); buildStrip(); }
+  const po=[...new Set(GAMES.filter(g=>g.po).map(g=>g.d).concat(Object.keys(NOTES)))].sort();
+  PLAYOFF_DATES.length=0; po.forEach(d=>PLAYOFF_DATES.push(d));
+}
+
+function prettyDate(d){ const dt=parseYMD(d); return dowOf(d)+" "+MON[dt.getMonth()]+" "+dt.getDate(); }
+function wasValue(g,f){
+  if(f==="d") return prettyDate(g.bd);
+  if(f==="t"){const x=fmt12(g.bt);return x.hh+" "+x.ampm;}
+  if(f==="cx"||f==="sd") return (g.bcx+" "+(g.bsd||"")).trim();
+  return g["b"+f];
+}
+/* One plain line the whole league can read: what this game used to be. */
+function changeLine(g){
+  const e=editOf(g); if(!e) return "";
+  const parts=[], seen={};
+  EDIT_FIELDS.forEach(f=>{
+    if(e[f]===undefined||e[f]===null) return;
+    const k=(f==="cx"||f==="sd")?"cx":f;
+    if(seen[k]) return; seen[k]=1;
+    if(String(e[f])===String(g["b"+(f==="sd"?"sd":f)])) return;
+    parts.push(FIELD_LABELS[k]+" was "+wasValue(g,k));
+  });
+  if(!parts.length) return "";
+  return '<div class="chg"><b>Changed</b> '+esc(parts.join(" · "))+'</div>';
+}
+
+function editUi(g){
+  if(!ADMIN.on) return "";
+  if(EDITING.key===g.key) return editForm(g);
+  return '<button type="button" class="editbtn" data-edit="'+esc(g.key)+'">Edit game</button>';
+}
+function opts(list,cur){
+  return list.map(x=>'<option value="'+esc(x)+'"'+(x===cur?' selected':'')+'>'+esc(x)+'</option>').join("");
+}
+function editForm(g){
+  const e=editOf(g)||{};
+  const slot=g.po && (isSlot(g.h)||isSlot(g.a));
+  const hv=g.po?g.po.hs:g.h, av=g.po?g.po.as:g.a;
+  const dis=ADMIN.busy?" disabled":"";
+  return '<div class="editform" data-key="'+esc(g.key)+'">'+
+    '<span class="lbl">Edit this game</span>'+
+    '<div class="ef-row"><label for="ef-d">Date</label>'+
+      '<input type="date" id="ef-d" data-f="d" value="'+esc(g.d)+'">'+
+      '<input type="time" class="sm" data-f="t" value="'+esc(g.t)+'" aria-label="Kickoff time"></div>'+
+    '<div class="ef-row"><label>Field</label>'+
+      '<input type="text" data-f="cx" list="dlFields" value="'+esc(g.cx)+'" aria-label="Field">'+
+      '<input type="text" class="sm" data-f="sd" value="'+esc(g.sd||"")+'" placeholder="Side" aria-label="Field side"></div>'+
+    '<div class="ef-row"><label>Home</label>'+
+      '<input type="text" data-f="h" list="dlTeams" value="'+esc(hv)+'" aria-label="Home team"></div>'+
+    '<div class="ef-row"><label>Away</label>'+
+      '<input type="text" data-f="a" list="dlTeams" value="'+esc(av)+'" aria-label="Away team"></div>'+
+    '<div class="ef-row"><label>League</label>'+
+      '<select data-f="dv" aria-label="Division">'+opts(DIV_LIST,g.dv)+'</select></div>'+
+    (slot?'<p class="ef-note">This game still has a bracket slot in it. Leave the team boxes alone unless you mean to overwrite the winner that feeds in.</p>':"")+
+    '<div class="ef-actions">'+
+      '<button type="button" data-act="save"'+dis+'>Save</button>'+
+      '<button type="button" class="alt" data-act="cancel"'+dis+'>Cancel</button>'+
+      (Object.keys(e).length?'<button type="button" class="warn" data-act="revert"'+dis+'>Undo changes</button>':'')+
+    '</div></div>';
+}
+
+/* ---- storage, same read-modify-write contract as the results file ---- */
+function editsWorkerFile(){ return WORKER_URL.replace(/\/+$/,"")+"/gh/"+EDITS_FILE; }
+async function readEditsViaWorker(){
+  const res=await fetch(editsWorkerFile()+"?ref=main",{cache:"no-store"});
+  if(res.status===404) return {sha:null,data:{games:{}}};
+  if(!res.ok) throw new Error("Worker returned "+res.status);
+  const j=await res.json();
+  return {sha:j.sha, data:j.content?JSON.parse(b64dec(j.content)):{games:{}}};
+}
+function applyEditsData(data){
+  const next=data&&data.games?data:{games:{}};
+  const changed=JSON.stringify(next.games)!==JSON.stringify(EDITS.games||{});
+  EDITS=next; rebuild();
+  if(changed && !EDITING.key) render();
+}
+async function loadEdits(){
+  try{
+    if(ADMIN.authed){ applyEditsData((await readEditsViaWorker()).data); return; }
+    const res=await fetch(EDITS_RAW+"?t="+Math.floor(Date.now()/60000),{cache:"no-store"});
+    if(res.status===404){ applyEditsData({games:{}}); return; }
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    applyEditsData(await res.json());
+  }catch(err){ if(ADMIN.on) adminMsg("Could not load game changes: "+err.message); }
+}
+
+async function saveEdit(key, entry){
+  const name=document.getElementById("adminName").value.trim();
+  if(!name){ toast("Enter your name first so the change is logged.","err"); document.getElementById("adminName").focus(); return; }
+  try{ sessionStorage.setItem("gdbName",name); }catch(err){}
+  ADMIN.busy=true; render();
+  let lastErr=null;
+  for(let attempt=0; attempt<2; attempt++){
+    try{
+      const cur=await readEditsViaWorker();
+      const data=cur.data||{}; data.games=data.games||{};
+      if(entry) data.games[key]=Object.assign({},entry,{by:name,at:new Date().toISOString()});
+      else delete data.games[key];
+      data.updatedAt=new Date().toISOString(); data.updatedBy=name;
+      const body={
+        message:(entry?"Game change: "+key:"Game change reverted: "+key)+" ("+name+")",
+        content:b64enc(JSON.stringify(data,null,2)),
+        branch:"main"
+      };
+      if(cur.sha) body.sha=cur.sha;
+      const res=await fetch(editsWorkerFile(),{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+      if(res.status===409||res.status===422){ lastErr=new Error("Someone else just saved, retrying"); continue; }
+      if(!res.ok) throw new Error("Worker returned "+res.status);
+      ADMIN.busy=false; EDITING.key=null;
+      applyEditsData(data); render();
+      toast(entry?"Game updated.":"Game put back to its original.","ok");
+      return;
+    }catch(err){ lastErr=err; break; }
+  }
+  ADMIN.busy=false; render();
+  toast("Not saved: "+(lastErr?lastErr.message:"unknown error"),"err");
+}
+
+function collectForm(g,form){
+  const vals={};
+  form.querySelectorAll("[data-f]").forEach(i=>{ vals[i.dataset.f]=(i.value||"").trim(); });
+  if(!vals.d||!vals.t){ toast("A game needs a date and a kickoff time.","err"); return undefined; }
+  if(!vals.cx){ toast("A game needs a field.","err"); return undefined; }
+  if(!vals.h||!vals.a){ toast("Both teams need a name.","err"); return undefined; }
+  if(vals.h===vals.a){ toast("A team cannot play itself.","err"); return undefined; }
+  if(!DIV_SPORT[vals.dv]){ toast("Pick a league from the list.","err"); return undefined; }
+  const entry={};
+  EDIT_FIELDS.forEach(f=>{
+    const base=g["b"+f]||"";
+    if(vals[f]!==String(base)) entry[f]=vals[f];
+  });
+  return entry;
+}
+
+document.getElementById("board").addEventListener("click",e=>{
+  if(!ADMIN.on || !e.target.closest) return;
+  const open=e.target.closest("[data-edit]");
+  if(open){ EDITING.key=open.dataset.edit; render(); return; }
+  const btn=e.target.closest("[data-act]");
+  if(!btn || ADMIN.busy) return;
+  const form=btn.closest(".editform"); if(!form) return;
+  const key=form.dataset.key, g=GAMES.find(x=>x.key===key); if(!g) return;
+  const act=btn.dataset.act;
+  if(act==="cancel"){ EDITING.key=null; render(); return; }
+  if(act==="revert"){ if(confirm("Put this game back to the schedule it shipped with?")) saveEdit(key,null); return; }
+  if(act==="save"){
+    const entry=collectForm(g,form);
+    if(entry===undefined) return;
+    if(!Object.keys(entry).length){ EDITING.key=null; render(); toast("Nothing changed.",""); return; }
+    saveEdit(key,entry);
+  }
+});
+
+(function fillDatalists(){
+  const t=document.getElementById("dlTeams");
+  Object.keys(TEAMS).sort().forEach(n=>{const o=document.createElement("option");o.value=n;t.appendChild(o);});
+  const f=document.getElementById("dlFields");
+  FIELD_LIST.forEach(n=>{const o=document.createElement("option");o.value=n;f.appendChild(o);});
+})();
+
+initKeys();
+rebuild();
 
 /* ---------- live feed ---------- */
 /* Point this at the Worker: https://<worker>.workers.dev/schedule
@@ -1097,6 +1345,7 @@ function applyFeed(payload){
   if(payload.teams) Object.assign(TEAMS, payload.teams);
   ALL_DATES.length=0;
   [...new Set(GAMES.map(g=>g.d))].sort().forEach(d=>ALL_DATES.push(d));
+  initKeys(); applyEdits();
   feedState={loaded:true, at:Date.now(), count:GAMES.length, mode:"live"};
   const keep=new Set([...state.dates].filter(d=>ALL_DATES.includes(d)));
   state.dates=keep;
@@ -1142,9 +1391,9 @@ document.addEventListener("visibilitychange",()=>{
 buildStrip();
 document.getElementById("btnToday").click();
 try{ if(sessionStorage.getItem("gdbAuth")==="1") ADMIN.authed=true; }catch(e){}
-loadResults();
-setInterval(()=>{ if(!document.hidden && !ADMIN.busy) loadResults(); }, RESULTS_POLL_MS);
-document.addEventListener("visibilitychange",()=>{ if(!document.hidden) loadResults(); });
+loadResults(); loadEdits();
+setInterval(()=>{ if(!document.hidden && !ADMIN.busy && !EDITING.key){ loadResults(); loadEdits(); } }, RESULTS_POLL_MS);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden && !EDITING.key){ loadResults(); loadEdits(); } });
 if(FEED_URL){
   loadFeed(false);
   setInterval(()=>loadFeed(false), FEED_POLL_MS);
