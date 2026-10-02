@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CGBFL Championship Saturday Program</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;500;600;700&display=swap">
+<style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>
+/* Layout: one-screen reader. Top bar holds the team and player jump menus, the book fills the stage, a scrubber sits underneath. Single night-game look taken from the program's own cover. */
+:root{
+  color-scheme:dark;
+  --ink:#0f0a0b; --panel:#1b1214; --line:#3a2529; --paper:#f6f1ee;
+  --text:#f4ecea; --muted:#b9a6a8; --red:#c8102e; --red-hi:#ef2b4a;
+  --display:"Anton","Arial Narrow",Impact,sans-serif;
+  --ui:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+}
+html,body{height:100%}
+body{background:var(--ink);color:var(--text);font-family:var(--ui);font-size:17px;display:flex;flex-direction:column;overflow:hidden}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding-inline:16px;padding-block:10px;background:var(--panel);border-bottom:3px solid var(--red)}
+.brand{display:flex;flex-direction:column;line-height:1;margin-right:auto;min-width:0}
+.brand small{font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-size:12px}
+.brand b{font-family:var(--display);font-weight:400;font-size:24px;letter-spacing:.02em;text-transform:uppercase;font-style:italic}
+.jump{display:flex;flex-wrap:wrap;gap:10px;flex:1 1 420px;justify-content:flex-end;min-width:0}
+.field{display:flex;flex-direction:column;gap:3px;flex:1 1 170px;max-width:280px;min-width:0}
+.field label{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+select{font:600 17px var(--ui);color:var(--text);background:var(--ink);border:1px solid var(--line);border-radius:3px;padding:7px 8px;width:100%;min-width:0}
+select:disabled{opacity:.45}
+select:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--red-hi);outline-offset:2px}
+#stage{flex:1;min-height:0;min-width:0;overflow:auto;display:flex;padding:14px 16px;
+  background:radial-gradient(ellipse at 50% 40%,#4a0d18 0%,#1d0c10 55%,var(--ink) 100%)}
+#book{position:relative;margin:auto;flex:none;perspective:2600px;user-select:none;-webkit-user-select:none}
+.half{position:absolute;top:0;width:50%;height:100%;background:var(--paper);cursor:pointer;box-shadow:0 12px 34px rgba(0,0,0,.6)}
+.half.left{left:0}.half.right{left:50%}
+.half.empty{visibility:hidden}
+.half img,.face img{width:100%;height:100%;display:block;object-fit:fill;-webkit-user-drag:none}
+.half.left::after,.half.right::after{content:"";position:absolute;inset:0;pointer-events:none}
+.half.left::after{background:linear-gradient(to left,rgba(0,0,0,.22),rgba(0,0,0,0) 9%)}
+.half.right::after{background:linear-gradient(to right,rgba(0,0,0,.22),rgba(0,0,0,0) 9%)}
+#book.single .left{display:none}
+#book.single .right{left:0;width:100%}
+#book.single .right::after{background:none}
+#book.zoomed .half{cursor:default}
+.leaf{position:absolute;top:0;width:50%;height:100%;transform-style:preserve-3d;z-index:5;pointer-events:none}
+.leaf.fwd{left:50%;transform-origin:left center}
+.leaf.back{left:0;transform-origin:right center}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--paper);box-shadow:0 0 30px rgba(0,0,0,.45)}
+.face.rev{transform:rotateY(180deg)}
+.half.pulse{animation:pulse 1.5s ease-out}
+@keyframes pulse{0%,45%{outline:5px solid var(--red-hi);outline-offset:-5px}100%{outline:5px solid transparent;outline-offset:-5px}}
+.fade{animation:fade .25s ease-out}
+@keyframes fade{from{opacity:.25}to{opacity:1}}
+.foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding-inline:16px;padding-block:8px calc(8px + env(safe-area-inset-bottom,0px));background:var(--panel);border-top:1px solid var(--line)}
+button{font:700 16px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--text);background:var(--ink);border:1px solid var(--line);border-radius:3px;padding:7px 14px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--red-hi)}
+button:disabled{opacity:.35;cursor:default}
+button.go{background:var(--red);border-color:var(--red)}
+button[aria-pressed="true"]{background:var(--text);color:var(--ink)}
+#scrub{flex:1 1 160px;min-width:0;accent-color:var(--red)}
+#where{font-weight:600;font-variant-numeric:tabular-nums;min-width:8.5em;text-align:center}
+#what{color:var(--muted);flex:1 1 100%;text-align:center;font-size:15px;order:9;overflow-wrap:anywhere}
+@media (min-width:900px){#what{flex:0 1 auto;order:0;text-align:left;max-width:30ch}}
+</style>
+</head>
+<body>
+
+
+<header class="bar">
+  <div class="brand"><small>Center Grove Bantam Football League · 2026</small><b>Championship Saturday</b></div>
+  <div class="jump">
+    <div class="field"><label for="teamSel">Jump to team</label><select id="teamSel"></select></div>
+    <div class="field"><label for="playerSel">Jump to player or cheerleader</label><select id="playerSel" disabled><option>Pick a team first</option></select></div>
+  </div>
+</header>
+
+<main id="stage">
+  <div id="book">
+    <div class="half left"><img alt=""></div>
+    <div class="half right"><img alt=""></div>
+    <div class="leaf" hidden><div class="face"><img alt=""></div><div class="face rev"><img alt=""></div></div>
+  </div>
+</main>
+
+<footer class="foot">
+  <button id="prev" class="go" aria-label="Previous pages">&#9664; Back</button>
+  <span id="where"></span>
+  <input id="scrub" type="range" min="1" max="155" value="1" aria-label="Page">
+  <span id="what"></span>
+  <button id="zoom" aria-pressed="false">Zoom</button>
+  <button id="full">Full screen</button>
+  <button id="next" class="go" aria-label="Next pages">Next &#9654;</button>
+</footer>
+
+<script>
+const DATA=[{"div":"Rookie","time":"2:00 PM","match":"Indiana vs Purdue","cover":7,"game":8,"teams":[{"name":"Indiana Hoosiers","photo":9,"info":10,"starters":11,"players":[[12,"1","James Kennedy"],[13,"2","Peyton Huffman"],[14,"3","Vinnie Grantner"],[15,"5","Niles Williams"],[16,"10","Brantley Vinson"],[17,"15","Will Dugger"],[18,"30","Parker Paxson"],[19,"32","Jackson Miller"],[20,"48","Reece Jacobs"],[21,"51","Rockne Nelson"],[22,"58","Valor Naue"],[23,"70","Charlie Ariss"],[24,"91","Cruz Chavis"]]},{"name":"Purdue Boilermakers","photo":25,"info":26,"starters":27,"players":[[28,"1","Henry Dirksen"],[29,"2","Luke Roberts"],[30,"3","Jayce Biggerstaff"],[31,"5","Ezekiel Kimbowa"],[32,"10","Max Ruhana"],[33,"12","Kole Kreutzberger"],[34,"15","Dillon Howe"],[35,"30","Ethan LeClair"],[36,"32","Jase Cassetty"],[37,"48","Owen Cummings"],[38,"51","Lennox Hensley"],[39,"58","Maddox Hensley"],[40,"70","Christian Peterson"],[41,"77","Colton Reid"],[42,"91","Declan Pav"]],"cheer":[[44,"Leah Bertsch"],[45,"Dawson Copas"],[46,"Alexa Holden"],[47,"Clover Holden"],[48,"Olivia Medaris"],[49,"Aliana Nicholson"],[50,"Vivienne Pettit"]],"cheerCover":43}]},{"div":"Minor","time":"4:00 PM","match":"Indiana vs Iowa","cover":51,"game":52,"teams":[{"name":"Indiana Hoosiers","photo":53,"info":54,"starters":55,"players":[[56,"1","Gavin Geiersbach"],[57,"2","Carter Clancy"],[58,"3","Creighton Landis"],[59,"5","Isaac Vinson"],[60,"10","McCoy Landis"],[61,"15","Landon Burge"],[62,"30","Zaidyn Earl"],[63,"32","Isaiah MacDonald"],[64,"48","Landon Nungester"],[65,"51","Landon O'Brien"],[66,"58","Colton (CJ) Schonegg"],[67,"70","Tegan Fields"],[68,"77","Liam Hemmer"]],"cheer":[[70,"Dakota Caplinger"],[71,"Bria Corsaro"],[72,"Belle Howe"],[73,"Henley Huber"],[74,"Liliana Lopez"],[75,"Lily Lukemeyer"],[76,"Jordan MacDonald"],[77,"Reese Nelson"]],"cheerCover":69},{"name":"Iowa Hawkeyes","photo":78,"info":79,"starters":80,"players":[[81,"1","Liam Adams"],[82,"2","Waylon Cain"],[83,"3","Louie Herold"],[84,"5","Mason Payton"],[85,"9","Owen Bell"],[86,"15","Beau Johnson"],[87,"30","Sam Kegeris"],[88,"32","Jaxson LaFree"],[89,"48","Grayson Goodman"],[90,"51","Atticus Apgar"],[91,"58","Nolan Wilson"],[92,"70","Hunter Willert"],[93,"77","Zeke Thomas"]],"cheer":[[95,"Amelia Apgar"],[96,"Marceline \"Marcie\" Deitz"],[97,"Carson Johnson"],[98,"Scarlet Mier"],[99,"Haddie Obert"],[100,"Maya Obert"],[101,"Malia Steill"],[102,"Kirby Thompson"]],"cheerCover":94}]},{"div":"Major","time":"6:00 PM","match":"Indiana vs Penn State","cover":103,"game":104,"teams":[{"name":"Indiana Hoosiers","photo":105,"info":106,"starters":107,"players":[[108,"1","Beau Ranard"],[109,"2","Austin Treharne"],[110,"3","Dean Griffin"],[111,"5","Liam Dean"],[112,"10","Omar Grant, Jr"],[113,"15","Bryce Pav"],[114,"32","Julian \"JuJu\" Bevis"],[115,"48","Nolan Halterman"],[116,"51","Jaxson Bare"],[117,"70","Gregory Werner"],[118,"77","Rhett Duncan"],[119,"94","Xavi Delgado"]],"cheer":[[121,"Sadie Blake"],[122,"Eleanor Duffer"],[123,"Lea Giffin"],[124,"Mary Himes"],[125,"Emrie Johannes"],[126,"Presley Overman"],[127,"Ariel-Ivy Smith"],[128,"Kasia Zieniewicz"]],"cheerCover":120},{"name":"Penn State","photo":129,"info":130,"starters":131,"players":[[132,"1","Brantley Ritter"],[133,"2","Jackson Oilar"],[134,"3","Miles Howell"],[135,"5","Eivin (Ivan) Brewer"],[136,"10","Leo Ryan"],[137,"15","Jackson Hinds"],[138,"30","Tyler Fountain"],[139,"32","Henry Pendowski"],[140,"48","Kamden Aiello"],[141,"51","Reece Roehling"],[142,"58","Ethan Johnston"],[143,"70","Carter Smith"],[144,"77","Lincoln Powers"],[145,"91","Lilly Patterson"]],"cheer":[[147,"Adison Alexander"],[148,"Audrey Bryan"],[149,"Adilynne Eckert"],[150,"Aubrie Eckert"],[151,"Hazley Fountain"],[152,"Elsie Gillen"],[153,"Everly Gillen"],[154,"Liliana Gore"],[155,"Lucy Vargas"]],"cheerCover":146}]}];
+const N=155, AR=1105/1430;
+const $=s=>document.querySelector(s);
+const stage=$('#stage'), book=$('#book'), L=$('.half.left'), R=$('.half.right'), leaf=$('.leaf');
+const [fFront,fBack]=leaf.querySelectorAll('img');
+const teamSel=$('#teamSel'), playerSel=$('#playerSel'), scrub=$('#scrub');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const src=n=>'pages/p-'+String(n).padStart(3,'0')+'.jpg';
+
+/* page index: what every page is, and which menu entries point at it */
+const TEAMS=[], meta={1:{label:'Cover',team:'p:1'},2:{label:"President's letter",team:'p:2'}};
+for(let i=3;i<=6;i++) meta[i]={label:'Sponsors, page '+(i-2)+' of 4',team:'p:3'};
+teamSel.add(new Option('Cover','p:1')); teamSel.add(new Option("President's letter",'p:2')); teamSel.add(new Option('Sponsors','p:3'));
+DATA.forEach(d=>{
+  const g=document.createElement('optgroup'); g.label=d.div+' Super Bowl, '+d.time;
+  meta[d.cover]={label:d.div+' division cover',team:'p:'+d.cover};
+  meta[d.game]={label:d.div+' game sheet, '+d.match,team:'p:'+d.game};
+  g.append(new Option(d.div+' cover','p:'+d.cover), new Option('Game sheet and rosters','p:'+d.game));
+  d.teams.forEach(t=>{
+    const key='t:'+TEAMS.length; TEAMS.push(t); t.div=d.div;
+    g.append(new Option(t.name+' ('+d.div+')',key));
+    const tag=t.name+', '+d.div;
+    meta[t.photo]={label:tag+': team photo',team:key};
+    meta[t.info]={label:tag+': team information',team:key};
+    meta[t.starters]={label:tag+': starters',team:key};
+    t.players.forEach(([n,num,name])=>meta[n]={label:'#'+num+' '+name+', '+tag,team:key});
+    if(t.cheer){ const ck='t:'+TEAMS.length, c={name:t.name+' Cheer',div:d.div,members:t.cheer,cover:t.cheerCover}; meta[c.cover]={label:t.name+' Cheer, '+d.div+': cover',team:ck}; TEAMS.push(c);
+      g.append(new Option(c.name+' ('+d.div+')',ck));
+      t.cheer.forEach(([n,name])=>meta[n]={label:name+', '+c.name+', '+d.div,team:ck}); }
+  });
+  teamSel.append(g);
+});
+
+let cur=1, single=false, zoom=1, endAnim=null, seq=0, pendingPulse=0;
+const view=p=>{ if(single) return [null,p]; const s=p>>1; return [2*s>=2?2*s:null, 2*s+1<=N?2*s+1:null]; };
+const key=p=>single?p:p>>1;
+
+function put(half,n){
+  const img=half.querySelector('img');
+  if(n==null){half.classList.add('empty');return}
+  half.classList.remove('empty'); img.src=src(n); img.alt='Page '+n+': '+meta[n].label;
+}
+function renderStatic(){
+  const [a,b]=view(cur); put(L,a); put(R,b);
+  if(pendingPulse){
+    const h=(single||pendingPulse%2)?R:L; pendingPulse=0;
+    h.classList.remove('pulse'); void h.offsetWidth; h.classList.add('pulse');
+  }
+  [a,b].forEach(n=>{ if(n) for(const k of [n-2,n-1,n+1,n+2,n+3]) if(k>=1&&k<=N) new Image().src=src(k); });
+}
+function fillPlayers(t){
+  playerSel.innerHTML=''; playerSel.disabled=!t;
+  if(!t){playerSel.add(new Option('Pick a team first',''));return}
+  if(t.members){ playerSel.add(new Option('Cheer cover',t.cover)); const g=document.createElement('optgroup'); g.label='Cheerleaders'; t.members.forEach(([n,name])=>g.append(new Option(name,n))); playerSel.append(g); return }
+  playerSel.add(new Option('Team photo',t.photo)); playerSel.add(new Option('Team information',t.info)); playerSel.add(new Option('Starters',t.starters));
+  const g=document.createElement('optgroup'); g.label='Players';
+  t.players.forEach(([n,num,name])=>g.append(new Option('#'+num+'  '+name,n)));
+  playerSel.append(g);
+}
+function sync(){
+  const [a,b]=view(cur), m=meta[cur];
+  $('#where').textContent=(a&&b?'Pages '+a+'-'+b:'Page '+(a||b))+' of '+N;
+  $('#what').textContent=m.label;
+  scrub.value=cur;
+  if(teamSel.value!==m.team){ teamSel.value=m.team; fillPlayers(m.team[0]==='t'?TEAMS[+m.team.slice(2)]:null); }
+  if(m.team[0]==='t') playerSel.value=cur;
+  $('#prev').disabled=key(cur)===key(1); $('#next').disabled=key(cur)===key(N);
+}
+const ready=ps=>Promise.all(ps.filter(Boolean).map(n=>{const i=new Image(); i.src=src(n);
+  return Promise.race([i.decode().catch(()=>{}), new Promise(r=>setTimeout(r,2500))])}));
+
+async function goTo(p,flash){
+  p=Math.max(1,Math.min(N,+p||1));
+  if(flash) pendingPulse=p;
+  if(key(p)===key(cur)){cur=p;sync();renderStatic();return}
+  const my=++seq; await ready(view(p)); if(my!==seq) return;
+  if(endAnim) endAnim();
+  const dir=p>cur?1:-1, old=view(cur); cur=p; const nw=view(p); sync();
+  if(single||reduced){ renderStatic(); R.classList.remove('fade'); void R.offsetWidth; R.classList.add('fade'); return }
+  leaf.className='leaf '+(dir>0?'fwd':'back');
+  fFront.src=src(dir>0?old[1]:old[0]); fBack.src=src(dir>0?nw[0]:nw[1]);
+  if(dir>0) put(R,nw[1]); else put(L,nw[0]);
+  leaf.hidden=false;
+  const anim=leaf.animate([{transform:'rotateY(0deg)'},{transform:'rotateY('+(dir>0?-180:180)+'deg)'}],{duration:750,easing:'cubic-bezier(.35,.05,.25,1)'});
+  endAnim=()=>{endAnim=null; anim.cancel(); leaf.hidden=true; renderStatic()};
+  anim.onfinish=()=>endAnim&&endAnim();
+}
+function step(d){
+  if(single) return goTo(cur+d);
+  const s=(cur>>1)+d; if(s<0||2*s>N) return;
+  goTo(s===0?1:2*s);
+}
+function layout(){
+  const cs=getComputedStyle(stage), w=stage.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight), h=stage.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+  const was=single; single=w<700||w/h<1.05;
+  const ph=Math.max(120,Math.min(h,w/(single?1:2)/AR))*zoom, pw=ph*AR;
+  book.style.width=pw*(single?1:2)+'px'; book.style.height=ph+'px';
+  book.classList.toggle('single',single); book.classList.toggle('zoomed',zoom>1);
+  if(was!==single){ if(endAnim) endAnim(); sync(); renderStatic(); }
+}
+
+teamSel.onchange=()=>{ const v=teamSel.value;
+  if(v[0]==='p'){fillPlayers(null);goTo(+v.slice(2),true)} else {const t=TEAMS[+v.slice(2)];fillPlayers(t);goTo(t.members?t.cover:t.photo,true)} };
+playerSel.onchange=()=>playerSel.value&&goTo(+playerSel.value,true);
+scrub.oninput=()=>{$('#where').textContent='Page '+scrub.value+' of '+N; $('#what').textContent=meta[scrub.value].label};
+scrub.onchange=()=>goTo(+scrub.value,true);
+$('#prev').onclick=()=>step(-1); $('#next').onclick=()=>step(1);
+L.onclick=()=>{ if(zoom===1) step(-1) };
+R.onclick=e=>{ if(zoom>1) return; if(single){const r=R.getBoundingClientRect(); step(e.clientX-r.left<r.width*.35?-1:1)} else step(1) };
+$('#zoom').onclick=e=>{ zoom=zoom>1?1:1.8; e.currentTarget.setAttribute('aria-pressed',zoom>1); layout(); if(zoom>1){stage.scrollLeft=(stage.scrollWidth-stage.clientWidth)/2; stage.scrollTop=0} };
+$('#full').onclick=()=>{ const el=document.documentElement;
+  if(document.fullscreenElement) document.exitFullscreen(); else if(el.requestFullscreen) el.requestFullscreen().catch(()=>{$('#full').hidden=true}); else $('#full').hidden=true };
+addEventListener('keydown',e=>{ if(/SELECT|INPUT/.test(e.target.tagName)) return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();step(1)} else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();step(-1)}
+  else if(e.key==='Home') goTo(1); else if(e.key==='End') goTo(N); });
+let tx=null,ty=0;
+book.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+book.addEventListener('touchend',e=>{ if(tx==null||zoom>1) return; const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty; tx=null;
+  if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.5){ e.preventDefault(); step(dx<0?1:-1) } });
+new ResizeObserver(layout).observe(stage);
+layout(); sync(); renderStatic();
+</script>
+
+</body>
+</html>
